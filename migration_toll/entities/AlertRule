@@ -1,0 +1,63 @@
+{
+  "name": "AlertRule",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "alert_type": {
+      "type": "string",
+      "enum": [
+        "migration_failed",
+        "backup_failed",
+        "restore_failed",
+        "storage_full",
+        "connection_lost",
+        "slow_migration",
+        "data_mismatch",
+        "schedule_missed"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "condition": {
+      "type": "string"
+    },
+    "threshold_value": {
+      "type": "number"
+    },
+    "notify_email": {
+      "type": "string"
+    },
+    "notify_slack": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_triggered": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "trigger_count": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "name",
+    "alert_type"
+  ]
+}

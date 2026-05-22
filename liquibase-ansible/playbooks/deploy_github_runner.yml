@@ -1,0 +1,10 @@
+# ============================================================
+# playbooks/deploy_github_runner.yml
+# Run individually: ansible-playbook -i inventories/hosts.ini playbooks/deploy_github_runner.yml
+# ============================================================
+---
+- name: Deploy GitHub Actions Runner Only
+  hosts: github_runner
+  become: yes
+  roles:
+    - role: github-runner

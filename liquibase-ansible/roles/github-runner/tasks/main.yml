@@ -1,0 +1,115 @@
+# ============================================================
+# Role: github-runner | tasks/main.yml
+# Purpose: Install self-hosted GitHub Actions runner on CI/CD server
+# ============================================================
+
+---
+# ── System Prep ──────────────────────────────────────────────
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install system dependencies
+  ansible.builtin.apt:
+    name:
+      - curl
+      - git
+      - jq
+      - tar
+      - libicu-dev
+      - libssl-dev
+      - python3
+      - python3-pip
+      - ansible          # So runner can trigger Ansible playbooks
+    state: present
+
+# ── Create Runner User ───────────────────────────────────────
+- name: Create github-runner user
+  ansible.builtin.user:
+    name: github-runner
+    system: yes
+    shell: /bin/bash
+    home: "{{ github_runner_dir }}"
+    create_home: yes
+    state: present
+
+# ── Download GitHub Actions Runner ───────────────────────────
+- name: Create runner directory
+  ansible.builtin.file:
+    path: "{{ github_runner_dir }}"
+    state: directory
+    owner: github-runner
+    group: github-runner
+    mode: "0755"
+
+- name: Download GitHub Actions runner v{{ github_runner_version }}
+  ansible.builtin.get_url:
+    url: "https://github.com/actions/runner/releases/download/v{{ github_runner_version }}/actions-runner-linux-x64-{{ github_runner_version }}.tar.gz"
+    dest: "/tmp/actions-runner.tar.gz"
+    mode: "0644"
+
+- name: Extract runner package
+  ansible.builtin.unarchive:
+    src: /tmp/actions-runner.tar.gz
+    dest: "{{ github_runner_dir }}"
+    remote_src: yes
+    owner: github-runner
+    group: github-runner
+
+# ── Configure Runner ─────────────────────────────────────────
+- name: Configure GitHub Actions runner
+  ansible.builtin.command:
+    cmd: >
+      ./config.sh
+      --url https://github.com/{{ github_org }}/{{ github_repo }}
+      --token {{ github_runner_token }}
+      --name "ansible-managed-runner"
+      --labels "self-hosted,ubuntu,liquibase"
+      --unattended
+      --replace
+    chdir: "{{ github_runner_dir }}"
+  become: yes
+  become_user: github-runner
+  args:
+    creates: "{{ github_runner_dir }}/.runner"
+
+# ── Install as Systemd Service ───────────────────────────────
+- name: Install runner as systemd service
+  ansible.builtin.command:
+    cmd: ./svc.sh install github-runner
+    chdir: "{{ github_runner_dir }}"
+  args:
+    creates: /etc/systemd/system/actions.runner.{{ github_org }}.{{ github_repo }}.ansible-managed-runner.service
+
+- name: Start and enable GitHub Actions runner service
+  ansible.builtin.systemd:
+    name: "actions.runner.{{ github_org }}.{{ github_repo }}.ansible-managed-runner"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+# ── Install Ansible on Runner (for migration triggers) ───────
+- name: Install Ansible pip dependencies on runner
+  ansible.builtin.pip:
+    name:
+      - ansible
+      - psycopg2-binary
+    state: present
+
+# ── Deploy GitHub Actions Workflow File ──────────────────────
+- name: Ensure .github/workflows directory exists locally
+  ansible.builtin.file:
+    path: /opt/workflows
+    state: directory
+    mode: "0755"
+
+- name: Deploy the CI/CD workflow YAML for reference
+  ansible.builtin.template:
+    src: db-migrate.yml.j2
+    dest: /opt/workflows/db-migrate.yml
+    mode: "0644"
+
+- name: Print runner status
+  ansible.builtin.debug:
+    msg: "GitHub Actions self-hosted runner is installed and running on this server."

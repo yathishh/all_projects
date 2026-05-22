@@ -1,0 +1,7 @@
+============================================================
+  PostgreSQL Index Health Report
+  Host      : pgsql_cluster.adhkiapps.com:5001
+  User      : postgres
+  Generated : Tue Apr  7 19:05:02 IST 2026
+============================================================
+

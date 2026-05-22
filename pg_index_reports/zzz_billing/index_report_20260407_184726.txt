@@ -1,0 +1,266 @@
+============================================================
+  DATABASE : zzz_billing
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 19:00:20 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (65 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               account                   idx_account_status                  8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_status ON public.account USING btree (status)
+  public               account                   idx_account_manager_id              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_manager_id ON public.account USING btree (account_manager_id)
+  public               account                   idx_account_code                    8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_code ON public.account USING btree (account_code)
+  public               account_activity          idx_account_activity_kind           8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_activity_kind ON public.account_activity USING btree (kind)
+  public               account_ddi               idx_account_ddi_s_n_id              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_ddi_s_n_id ON public.account_ddi USING btree (service_number_id)
+  public               account_ddi               idx_account_ddi_a_id                8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_ddi_a_id ON public.account_ddi USING btree (account_id)
+  public               account_discount          idx_account_discount_a_t_id         8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_discount_a_t_id ON public.account_discount USING btree (account_id)
+  public               account_note              idx_account_note_account_id         8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_note_account_id ON public.account_note USING btree (account_id)
+  public               account_tariff            idx_account_tariff_out_l_t          16 kB      0        btree       
+    DDL: CREATE INDEX idx_account_tariff_out_l_t ON public.account_tariff USING btree (out_l_tariff)
+  public               account_tariff            idx_account_tariif_in_fax_t         16 kB      0        btree       
+    DDL: CREATE INDEX idx_account_tariif_in_fax_t ON public.account_tariff USING btree (in_fax_tariff)
+  public               account_tariff            idx_account_tariff_out_i_t          16 kB      0        btree       
+    DDL: CREATE INDEX idx_account_tariff_out_i_t ON public.account_tariff USING btree (out_i_tariff)
+  public               account_tariff            idx_account_tariff_in_t             16 kB      0        btree       
+    DDL: CREATE INDEX idx_account_tariff_in_t ON public.account_tariff USING btree (in_tariff)
+  public               account_tariff            idx_account_tariff_out_m_t          16 kB      0        btree       
+    DDL: CREATE INDEX idx_account_tariff_out_m_t ON public.account_tariff USING btree (out_m_tariff)
+  public               account_template          idx_account_template_a_t_id         8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_template_a_t_id ON public.account_template USING btree (account_tariff_id)
+  public               account_to_tariff         idx_account_to_tariff_account_tariff_id 8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_to_tariff_account_tariff_id ON public.account_to_tariff USING btree (account_tariff_id)
+  public               account_to_tariff         idx_account_to_tariff_account_id    8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_to_tariff_account_id ON public.account_to_tariff USING btree (account_id)
+  public               account_to_tariff_06-2019 idx_account_to_tariff_account_tariff_id_copy1 8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_to_tariff_account_tariff_id_copy1 ON public."account_to_tariff_06-2019" USING btree (account_tariff_id)
+  public               account_to_tariff_06-2019 idx_account_to_tariff_account_id_copy1 8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_to_tariff_account_id_copy1 ON public."account_to_tariff_06-2019" USING btree (account_id)
+  public               additional_bill           idx_additional_bill_account_id      8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_additional_bill_account_id ON public.additional_bill USING btree (account_id)
+  public               additional_bill           idx_additional_bill_invoice_id      8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_additional_bill_invoice_id ON public.additional_bill USING btree (invoice_id)
+  public               additional_charge         idx_additional_charge_account_id    8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_additional_charge_account_id ON public.additional_charge USING btree (account_id)
+  public               additional_charge         idx_additional_charge_charge_type_id 8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_additional_charge_charge_type_id ON public.additional_charge USING btree (charge_type_id)
+  public               additional_charge         idx_additional_charge_invoice_id    8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_additional_charge_invoice_id ON public.additional_charge USING btree (invoice_id)
+  public               additional_charge         idx_additional_charge_null_invoices 8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_additional_charge_null_invoices ON public.additional_charge USING btree (invoice_id) WHERE (invoice_id IS NULL)
+  public               alias                     idx_alias_parent                    8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_alias_parent ON public.alias USING btree (parent_id)
+  public               audit_table               idx_audit_table_tbl                 8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_audit_table_tbl ON public.audit_table USING btree (tbl, pk_value)
+  public               audit_table               idx_audit_table_full                8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_audit_table_full ON public.audit_table USING btree (tbl, pk_name, pk_value)
+  public               bank_holiday              idx_bank_holiday_date               8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_bank_holiday_date ON public.bank_holiday USING btree (countries_id, holiday_date)
+  public               cdr                       idx_cdr_out_t_id                    8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cdr_out_t_id ON public.cdr USING btree (out_tariff_id)
+  public               cdr                       idx_cdr_invoice_id                  8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cdr_invoice_id ON public.cdr USING btree (invoice_id)
+  public               cdr                       idx_cdr_a_id                        8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cdr_a_id ON public.cdr USING btree (account_id)
+  public               cdr                       idx_cdr_null_invoices               8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cdr_null_invoices ON public.cdr USING btree (invoice_id) WHERE (invoice_id IS NULL)
+  public               cdr                       idx_cdr_ref                         8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cdr_ref ON public.cdr USING btree (cdr_ref)
+  public               cdr                       idx_cdr_call_time                   8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cdr_call_time ON public.cdr USING btree (call_time)
+  public               cdr                       idx_cdr_out_time                    8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cdr_out_time ON public.cdr USING btree (out_time)
+  public               cdr                       idx_cdr_date                        8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cdr_date ON public.cdr USING btree (date(timezone('UTC'::text, call_time)))
+  public               cdr                       idx_cdr_ddi_no                      8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cdr_ddi_no ON public.cdr USING btree (ddi_no)
+  public               cdr                       idx_cdr_call_t_id                   8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cdr_call_t_id ON public.cdr USING btree (call_tariff_id)
+  public               charge                    idx_charge_charge_type_id           8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_charge_charge_type_id ON public.charge USING btree (charge_type_id)
+  public               charge                    idx_charge_account_tariff_id        8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_charge_account_tariff_id ON public.charge USING btree (account_tariff_id)
+  public               charge_type               idx_charge_type_charge_type         8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_charge_type_charge_type ON public.charge_type USING btree (charge_type)
+  public               credit_history            idx_credit_history_account_id       8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_credit_history_account_id ON public.credit_history USING btree (account_id)
+  public               epdq_payment_request_log  idx_epdq_payment_request_log        8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_epdq_payment_request_log ON public.epdq_payment_request_log USING btree (invoice_number)
+  public               free                      idx_free_account_tariff_id          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_free_account_tariff_id ON public.free USING btree (account_tariff_id)
+  public               free                      idx_free_free_type_id               8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_free_free_type_id ON public.free USING btree (free_type_id)
+  public               invoice                   idx_invoice_account_id              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_invoice_account_id ON public.invoice USING btree (account_id)
+  public               invoice                   idx_invoice_status                  8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_invoice_status ON public.invoice USING btree (status)
+  public               invoice                   idx_amount_payable                  8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_amount_payable ON public.invoice USING btree (amount_payable)
+  public               recurring_bill            idx_recurring_bill_run_next         8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_recurring_bill_run_next ON public.recurring_bill USING btree (run_next)
+  public               recurring_bill            idx_recurring_bill_account          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_recurring_bill_account ON public.recurring_bill USING btree (account_id)
+  public               service_number            idx_service_number_public_no        8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_service_number_public_no ON public.service_number USING btree (public_no)
+  public               service_number            idx_service_number_owner_uuid       8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_service_number_owner_uuid ON public.service_number USING btree (owner_uuid)
+  public               service_number            idx_service_number_full_no          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_service_number_full_no ON public.service_number USING btree (full_no)
+  public               service_number_note       idx_service_number_note_s_n_id      8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_service_number_note_s_n_id ON public.service_number_note USING btree (service_number_id)
+  public               tariff_note               idx_tariff_note_tariff_id           8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_tariff_note_tariff_id ON public.tariff_note USING btree (tariff_id)
+  public               tariff_override           idx_tariff_override_t_id            8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_tariff_override_t_id ON public.tariff_override USING btree (tariff_id)
+  public               tariff_override           idx_tariff_override_a_t_id          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_tariff_override_a_t_id ON public.tariff_override USING btree (account_tariff_id)
+  public               temp_cdr                  idx_call_time                       8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_call_time ON public.temp_cdr USING btree (call_time)
+  public               temp_cdr                  idx_out_time                        8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_out_time ON public.temp_cdr USING btree (out_time)
+  public               temp_cdr                  idx_account_id                      8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_account_id ON public.temp_cdr USING btree (account_id)
+  public               transaction               idx_transaction_tx_id               8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_transaction_tx_id ON public.transaction USING btree (tx_id)
+  public               transaction               idx_transaction_invoice_id          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_transaction_invoice_id ON public.transaction USING btree (invoice_id)
+  public               transaction               idx_transaction_tx_ref              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_transaction_tx_ref ON public.transaction USING btree (tx_ref)
+  public               transaction               idx_transaction_account_id          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_transaction_account_id ON public.transaction USING btree (account_id)
+  public               users_history             idx_users_history_username          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_users_history_username ON public.users_history USING btree (username)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No large unused indexes found.
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  public             charge                 idx_charge_account_tariff_id   idx_charge_unique_index        8192 bytes
+    Redundant DDL : CREATE INDEX idx_charge_account_tariff_id ON public.charge USING btree (account_tariff_id)
+    Covering  DDL : CREATE UNIQUE INDEX idx_charge_unique_index ON public.charge USING btree (account_tariff_id, charge_type_id)
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (2 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  INDEX                          DUPLICATE OF                   SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  public             additional_charge      idx_additional_charge_invoice_id idx_additional_charge_null_invoices 8192 bytes
+    Index 1 DDL : CREATE INDEX idx_additional_charge_invoice_id ON public.additional_charge USING btree (invoice_id)
+    Index 2 DDL : CREATE INDEX idx_additional_charge_null_invoices ON public.additional_charge USING btree (invoice_id) WHERE (invoice_id IS NULL)
+  public             cdr                    idx_cdr_invoice_id             idx_cdr_null_invoices          8192 bytes
+    Index 1 DDL : CREATE INDEX idx_cdr_invoice_id ON public.cdr USING btree (invoice_id)
+    Index 2 DDL : CREATE INDEX idx_cdr_null_invoices ON public.cdr USING btree (invoice_id) WHERE (invoice_id IS NULL)
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_account_status"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_manager_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_code"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_activity_kind"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_ddi_s_n_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_ddi_a_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_discount_a_t_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_note_account_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_tariff_out_l_t"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_account_tariif_in_fax_t"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_account_tariff_out_i_t"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_account_tariff_in_t"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_account_tariff_out_m_t"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_account_template_a_t_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_to_tariff_account_tariff_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_to_tariff_account_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_to_tariff_account_tariff_id_copy1"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_to_tariff_account_id_copy1"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_additional_bill_account_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_additional_bill_invoice_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_additional_charge_account_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_additional_charge_charge_type_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_additional_charge_invoice_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_additional_charge_null_invoices"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_alias_parent"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_audit_table_tbl"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_audit_table_full"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_bank_holiday_date"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cdr_out_t_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cdr_invoice_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cdr_a_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cdr_null_invoices"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cdr_ref"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cdr_call_time"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cdr_out_time"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cdr_date"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cdr_ddi_no"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cdr_call_t_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_charge_charge_type_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_charge_account_tariff_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_charge_type_charge_type"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_credit_history_account_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_epdq_payment_request_log"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_free_account_tariff_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_free_free_type_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_invoice_account_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_invoice_status"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_amount_payable"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_recurring_bill_run_next"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_recurring_bill_account"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_service_number_public_no"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_service_number_owner_uuid"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_service_number_full_no"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_service_number_note_s_n_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_tariff_note_tariff_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_tariff_override_t_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_tariff_override_a_t_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_call_time"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_out_time"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_account_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_transaction_tx_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_transaction_invoice_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_transaction_tx_ref"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_transaction_account_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_users_history_username"; -- size: 8192 bytes
+
+  -- Duplicate indexes (keep one, drop the other):
+  DROP INDEX CONCURRENTLY public."idx_additional_charge_invoice_id"; -- duplicate of idx_additional_charge_null_invoices, size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cdr_invoice_id"; -- duplicate of idx_cdr_null_invoices, size: 8192 bytes
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 137        1160 kB         65             
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: zzz_billing
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                65
+  Large unused (>1MB):                     0
+  Redundant/overlap indexes:               1
+  Exact duplicate indexes:                 2
+  Total drop candidates:                   67
+────────────────────────────────────────────────────────────

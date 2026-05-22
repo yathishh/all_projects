@@ -1,0 +1,92 @@
+# ============================================================
+# Master Playbook: site.yml
+# Provisions all 3 servers for the Liquibase CI/CD pipeline
+#
+# Usage:
+#   ansible-playbook -i inventories/hosts.ini site.yml
+#   ansible-playbook -i inventories/hosts.ini site.yml --tags postgresql
+#   ansible-playbook -i inventories/hosts.ini site.yml --tags liquibase
+#   ansible-playbook -i inventories/hosts.ini site.yml --tags github_runner
+# ============================================================
+
+---
+# ── Play 1: Configure PostgreSQL Server ─────────────────────
+- name: Setup PostgreSQL Database Server
+  hosts: postgresql
+  become: yes
+  gather_facts: yes
+  tags: [postgresql, db]
+
+  pre_tasks:
+    - name: Print target server info
+      ansible.builtin.debug:
+        msg: "Configuring PostgreSQL on {{ inventory_hostname }} ({{ ansible_host }})"
+
+  roles:
+    - role: postgresql
+
+  post_tasks:
+    - name: PostgreSQL setup complete
+      ansible.builtin.debug:
+        msg: |
+          ✅ PostgreSQL {{ pg_version }} installed
+          ✅ Database '{{ pg_database }}' created
+          ✅ User '{{ pg_user }}' created
+          ✅ Access allowed from migration server only
+
+
+# ── Play 2: Configure Migration Server ──────────────────────
+- name: Setup Liquibase Migration Server
+  hosts: migration
+  become: yes
+  gather_facts: yes
+  tags: [liquibase, migration]
+
+  pre_tasks:
+    - name: Print target server info
+      ansible.builtin.debug:
+        msg: "Configuring Liquibase migration server on {{ inventory_hostname }} ({{ ansible_host }})"
+
+  roles:
+    - role: liquibase
+
+  post_tasks:
+    - name: Migration server setup complete
+      ansible.builtin.debug:
+        msg: |
+          ✅ Java 17 installed
+          ✅ Liquibase {{ liquibase_version }} installed (held at this version)
+          ✅ PostgreSQL JDBC driver downloaded
+          ✅ liquibase.properties configured
+          ✅ Project structure created at {{ liquibase_project_dir }}
+          ✅ Python venv with psycopg2 ready
+          ✅ run-migration wrapper script at /usr/local/bin/run-migration
+
+
+# ── Play 3: Configure GitHub Actions Runner ──────────────────
+- name: Setup GitHub Actions Self-Hosted Runner
+  hosts: github_runner
+  become: yes
+  gather_facts: yes
+  tags: [github_runner, cicd]
+
+  pre_tasks:
+    - name: Print target server info
+      ansible.builtin.debug:
+        msg: "Configuring GitHub Actions runner on {{ inventory_hostname }} ({{ ansible_host }})"
+
+  roles:
+    - role: github-runner
+
+  post_tasks:
+    - name: CI/CD server setup complete
+      ansible.builtin.debug:
+        msg: |
+          ✅ GitHub Actions runner v{{ github_runner_version }} installed
+          ✅ Runner registered to github.com/{{ github_org }}/{{ github_repo }}
+          ✅ Runner running as systemd service
+          ✅ Ansible installed on runner for pipeline orchestration
+          ✅ Sample workflow saved to /opt/workflows/db-migrate.yml
+          
+          ⚠️  Next step: Copy /opt/workflows/db-migrate.yml 
+              to your repo at .github/workflows/db-migrate.yml

@@ -1,0 +1,149 @@
+{
+  "name": "MigrationProject",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Project name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Project description"
+    },
+    "source_db_type": {
+      "type": "string",
+      "enum": [
+        "oracle",
+        "sql_server",
+        "postgresql",
+        "mysql",
+        "mariadb",
+        "db2",
+        "sqlite",
+        "mongodb",
+        "cassandra",
+        "dynamodb",
+        "couchbase",
+        "redis",
+        "neo4j",
+        "firebase",
+        "cosmosdb"
+      ],
+      "description": "Source database type"
+    },
+    "target_db_type": {
+      "type": "string",
+      "enum": [
+        "oracle",
+        "sql_server",
+        "postgresql",
+        "mysql",
+        "mariadb",
+        "db2",
+        "sqlite",
+        "mongodb",
+        "cassandra",
+        "dynamodb",
+        "couchbase",
+        "redis",
+        "neo4j",
+        "firebase",
+        "cosmosdb"
+      ],
+      "description": "Target database type"
+    },
+    "source_db_category": {
+      "type": "string",
+      "enum": [
+        "rdbms",
+        "nosql"
+      ],
+      "description": "Source database category"
+    },
+    "target_db_category": {
+      "type": "string",
+      "enum": [
+        "rdbms",
+        "nosql"
+      ],
+      "description": "Target database category"
+    },
+    "source_connection_string": {
+      "type": "string",
+      "description": "Source database connection string"
+    },
+    "target_connection_string": {
+      "type": "string",
+      "description": "Target database connection string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "configuring",
+        "validating",
+        "migrating",
+        "completed",
+        "failed",
+        "paused"
+      ],
+      "default": "planning",
+      "description": "Current project status"
+    },
+    "migration_type": {
+      "type": "string",
+      "enum": [
+        "full",
+        "schema_only",
+        "data_only",
+        "incremental"
+      ],
+      "default": "full",
+      "description": "Type of migration"
+    },
+    "total_tables": {
+      "type": "number",
+      "default": 0,
+      "description": "Total tables/collections to migrate"
+    },
+    "migrated_tables": {
+      "type": "number",
+      "default": 0,
+      "description": "Tables/collections migrated so far"
+    },
+    "total_records": {
+      "type": "number",
+      "default": 0,
+      "description": "Total records to migrate"
+    },
+    "migrated_records": {
+      "type": "number",
+      "default": 0,
+      "description": "Records migrated so far"
+    },
+    "estimated_size_gb": {
+      "type": "number",
+      "default": 0,
+      "description": "Estimated data size in GB"
+    },
+    "start_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Migration start time"
+    },
+    "end_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Migration end time"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes"
+    }
+  },
+  "required": [
+    "name",
+    "source_db_type",
+    "target_db_type"
+  ]
+}

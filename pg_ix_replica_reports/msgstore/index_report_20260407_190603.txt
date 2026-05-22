@@ -1,0 +1,194 @@
+============================================================
+  DATABASE : msgstore
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:13:33 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (31 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               call                      idx_call_extention                  8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_call_extention ON public.call USING btree (extension)
+  public               call                      idx_call_reminder                   8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_call_reminder ON public.call USING btree (reminder) WHERE (reminder IS TRUE)
+  public               call                      idx_call_owner                      8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_call_owner ON public.call USING btree (call_owner)
+  public               call                      idx_call_uuid                       8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_call_uuid ON public.call USING btree (uuid)
+  public               email                     idx_email_uuid_                     546 MB     0        btree       
+    DDL: CREATE INDEX idx_email_uuid_ ON public.email USING btree (uuid)
+  public               email                     idx_email_queue_id_                 62 MB      0        btree       
+    DDL: CREATE INDEX idx_email_queue_id_ ON public.email USING btree (queue_id)
+  public               email                     idx_email_added_                    60 MB      0        btree       
+    DDL: CREATE INDEX idx_email_added_ ON public.email USING btree (date(timezone('GB'::text, added)))
+  public               email                     idx_email_pending_                  520 kB     0        btree       
+    DDL: CREATE INDEX idx_email_pending_ ON public.email USING btree (pending) WHERE (pending IS TRUE)
+  public               email_log                 idx_email_log_queue_id              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_email_log_queue_id ON public.email_log USING btree (queue_id)
+  public               http                      idx_http_uuid                       2712 kB    0        btree       
+    DDL: CREATE INDEX idx_http_uuid ON public.http USING btree (uuid)
+  public               http                      idx_http_added                      440 kB     0        btree       
+    DDL: CREATE INDEX idx_http_added ON public.http USING btree (date(timezone('GB'::text, added)))
+  public               http                      idx_http_pending                    16 kB      0        btree       
+    DDL: CREATE INDEX idx_http_pending ON public.http USING btree (pending) WHERE (pending IS TRUE)
+  public               log                       idx_log_uuid_                       16 MB      0        btree       
+    DDL: CREATE INDEX idx_log_uuid_ ON public.log USING btree (uuid)
+  public               message                   idx_message_uuid_                   39 MB      0        btree       
+    DDL: CREATE INDEX idx_message_uuid_ ON public.message USING btree (uuid)
+  public               message                   idx_message_id                      18 MB      0        btree       
+    DDL: CREATE INDEX idx_message_id ON public.message USING btree (message_id)
+  public               message                   idx_message_added_by2               6800 kB    0        btree       
+    DDL: CREATE INDEX idx_message_added_by2 ON public.message USING btree (added_by)
+  public               message                   idx_message_added_                  5456 kB    0        btree       
+    DDL: CREATE INDEX idx_message_added_ ON public.message USING btree (date(timezone('GB'::text, added)))
+  public               message                   idx_message_pending_                392 kB     0        btree       
+    DDL: CREATE INDEX idx_message_pending_ ON public.message USING btree (pending) WHERE (pending IS TRUE)
+  public               message_archive           idx_added_uuid                      943 MB     0        btree       
+    DDL: CREATE INDEX idx_added_uuid ON public.message_archive USING btree (added) INCLUDE (uuid) WITH (deduplicate_items='false')
+  public               message_archive           idx_messagearchive_uuid             606 MB     0        btree       
+    DDL: CREATE INDEX idx_messagearchive_uuid ON public.message_archive USING btree (uuid)
+  public               message_archive           idx_message_added2                  63 MB      0        btree       
+    DDL: CREATE INDEX idx_message_added2 ON public.message_archive USING btree (date(timezone('GB'::text, added)))
+  public               message_snapshot          idx_message_snapshot_uuid           594 MB     0        btree       
+    DDL: CREATE INDEX idx_message_snapshot_uuid ON public.message_snapshot USING btree (uuid)
+  public               message_snapshot          idx_message_snapshot_id             312 MB     0        btree       
+    DDL: CREATE INDEX idx_message_snapshot_id ON public.message_snapshot USING btree (message_id)
+  public               message_snapshot          idx_message_snapshot_owner_with_added 160 MB     0        btree       
+    DDL: CREATE INDEX idx_message_snapshot_owner_with_added ON public.message_snapshot USING btree (message_owner, date(timezone('GB'::text, added)))
+  public               message_snapshot          idx_message_snapshot_added2         70 MB      0        btree       
+    DDL: CREATE INDEX idx_message_snapshot_added2 ON public.message_snapshot USING btree (date(timezone('GB'::text, added)))
+  public               message_snapshot          idx_message_snapshot_added_by2      66 MB      0        btree       
+    DDL: CREATE INDEX idx_message_snapshot_added_by2 ON public.message_snapshot USING btree (added_by)
+  public               message_snapshot          idx_message_snapshot_pending        632 kB     0        btree       
+    DDL: CREATE INDEX idx_message_snapshot_pending ON public.message_snapshot USING btree (pending) WHERE (pending IS TRUE)
+  public               sms                       idx_sms_queue_id                    48 MB      0        btree       
+    DDL: CREATE INDEX idx_sms_queue_id ON public.sms USING btree (queue_id)
+  public               sms                       idx_sms_uuid                        39 MB      0        btree       
+    DDL: CREATE INDEX idx_sms_uuid ON public.sms USING btree (uuid)
+  public               sms                       idx_sms_added                       10 MB      0        btree       
+    DDL: CREATE INDEX idx_sms_added ON public.sms USING btree (date(timezone('GB'::text, added)))
+  public               sms                       idx_sms_pending                     72 kB      0        btree       
+    DDL: CREATE INDEX idx_sms_pending ON public.sms USING btree (pending) WHERE (pending IS TRUE)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (20 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  public               message_archive           idx_added_uuid                      943 MB       0       
+    DDL: CREATE INDEX idx_added_uuid ON public.message_archive USING btree (added) INCLUDE (uuid) WITH (deduplicate_items='false')
+  public               message_archive           idx_messagearchive_uuid             606 MB       0       
+    DDL: CREATE INDEX idx_messagearchive_uuid ON public.message_archive USING btree (uuid)
+  public               message_snapshot          idx_message_snapshot_uuid           594 MB       0       
+    DDL: CREATE INDEX idx_message_snapshot_uuid ON public.message_snapshot USING btree (uuid)
+  public               email                     idx_email_uuid_                     546 MB       0       
+    DDL: CREATE INDEX idx_email_uuid_ ON public.email USING btree (uuid)
+  public               message_snapshot          idx_message_snapshot_id             312 MB       0       
+    DDL: CREATE INDEX idx_message_snapshot_id ON public.message_snapshot USING btree (message_id)
+  public               message_snapshot          idx_message_snapshot_owner_with_added 160 MB       0       
+    DDL: CREATE INDEX idx_message_snapshot_owner_with_added ON public.message_snapshot USING btree (message_owner, date(timezone('GB'::text, added)))
+  public               message_snapshot          idx_message_snapshot_added2         70 MB        0       
+    DDL: CREATE INDEX idx_message_snapshot_added2 ON public.message_snapshot USING btree (date(timezone('GB'::text, added)))
+  public               message_snapshot          idx_message_snapshot_added_by2      66 MB        0       
+    DDL: CREATE INDEX idx_message_snapshot_added_by2 ON public.message_snapshot USING btree (added_by)
+  public               message_archive           idx_message_added2                  63 MB        0       
+    DDL: CREATE INDEX idx_message_added2 ON public.message_archive USING btree (date(timezone('GB'::text, added)))
+  public               email                     idx_email_queue_id_                 62 MB        0       
+    DDL: CREATE INDEX idx_email_queue_id_ ON public.email USING btree (queue_id)
+  public               email                     idx_email_added_                    60 MB        0       
+    DDL: CREATE INDEX idx_email_added_ ON public.email USING btree (date(timezone('GB'::text, added)))
+  public               sms                       idx_sms_queue_id                    48 MB        0       
+    DDL: CREATE INDEX idx_sms_queue_id ON public.sms USING btree (queue_id)
+  public               sms                       idx_sms_uuid                        39 MB        0       
+    DDL: CREATE INDEX idx_sms_uuid ON public.sms USING btree (uuid)
+  public               message                   idx_message_uuid_                   39 MB        0       
+    DDL: CREATE INDEX idx_message_uuid_ ON public.message USING btree (uuid)
+  public               message                   idx_message_id                      18 MB        0       
+    DDL: CREATE INDEX idx_message_id ON public.message USING btree (message_id)
+  public               log                       idx_log_uuid_                       16 MB        0       
+    DDL: CREATE INDEX idx_log_uuid_ ON public.log USING btree (uuid)
+  public               sms                       idx_sms_added                       10 MB        0       
+    DDL: CREATE INDEX idx_sms_added ON public.sms USING btree (date(timezone('GB'::text, added)))
+  public               message                   idx_message_added_by2               6800 kB      0       
+    DDL: CREATE INDEX idx_message_added_by2 ON public.message USING btree (added_by)
+  public               message                   idx_message_added_                  5456 kB      0       
+    DDL: CREATE INDEX idx_message_added_ ON public.message USING btree (date(timezone('GB'::text, added)))
+  public               http                      idx_http_uuid                       2712 kB      0       
+    DDL: CREATE INDEX idx_http_uuid ON public.http USING btree (uuid)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  public             message_archive        idx_messagearchive_uuid        idx_added_uuid                 606 MB    
+    Redundant DDL : CREATE INDEX idx_messagearchive_uuid ON public.message_archive USING btree (uuid)
+    Covering  DDL : CREATE INDEX idx_added_uuid ON public.message_archive USING btree (added) INCLUDE (uuid) WITH (deduplicate_items='false')
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_call_extention"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_call_reminder"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_call_owner"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_call_uuid"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_email_uuid_"; -- size: 546 MB
+  DROP INDEX CONCURRENTLY public."idx_email_queue_id_"; -- size: 62 MB
+  DROP INDEX CONCURRENTLY public."idx_email_added_"; -- size: 60 MB
+  DROP INDEX CONCURRENTLY public."idx_email_pending_"; -- size: 520 kB
+  DROP INDEX CONCURRENTLY public."idx_email_log_queue_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_http_uuid"; -- size: 2712 kB
+  DROP INDEX CONCURRENTLY public."idx_http_added"; -- size: 440 kB
+  DROP INDEX CONCURRENTLY public."idx_http_pending"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_log_uuid_"; -- size: 16 MB
+  DROP INDEX CONCURRENTLY public."idx_message_uuid_"; -- size: 39 MB
+  DROP INDEX CONCURRENTLY public."idx_message_id"; -- size: 18 MB
+  DROP INDEX CONCURRENTLY public."idx_message_added_by2"; -- size: 6800 kB
+  DROP INDEX CONCURRENTLY public."idx_message_added_"; -- size: 5456 kB
+  DROP INDEX CONCURRENTLY public."idx_message_pending_"; -- size: 392 kB
+  DROP INDEX CONCURRENTLY public."idx_added_uuid"; -- size: 943 MB
+  DROP INDEX CONCURRENTLY public."idx_messagearchive_uuid"; -- size: 606 MB
+  DROP INDEX CONCURRENTLY public."idx_message_added2"; -- size: 63 MB
+  DROP INDEX CONCURRENTLY public."idx_message_snapshot_uuid"; -- size: 594 MB
+  DROP INDEX CONCURRENTLY public."idx_message_snapshot_id"; -- size: 312 MB
+  DROP INDEX CONCURRENTLY public."idx_message_snapshot_owner_with_added"; -- size: 160 MB
+  DROP INDEX CONCURRENTLY public."idx_message_snapshot_added2"; -- size: 70 MB
+  DROP INDEX CONCURRENTLY public."idx_message_snapshot_added_by2"; -- size: 66 MB
+  DROP INDEX CONCURRENTLY public."idx_message_snapshot_pending"; -- size: 632 kB
+  DROP INDEX CONCURRENTLY public."idx_sms_queue_id"; -- size: 48 MB
+  DROP INDEX CONCURRENTLY public."idx_sms_uuid"; -- size: 39 MB
+  DROP INDEX CONCURRENTLY public."idx_sms_added"; -- size: 10 MB
+  DROP INDEX CONCURRENTLY public."idx_sms_pending"; -- size: 72 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 46         4553 MB         31             
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: msgstore
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                31
+  Large unused (>1MB):                     20
+  Redundant/overlap indexes:               1
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   31
+────────────────────────────────────────────────────────────

@@ -1,0 +1,80 @@
+============================================================
+  DATABASE : widgets
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:17:31 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (3 found)
+────────────────────────────────────────────────────────────
+  • callout
+  • deptools
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (3 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  callout              calls                     idx_calls_umbrella_widget_start     138 MB     0        btree       
+    DDL: CREATE INDEX idx_calls_umbrella_widget_start ON callout.calls USING btree (umbrella_id, calloutwidgetid, starttime)
+  callout              calls                     idx__callid                         78 MB      0        btree       
+    DDL: CREATE INDEX idx__callid ON callout.calls USING btree (calls_id) WITH (deduplicate_items='true')
+  callout              calls                     calls_pbx_call_id_idx               18 MB      0        btree       
+    DDL: CREATE INDEX calls_pbx_call_id_idx ON callout.calls USING btree (pbx_call_id)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (3 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  callout              calls                     idx_calls_umbrella_widget_start     138 MB       0       
+    DDL: CREATE INDEX idx_calls_umbrella_widget_start ON callout.calls USING btree (umbrella_id, calloutwidgetid, starttime)
+  callout              calls                     idx__callid                         78 MB        0       
+    DDL: CREATE INDEX idx__callid ON callout.calls USING btree (calls_id) WITH (deduplicate_items='true')
+  callout              calls                     calls_pbx_call_id_idx               18 MB        0       
+    DDL: CREATE INDEX calls_pbx_call_id_idx ON callout.calls USING btree (pbx_call_id)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  callout            calls                  idx__callid                    idx_calls_umbrella_widget_start 78 MB     
+    Redundant DDL : CREATE INDEX idx__callid ON callout.calls USING btree (calls_id) WITH (deduplicate_items='true')
+    Covering  DDL : CREATE INDEX idx_calls_umbrella_widget_start ON callout.calls USING btree (umbrella_id, calloutwidgetid, starttime)
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY callout."idx_calls_umbrella_widget_start"; -- size: 138 MB
+  DROP INDEX CONCURRENTLY callout."idx__callid"; -- size: 78 MB
+  DROP INDEX CONCURRENTLY callout."calls_pbx_call_id_idx"; -- size: 18 MB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  callout                5          466 MB          3              
+  deptools               1          64 kB           0              
+  public                 0          0 bytes         0              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: widgets
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         3
+  Unused indexes (0 scans):                3
+  Large unused (>1MB):                     3
+  Redundant/overlap indexes:               1
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   3
+────────────────────────────────────────────────────────────

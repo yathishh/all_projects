@@ -1,0 +1,35 @@
+# ============================================================
+# Global Variables - group_vars/all.yml
+# ============================================================
+# ⚠️  Move sensitive values to Ansible Vault in production:
+#     ansible-vault encrypt_string 'yourpassword' --name 'pg_password'
+
+# ── PostgreSQL Settings ──────────────────────────────────────
+pg_version: "15"
+pg_host: "192.168.1.10"          # ← Change to your DB server IP
+pg_port: 5432
+pg_database: "devdb"
+pg_user: "devuser"
+pg_password: "StrongPass@2025"   # ← Change this!
+
+# ── Liquibase Settings ───────────────────────────────────────
+liquibase_version: "4.33.0"
+liquibase_install_dir: "/opt/liquibase"
+liquibase_project_dir: "/opt/liquibase-project"
+jdbc_driver_version: "42.7.1"
+jdbc_driver_dir: "/opt/liquibase/drivers"
+
+# ── Java Settings ────────────────────────────────────────────
+java_package: "openjdk-17-jdk"
+
+# ── GitHub Actions Runner Settings ──────────────────────────
+github_runner_version: "2.316.0"
+github_runner_dir: "/opt/actions-runner"
+github_org: "your-org"           # ← Change to your GitHub org
+github_repo: "your-repo"         # ← Change to your repo name
+# Generate token at: Settings → Actions → Runners → New runner
+github_runner_token: "REPLACE_WITH_YOUR_RUNNER_TOKEN"
+
+# ── System Settings ──────────────────────────────────────────
+app_user: "liquibase"
+app_group: "liquibase"

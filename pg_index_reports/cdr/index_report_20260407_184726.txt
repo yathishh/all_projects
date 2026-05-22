@@ -1,0 +1,108 @@
+============================================================
+  DATABASE : cdr
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:50:43 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (10 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               cdr                       idx_cdr_call_time                   11 MB      0        btree       
+    DDL: CREATE INDEX idx_cdr_call_time ON public.cdr USING btree (call_time)
+  public               cdr                       idx_cdr_date                        11 MB      0        btree       
+    DDL: CREATE INDEX idx_cdr_date ON public.cdr USING btree (call_time)
+  public               cdr                       idx_cdr_date_ext                    5560 kB    0        btree       
+    DDL: CREATE INDEX idx_cdr_date_ext ON public.cdr USING btree (date(call_time), ext)
+  public               cdr                       idx_cdr_id_type_fwd                 3464 kB    0        btree       
+    DDL: CREATE INDEX idx_cdr_id_type_fwd ON public.cdr USING btree (id, call_type, fwd_type)
+  public               cdr                       idx_cdr_id                          3416 kB    0        btree       
+    DDL: CREATE INDEX idx_cdr_id ON public.cdr USING btree (id)
+  public               cdr_info                  idx_cdr_info                        8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cdr_info ON public.cdr_info USING btree (id)
+  public               daily_stats               idx_ds_day                          16 kB      0        btree       
+    DDL: CREATE INDEX idx_ds_day ON public.daily_stats USING btree (day)
+  public               daily_stats               idx_ds_id                           16 kB      0        btree       
+    DDL: CREATE INDEX idx_ds_id ON public.daily_stats USING btree (id)
+  public               last30days_changes        idx_last30days_changes              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_last30days_changes ON public.last30days_changes USING btree (id)
+  public               last30days_notes          idx_last30days_notes_id             8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_last30days_notes_id ON public.last30days_notes USING btree (id)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (5 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  public               cdr                       idx_cdr_call_time                   11 MB        0       
+    DDL: CREATE INDEX idx_cdr_call_time ON public.cdr USING btree (call_time)
+  public               cdr                       idx_cdr_date                        11 MB        0       
+    DDL: CREATE INDEX idx_cdr_date ON public.cdr USING btree (call_time)
+  public               cdr                       idx_cdr_date_ext                    5560 kB      0       
+    DDL: CREATE INDEX idx_cdr_date_ext ON public.cdr USING btree (date(call_time), ext)
+  public               cdr                       idx_cdr_id_type_fwd                 3464 kB      0       
+    DDL: CREATE INDEX idx_cdr_id_type_fwd ON public.cdr USING btree (id, call_type, fwd_type)
+  public               cdr                       idx_cdr_id                          3416 kB      0       
+    DDL: CREATE INDEX idx_cdr_id ON public.cdr USING btree (id)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  public             cdr                    idx_cdr_id                     idx_cdr_id_type_fwd            3416 kB   
+    Redundant DDL : CREATE INDEX idx_cdr_id ON public.cdr USING btree (id)
+    Covering  DDL : CREATE INDEX idx_cdr_id_type_fwd ON public.cdr USING btree (id, call_type, fwd_type)
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  INDEX                          DUPLICATE OF                   SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  public             cdr                    idx_cdr_call_time              idx_cdr_date                   11 MB     
+    Index 1 DDL : CREATE INDEX idx_cdr_call_time ON public.cdr USING btree (call_time)
+    Index 2 DDL : CREATE INDEX idx_cdr_date ON public.cdr USING btree (call_time)
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_cdr_call_time"; -- size: 11 MB
+  DROP INDEX CONCURRENTLY public."idx_cdr_date"; -- size: 11 MB
+  DROP INDEX CONCURRENTLY public."idx_cdr_date_ext"; -- size: 5560 kB
+  DROP INDEX CONCURRENTLY public."idx_cdr_id_type_fwd"; -- size: 3464 kB
+  DROP INDEX CONCURRENTLY public."idx_cdr_id"; -- size: 3416 kB
+  DROP INDEX CONCURRENTLY public."idx_cdr_info"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_ds_day"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_ds_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_last30days_changes"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_last30days_notes_id"; -- size: 8192 bytes
+
+  -- Duplicate indexes (keep one, drop the other):
+  DROP INDEX CONCURRENTLY public."idx_cdr_call_time"; -- duplicate of idx_cdr_date, size: 11 MB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 16         34 MB           10             
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: cdr
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                10
+  Large unused (>1MB):                     5
+  Redundant/overlap indexes:               1
+  Exact duplicate indexes:                 1
+  Total drop candidates:                   11
+────────────────────────────────────────────────────────────

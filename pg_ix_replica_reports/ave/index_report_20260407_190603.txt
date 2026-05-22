@@ -1,0 +1,124 @@
+============================================================
+  DATABASE : ave
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:07:05 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (2 found)
+────────────────────────────────────────────────────────────
+  • ave
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (22 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  ave                  ave_models                newtable_id_idx                     16 kB      0        btree       
+    DDL: CREATE INDEX newtable_id_idx ON ave.ave_models USING btree (id)
+  ave                  ave_models                newtable_name_idx                   16 kB      0        btree       
+    DDL: CREATE INDEX newtable_name_idx ON ave.ave_models USING btree (name)
+  ave                  ave_scripts               ave_scripts_id_idx                  16 kB      0        btree       
+    DDL: CREATE INDEX ave_scripts_id_idx ON ave.ave_scripts USING btree (id)
+  ave                  ave_scripts               ave_scripts_isactive_idx            16 kB      0        btree       
+    DDL: CREATE INDEX ave_scripts_isactive_idx ON ave.ave_scripts USING btree (isactive)
+  ave                  ave_scripts               ave_scripts_name_idx                16 kB      0        btree       
+    DDL: CREATE INDEX ave_scripts_name_idx ON ave.ave_scripts USING btree (name)
+  ave                  ave_step_types            ave_step_types_isactive_idx         16 kB      0        btree       
+    DDL: CREATE INDEX ave_step_types_isactive_idx ON ave.ave_step_types USING btree (isactive)
+  ave                  ave_step_types            ave_step_types_name_idx             16 kB      0        btree       
+    DDL: CREATE INDEX ave_step_types_name_idx ON ave.ave_step_types USING btree (name)
+  ave                  ave_step_types            ave_step_types_id_idx               16 kB      0        btree       
+    DDL: CREATE INDEX ave_step_types_id_idx ON ave.ave_step_types USING btree (id)
+  ave                  pbx_audiosocket_endpoint  pbx_audiosocket_endpoint_endpoint_port_idx 16 kB      0        btree       
+    DDL: CREATE INDEX pbx_audiosocket_endpoint_endpoint_port_idx ON ave.pbx_audiosocket_endpoint USING btree (endpoint_port)
+  ave                  pbx_audiosocket_endpoint  pbx_audiosocket_endpoint_endpoint_ip_idx 16 kB      0        btree       
+    DDL: CREATE INDEX pbx_audiosocket_endpoint_endpoint_ip_idx ON ave.pbx_audiosocket_endpoint USING btree (endpoint_ip)
+  ave                  pbx_ave_ivrmenu           pbx_ave_ivrmenu_id_script_idx       16 kB      0        btree       
+    DDL: CREATE INDEX pbx_ave_ivrmenu_id_script_idx ON ave.pbx_ave_ivrmenu USING btree (id_script)
+  ave                  pbx_ave_request           pbx_ave_request_agent_idx           16 kB      0        btree       
+    DDL: CREATE INDEX pbx_ave_request_agent_idx ON ave.pbx_ave_request USING btree (agent)
+  ave                  pbx_ave_request           pbx_ave_request_caller_name_idx     16 kB      0        btree       
+    DDL: CREATE INDEX pbx_ave_request_caller_name_idx ON ave.pbx_ave_request USING btree (caller_name)
+  ave                  pbx_ave_request           pbx_ave_request_requested_time_idx  16 kB      0        btree       
+    DDL: CREATE INDEX pbx_ave_request_requested_time_idx ON ave.pbx_ave_request USING btree (requested_time)
+  ave                  pbx_ave_request           pbx_ave_request_cli_idx             16 kB      0        btree       
+    DDL: CREATE INDEX pbx_ave_request_cli_idx ON ave.pbx_ave_request USING btree (cli)
+  ave                  pbx_communication         pbx_communication_date_sent_idx     8192 bytes 0        btree       
+    DDL: CREATE INDEX pbx_communication_date_sent_idx ON ave.pbx_communication USING btree (date_sent)
+  ave                  pbx_communication_type    pbx_communication_type_name_idx     16 kB      0        btree       
+    DDL: CREATE INDEX pbx_communication_type_name_idx ON ave.pbx_communication_type USING btree (name)
+  ave                  pbx_context               pbx_context_context_name_idx        16 kB      0        btree       
+    DDL: CREATE INDEX pbx_context_context_name_idx ON ave.pbx_context USING btree (context_name)
+  ave                  pbx_log_type              pbx_log_type_name_idx               16 kB      0        btree       
+    DDL: CREATE INDEX pbx_log_type_name_idx ON ave.pbx_log_type USING btree (name)
+  ave                  pbx_request_status        pbx_request_status_name_idx         16 kB      0        btree       
+    DDL: CREATE INDEX pbx_request_status_name_idx ON ave.pbx_request_status USING btree (name)
+  ave                  pbx_request_type          pbx_request_type_name_idx           16 kB      0        btree       
+    DDL: CREATE INDEX pbx_request_type_name_idx ON ave.pbx_request_type USING btree (name)
+  ave                  pbx_scriptrunner_endpoint pbx_scriptrunner_endpoint_name_idx  16 kB      0        btree       
+    DDL: CREATE INDEX pbx_scriptrunner_endpoint_name_idx ON ave.pbx_scriptrunner_endpoint USING btree (name)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No large unused indexes found.
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY ave."newtable_id_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."newtable_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_scripts_id_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_scripts_isactive_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_scripts_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_step_types_isactive_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_step_types_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_step_types_id_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_audiosocket_endpoint_endpoint_port_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_audiosocket_endpoint_endpoint_ip_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_ave_ivrmenu_id_script_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_ave_request_agent_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_ave_request_caller_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_ave_request_requested_time_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_ave_request_cli_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_communication_date_sent_idx"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY ave."pbx_communication_type_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_context_context_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_log_type_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_request_status_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_request_type_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_scriptrunner_endpoint_name_idx"; -- size: 16 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  ave                    53         1136 kB         22             
+  public                 0          0 bytes         0              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: ave
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         2
+  Unused indexes (0 scans):                22
+  Large unused (>1MB):                     0
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   22
+────────────────────────────────────────────────────────────

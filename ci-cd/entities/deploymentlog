@@ -1,0 +1,56 @@
+{
+  "name": "DeploymentLog",
+  "type": "object",
+  "properties": {
+    "change_request_id": {
+      "type": "string"
+    },
+    "change_request_title": {
+      "type": "string"
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "local",
+        "staging",
+        "production"
+      ]
+    },
+    "action": {
+      "type": "string",
+      "enum": [
+        "test",
+        "deploy",
+        "approve",
+        "reject",
+        "rollback"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "failed",
+        "pending"
+      ]
+    },
+    "performed_by": {
+      "type": "string"
+    },
+    "log_output": {
+      "type": "string"
+    },
+    "duration_ms": {
+      "type": "number"
+    },
+    "db_type": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "change_request_id",
+    "environment",
+    "action",
+    "status"
+  ]
+}

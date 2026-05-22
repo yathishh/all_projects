@@ -1,0 +1,63 @@
+{
+  "name": "AuditLog",
+  "type": "object",
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "project_created",
+        "project_updated",
+        "project_deleted",
+        "migration_started",
+        "migration_completed",
+        "migration_failed",
+        "backup_started",
+        "backup_completed",
+        "backup_failed",
+        "restore_started",
+        "restore_completed",
+        "restore_failed",
+        "storage_added",
+        "connection_tested",
+        "user_action",
+        "schedule_triggered",
+        "alert_fired"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "error",
+        "critical"
+      ],
+      "default": "info"
+    },
+    "resource_type": {
+      "type": "string"
+    },
+    "resource_id": {
+      "type": "string"
+    },
+    "resource_name": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "details": {
+      "type": "string"
+    },
+    "user_email": {
+      "type": "string"
+    },
+    "ip_address": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_type",
+    "message"
+  ]
+}

@@ -1,0 +1,86 @@
+============================================================
+  DATABASE : single_telephony
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:15:13 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (3 found)
+────────────────────────────────────────────────────────────
+  • asterisk
+  • caams
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (5 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  asterisk             telephony                 idx_telephony_label                 16 kB      0        btree       
+    DDL: CREATE INDEX idx_telephony_label ON asterisk.telephony USING btree (label)
+  asterisk             user_queues               idx_user_queues_queue_id            16 kB      0        btree       
+    DDL: CREATE INDEX idx_user_queues_queue_id ON asterisk.user_queues USING btree (queue_id)
+  asterisk             users                     idx_users_username                  16 kB      0        btree       
+    DDL: CREATE INDEX idx_users_username ON asterisk.users USING btree (username)
+  caams                client_properties         idx_client_id                       16 kB      0        btree       
+    DDL: CREATE INDEX idx_client_id ON caams.client_properties USING btree (client_id)
+  caams                discovery_config          idx_default_client_id               16 kB      0        btree       
+    DDL: CREATE INDEX idx_default_client_id ON caams.discovery_config USING btree (default_client_id)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No large unused indexes found.
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  asterisk           telephony              idx_telephony_label            telephony_label_site_id_key    16 kB     
+    Redundant DDL : CREATE INDEX idx_telephony_label ON asterisk.telephony USING btree (label)
+    Covering  DDL : CREATE UNIQUE INDEX telephony_label_site_id_key ON asterisk.telephony USING btree (label, site_id)
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  INDEX                          DUPLICATE OF                   SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  asterisk           users                  users_username_key             idx_users_username             16 kB     
+    Index 1 DDL : CREATE UNIQUE INDEX users_username_key ON asterisk.users USING btree (username)
+    Index 2 DDL : CREATE INDEX idx_users_username ON asterisk.users USING btree (username)
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY asterisk."idx_telephony_label"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY asterisk."idx_user_queues_queue_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY asterisk."idx_users_username"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY caams."idx_client_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY caams."idx_default_client_id"; -- size: 16 kB
+
+  -- Duplicate indexes (keep one, drop the other):
+  DROP INDEX CONCURRENTLY asterisk."users_username_key"; -- duplicate of idx_users_username, size: 16 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  asterisk               22         344 kB          3              
+  caams                  9          128 kB          2              
+  public                 0          0 bytes         0              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: single_telephony
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         3
+  Unused indexes (0 scans):                5
+  Large unused (>1MB):                     0
+  Redundant/overlap indexes:               1
+  Exact duplicate indexes:                 1
+  Total drop candidates:                   6
+────────────────────────────────────────────────────────────

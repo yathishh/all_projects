@@ -1,0 +1,29 @@
+- name: Ensure Certbot and DNS plugin installed
+  apt:
+    name:
+      - certbot
+      - python3-certbot-dns-route53
+    state: present
+    update_cache: yes
+
+- name: Install credentials file
+  template:
+    src: credentials.ini.j2
+    dest: /etc/letsencrypt/credentials.ini
+    mode: "0600"
+
+- name: Request/renew certificates
+  command: >
+    certbot certonly
+    --dns-route53
+    --non-interactive
+    --agree-tos
+    --email {{ letsencrypt_email }}
+    -d {{ letsencrypt_domain }}
+    --dns-route53-propagation-seconds 30
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ aws_access_key }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key }}"
+    AWS_DEFAULT_REGION: "{{ aws_region }}"
+  register: certbot_result
+  changed_when: "'Congratulations' in certbot_result.stdout"

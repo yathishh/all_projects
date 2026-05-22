@@ -1,0 +1,54 @@
+============================================================
+  DATABASE : references
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:55:29 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No unused indexes found.
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No large unused indexes found.
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  ✓ No drop candidates identified.
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 2          144 kB          0              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: references
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                0
+  Large unused (>1MB):                     0
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   0
+────────────────────────────────────────────────────────────

@@ -1,0 +1,113 @@
+============================================================
+  DATABASE : contact
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:09:57 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (16 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               calls                     idx_calls_uuid                      10032 kB   0        btree       
+    DDL: CREATE INDEX idx_calls_uuid ON public.calls USING btree (contacts_id, uuid)
+  public               calls                     idx_calls_groups_id                 2136 kB    0        btree       
+    DDL: CREATE INDEX idx_calls_groups_id ON public.calls USING btree (groups_id)
+  public               contacts                  idx_contacts_surname                344 kB     0        btree       
+    DDL: CREATE INDEX idx_contacts_surname ON public.contacts USING btree (surname)
+  public               contacts                  idx_contacts_forename               272 kB     0        btree       
+    DDL: CREATE INDEX idx_contacts_forename ON public.contacts USING btree (forename)
+  public               contacts_details          idx_contacts_id                     16 kB      0        btree       
+    DDL: CREATE INDEX idx_contacts_id ON public.contacts_details USING btree (contacts_id)
+  public               diary                     idx_diary_groups_id                 880 kB     0        btree       
+    DDL: CREATE INDEX idx_diary_groups_id ON public.diary USING btree (groups_id)
+  public               diary_log                 idx_diary_log_groups_id             872 kB     0        btree       
+    DDL: CREATE INDEX idx_diary_log_groups_id ON public.diary_log USING btree (groups_id, log_type)
+  public               diary_slots               idx_diary_slots_groups_id           16 kB      0        btree       
+    DDL: CREATE INDEX idx_diary_slots_groups_id ON public.diary_slots USING btree (groups_id)
+  public               groups                    idx_groups_client_id_name           88 kB      0        btree       
+    DDL: CREATE INDEX idx_groups_client_id_name ON public.groups USING btree (clients_id, name)
+  public               messages                  idx_messages_added                  72 kB      0        btree       
+    DDL: CREATE INDEX idx_messages_added ON public.messages USING btree (added)
+  public               messages                  idx_messages_groups_id              40 kB      0        btree       
+    DDL: CREATE INDEX idx_messages_groups_id ON public.messages USING btree (groups_id)
+  public               messages                  idx_messages_contacts_id            40 kB      0        btree       
+    DDL: CREATE INDEX idx_messages_contacts_id ON public.messages USING btree (contacts_id)
+  public               messages                  idx_messages_state                  32 kB      0        btree       
+    DDL: CREATE INDEX idx_messages_state ON public.messages USING btree (mstate) WHERE (((mstate)::text = 'New'::text) OR ((mstate)::text = 'Open'::text))
+  public               notes                     idx_notes                           16 kB      0        btree       
+    DDL: CREATE INDEX idx_notes ON public.notes USING btree (notes_group, notes_pk)
+  public               rotas                     idx_rotas_contacts_id               77 MB      0        btree       
+    DDL: CREATE INDEX idx_rotas_contacts_id ON public.rotas USING btree (contacts_id)
+  public               rotas                     idx_rotas_groups_id                 65 MB      0        btree       
+    DDL: CREATE INDEX idx_rotas_groups_id ON public.rotas USING btree (groups_id)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (4 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  public               rotas                     idx_rotas_contacts_id               77 MB        0       
+    DDL: CREATE INDEX idx_rotas_contacts_id ON public.rotas USING btree (contacts_id)
+  public               rotas                     idx_rotas_groups_id                 65 MB        0       
+    DDL: CREATE INDEX idx_rotas_groups_id ON public.rotas USING btree (groups_id)
+  public               calls                     idx_calls_uuid                      10032 kB     0       
+    DDL: CREATE INDEX idx_calls_uuid ON public.calls USING btree (contacts_id, uuid)
+  public               calls                     idx_calls_groups_id                 2136 kB      0       
+    DDL: CREATE INDEX idx_calls_groups_id ON public.calls USING btree (groups_id)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_calls_uuid"; -- size: 10032 kB
+  DROP INDEX CONCURRENTLY public."idx_calls_groups_id"; -- size: 2136 kB
+  DROP INDEX CONCURRENTLY public."idx_contacts_surname"; -- size: 344 kB
+  DROP INDEX CONCURRENTLY public."idx_contacts_forename"; -- size: 272 kB
+  DROP INDEX CONCURRENTLY public."idx_contacts_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_diary_groups_id"; -- size: 880 kB
+  DROP INDEX CONCURRENTLY public."idx_diary_log_groups_id"; -- size: 872 kB
+  DROP INDEX CONCURRENTLY public."idx_diary_slots_groups_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_groups_client_id_name"; -- size: 88 kB
+  DROP INDEX CONCURRENTLY public."idx_messages_added"; -- size: 72 kB
+  DROP INDEX CONCURRENTLY public."idx_messages_groups_id"; -- size: 40 kB
+  DROP INDEX CONCURRENTLY public."idx_messages_contacts_id"; -- size: 40 kB
+  DROP INDEX CONCURRENTLY public."idx_messages_state"; -- size: 32 kB
+  DROP INDEX CONCURRENTLY public."idx_notes"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_rotas_contacts_id"; -- size: 77 MB
+  DROP INDEX CONCURRENTLY public."idx_rotas_groups_id"; -- size: 65 MB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 45         486 MB          16             
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: contact
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                16
+  Large unused (>1MB):                     4
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   16
+────────────────────────────────────────────────────────────

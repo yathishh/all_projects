@@ -1,0 +1,102 @@
+============================================================
+  DATABASE : caams
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:08:16 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (3 found)
+────────────────────────────────────────────────────────────
+  • champs
+  • public
+  • smdr
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (9 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               members                   idx_members                         88 kB      0        btree       
+    DDL: CREATE INDEX idx_members ON public.members USING btree (username)
+  public               members_log               idx_members_log_added               123 MB     0        btree       
+    DDL: CREATE INDEX idx_members_log_added ON public.members_log USING btree (added)
+  public               members_log               idx_members_log                     22 MB      0        btree       
+    DDL: CREATE INDEX idx_members_log ON public.members_log USING btree (ext)
+  public               messages                  idx_messages_pending                8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_messages_pending ON public.messages USING btree (pending) WHERE (pending IS TRUE)
+  public               news                      idx_news_pending                    8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_news_pending ON public.news USING btree (pending) WHERE (pending IS TRUE)
+  public               snapshots                 idx_snapshots_type                  16 kB      0        btree       
+    DDL: CREATE INDEX idx_snapshots_type ON public.snapshots USING btree (host, type)
+  smdr                 calls                     idx_account_code                    532 MB     0        btree       
+    DDL: CREATE INDEX idx_account_code ON smdr.calls USING btree (account_code)
+  smdr                 calls                     idx_ext                             107 MB     0        btree       
+    DDL: CREATE INDEX idx_ext ON smdr.calls USING btree (ext)
+  smdr                 calls                     idx_call_type                       106 MB     0        btree       
+    DDL: CREATE INDEX idx_call_type ON smdr.calls USING btree (call_type)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (5 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  smdr                 calls                     idx_account_code                    532 MB       0       
+    DDL: CREATE INDEX idx_account_code ON smdr.calls USING btree (account_code)
+  public               members_log               idx_members_log_added               123 MB       0       
+    DDL: CREATE INDEX idx_members_log_added ON public.members_log USING btree (added)
+  smdr                 calls                     idx_ext                             107 MB       0       
+    DDL: CREATE INDEX idx_ext ON smdr.calls USING btree (ext)
+  smdr                 calls                     idx_call_type                       106 MB       0       
+    DDL: CREATE INDEX idx_call_type ON smdr.calls USING btree (call_type)
+  public               members_log               idx_members_log                     22 MB        0       
+    DDL: CREATE INDEX idx_members_log ON public.members_log USING btree (ext)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  public             members                idx_members                    idx_members_username           88 kB     
+    Redundant DDL : CREATE INDEX idx_members ON public.members USING btree (username)
+    Covering  DDL : CREATE UNIQUE INDEX idx_members_username ON public.members USING btree (username, active) WHERE (active = 'Y'::bpchar)
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_members"; -- size: 88 kB
+  DROP INDEX CONCURRENTLY public."idx_members_log_added"; -- size: 123 MB
+  DROP INDEX CONCURRENTLY public."idx_members_log"; -- size: 22 MB
+  DROP INDEX CONCURRENTLY public."idx_messages_pending"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_news_pending"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_snapshots_type"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY smdr."idx_account_code"; -- size: 532 MB
+  DROP INDEX CONCURRENTLY smdr."idx_ext"; -- size: 107 MB
+  DROP INDEX CONCURRENTLY smdr."idx_call_type"; -- size: 106 MB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  champs                 2          6096 kB         0              
+  public                 19         298 MB          6              
+  smdr                   7          1556 MB         3              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: caams
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         3
+  Unused indexes (0 scans):                9
+  Large unused (>1MB):                     5
+  Redundant/overlap indexes:               1
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   9
+────────────────────────────────────────────────────────────

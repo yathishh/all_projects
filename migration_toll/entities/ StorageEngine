@@ -1,0 +1,82 @@
+{
+  "name": "StorageEngine",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "engine_type": {
+      "type": "string",
+      "enum": [
+        "local_disk",
+        "aws_s3",
+        "azure_blob",
+        "gcs",
+        "nfs",
+        "sftp",
+        "ftp",
+        "minio",
+        "wasabi",
+        "backblaze",
+        "ceph"
+      ]
+    },
+    "display_name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "endpoint_url": {
+      "type": "string"
+    },
+    "bucket_or_container": {
+      "type": "string"
+    },
+    "region": {
+      "type": "string"
+    },
+    "access_key": {
+      "type": "string"
+    },
+    "secret_key": {
+      "type": "string"
+    },
+    "base_path": {
+      "type": "string"
+    },
+    "max_storage_gb": {
+      "type": "number",
+      "default": 0
+    },
+    "used_storage_gb": {
+      "type": "number",
+      "default": 0
+    },
+    "is_default": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "connection_status": {
+      "type": "string",
+      "enum": [
+        "connected",
+        "disconnected",
+        "error",
+        "unchecked"
+      ],
+      "default": "unchecked"
+    },
+    "extra_config": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "engine_type"
+  ]
+}

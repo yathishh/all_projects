@@ -1,0 +1,443 @@
+============================================================
+  DATABASE : virtualoffice
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:57:11 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (26 found)
+────────────────────────────────────────────────────────────
+  • api
+  • asterisk
+  • ave
+  • callback
+  • calllogic
+  • calllogic_test
+  • champs
+  • etop
+  • feedback
+  • geodata
+  • logger
+  • logger_ifl
+  • messaging
+  • minion
+  • mitel
+  • paxton
+  • public
+  • quicksight
+  • quicksight_clients
+  • reporting
+  • router
+  • signup
+  • smdr
+  • staging_router
+  • wallboard
+  • wallboard2
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (80 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  api                  activities                idx_activities_companies_id         8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_activities_companies_id ON api.activities USING btree (companies_id)
+  api                  addresses                 idx_addresses_locations_id          168 kB     0        btree       
+    DDL: CREATE INDEX idx_addresses_locations_id ON api.addresses USING btree (locations_id)
+  api                  addresses                 idx_addresses_country               168 kB     0        btree       
+    DDL: CREATE INDEX idx_addresses_country ON api.addresses USING btree (country)
+  api                  audit_log                 idx_audit_log_tbl                   50 MB      0        btree       
+    DDL: CREATE INDEX idx_audit_log_tbl ON api.audit_log USING btree (tbl, pk_value)
+  api                  broadcasts                idx_broadcasts_companies_id         16 kB      0        btree       
+    DDL: CREATE INDEX idx_broadcasts_companies_id ON api.broadcasts USING btree (companies_id)
+  api                  calls                     idx_calls_companies_id              16 kB      0        btree       
+    DDL: CREATE INDEX idx_calls_companies_id ON api.calls USING btree (companies_id, call_id)
+  api                  communications            idx_communications_method           504 kB     0        btree       
+    DDL: CREATE INDEX idx_communications_method ON api.communications USING btree (method)
+  api                  communications            idx_communications_kind             496 kB     0        btree       
+    DDL: CREATE INDEX idx_communications_kind ON api.communications USING btree (kind)
+  api                  companies                 idx_companies_full_name             704 kB     0        btree       
+    DDL: CREATE INDEX idx_companies_full_name ON api.companies USING btree (full_name)
+  api                  companies                 companies_idx_billing_address_id    616 kB     0        btree       
+    DDL: CREATE INDEX companies_idx_billing_address_id ON api.companies USING btree (billing_address_id)
+  api                  companies                 idx_companies_status                152 kB     0        btree       
+    DDL: CREATE INDEX idx_companies_status ON api.companies USING btree (status)
+  api                  feedback                  idx_feedback_pending                16 kB      0        btree       
+    DDL: CREATE INDEX idx_feedback_pending ON api.feedback USING btree (pending) WHERE (pending IS TRUE)
+  api                  forgot_details            idx_forgot_details_users_ir         96 kB      0        btree       
+    DDL: CREATE INDEX idx_forgot_details_users_ir ON api.forgot_details USING btree (users_id)
+  api                  labels                    idx_labels_people_id                8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_labels_people_id ON api.labels USING btree (people_id)
+  api                  logs                      idx_logs_users_id                   16 kB      0        btree       
+    DDL: CREATE INDEX idx_logs_users_id ON api.logs USING btree (users_id)
+  api                  message_contents          idx_message_contents_call_ref       160 MB     0        btree       
+    DDL: CREATE INDEX idx_message_contents_call_ref ON api.message_contents USING btree (call_ref)
+  api                  message_contents_pending  idx_message_contents_pending_availabilities_id 74 MB      0        btree       
+    DDL: CREATE INDEX idx_message_contents_pending_availabilities_id ON api.message_contents_pending USING btree (availabilities_id)
+  api                  message_contents_pending  idx_message_contents_pending_pending 53 MB      0        btree       
+    DDL: CREATE INDEX idx_message_contents_pending_pending ON api.message_contents_pending USING btree (pending) WHERE (pending IS TRUE)
+  api                  messages                  idx_messages_notifed                166 MB     0        btree       
+    DDL: CREATE INDEX idx_messages_notifed ON api.messages USING btree (notified) WHERE (notified IS FALSE)
+  api                  messages                  idx_messages_forwarded_by           166 MB     0        btree       
+    DDL: CREATE INDEX idx_messages_forwarded_by ON api.messages USING btree (forwarded_by)
+  api                  notes                     idx_notes_verified                  48 kB      0        btree       
+    DDL: CREATE INDEX idx_notes_verified ON api.notes USING btree (verified) WHERE (verified IS FALSE)
+  api                  people                    idx_person_addresses_id             240 kB     0        btree       
+    DDL: CREATE INDEX idx_person_addresses_id ON api.people USING btree (addresses_id)
+  api                  people_have_addresses     people_have_addresses_people_id_addresses_id 8192 bytes 0        btree       
+    DDL: CREATE INDEX people_have_addresses_people_id_addresses_id ON api.people_have_addresses USING btree (people_id, addresses_id)
+  api                  rota_options              idx_rota_options_rota_owner_id      8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_rota_options_rota_owner_id ON api.rota_options USING btree (rota_owner_id)
+  api                  rota_types                idx_rota_types_name                 16 kB      0        btree       
+    DDL: CREATE INDEX idx_rota_types_name ON api.rota_types USING btree (name)
+  api                  rotas                     idx_rotas_availabilities_id         16 kB      0        btree       
+    DDL: CREATE INDEX idx_rotas_availabilities_id ON api.rotas USING btree (availabilities_id)
+  api                  tokens                    idx_tokens_users_id                 16 kB      0        btree       
+    DDL: CREATE INDEX idx_tokens_users_id ON api.tokens USING btree (users_id)
+  api                  trial_numbers             idx_trial_numbers_area_codes_id     16 kB      0        btree       
+    DDL: CREATE INDEX idx_trial_numbers_area_codes_id ON api.trial_numbers USING btree (area_codes_id)
+  api                  trials                    idx_trials_companies_id             16 kB      0        btree       
+    DDL: CREATE INDEX idx_trials_companies_id ON api.trials USING btree (companies_id)
+  api                  vips                      idx_vips_addresses_id               32 kB      0        btree       
+    DDL: CREATE INDEX idx_vips_addresses_id ON api.vips USING btree (addresses_id)
+  ave                  ave_models                newtable_name_idx                   16 kB      0        btree       
+    DDL: CREATE INDEX newtable_name_idx ON ave.ave_models USING btree (name)
+  ave                  ave_models                newtable_id_idx                     16 kB      0        btree       
+    DDL: CREATE INDEX newtable_id_idx ON ave.ave_models USING btree (id)
+  ave                  ave_scripts               ave_scripts_name_idx                16 kB      0        btree       
+    DDL: CREATE INDEX ave_scripts_name_idx ON ave.ave_scripts USING btree (name)
+  ave                  ave_scripts               ave_scripts_isactive_idx            16 kB      0        btree       
+    DDL: CREATE INDEX ave_scripts_isactive_idx ON ave.ave_scripts USING btree (isactive)
+  ave                  ave_scripts               ave_scripts_id_idx                  16 kB      0        btree       
+    DDL: CREATE INDEX ave_scripts_id_idx ON ave.ave_scripts USING btree (id)
+  ave                  ave_step_types            ave_step_types_name_idx             16 kB      0        btree       
+    DDL: CREATE INDEX ave_step_types_name_idx ON ave.ave_step_types USING btree (name)
+  ave                  ave_step_types            ave_step_types_isactive_idx         16 kB      0        btree       
+    DDL: CREATE INDEX ave_step_types_isactive_idx ON ave.ave_step_types USING btree (isactive)
+  ave                  ave_step_types            ave_step_types_id_idx               16 kB      0        btree       
+    DDL: CREATE INDEX ave_step_types_id_idx ON ave.ave_step_types USING btree (id)
+  ave                  pbx_audiosocket_endpoint  pbx_audiosocket_endpoint_endpoint_port_idx 16 kB      0        btree       
+    DDL: CREATE INDEX pbx_audiosocket_endpoint_endpoint_port_idx ON ave.pbx_audiosocket_endpoint USING btree (endpoint_port)
+  ave                  pbx_audiosocket_endpoint  pbx_audiosocket_endpoint_endpoint_ip_idx 16 kB      0        btree       
+    DDL: CREATE INDEX pbx_audiosocket_endpoint_endpoint_ip_idx ON ave.pbx_audiosocket_endpoint USING btree (endpoint_ip)
+  ave                  pbx_ave_ivrmenu           pbx_ave_ivrmenu_id_script_idx       16 kB      0        btree       
+    DDL: CREATE INDEX pbx_ave_ivrmenu_id_script_idx ON ave.pbx_ave_ivrmenu USING btree (id_script)
+  ave                  pbx_ave_request           pbx_ave_request_caller_name_idx     16 kB      0        btree       
+    DDL: CREATE INDEX pbx_ave_request_caller_name_idx ON ave.pbx_ave_request USING btree (caller_name)
+  ave                  pbx_ave_request           pbx_ave_request_requested_time_idx  16 kB      0        btree       
+    DDL: CREATE INDEX pbx_ave_request_requested_time_idx ON ave.pbx_ave_request USING btree (requested_time)
+  ave                  pbx_ave_request           pbx_ave_request_agent_idx           16 kB      0        btree       
+    DDL: CREATE INDEX pbx_ave_request_agent_idx ON ave.pbx_ave_request USING btree (agent)
+  ave                  pbx_ave_request           pbx_ave_request_cli_idx             16 kB      0        btree       
+    DDL: CREATE INDEX pbx_ave_request_cli_idx ON ave.pbx_ave_request USING btree (cli)
+  ave                  pbx_communication         pbx_communication_date_sent_idx     8192 bytes 0        btree       
+    DDL: CREATE INDEX pbx_communication_date_sent_idx ON ave.pbx_communication USING btree (date_sent)
+  ave                  pbx_communication_type    pbx_communication_type_name_idx     16 kB      0        btree       
+    DDL: CREATE INDEX pbx_communication_type_name_idx ON ave.pbx_communication_type USING btree (name)
+  ave                  pbx_context               pbx_context_context_name_idx        16 kB      0        btree       
+    DDL: CREATE INDEX pbx_context_context_name_idx ON ave.pbx_context USING btree (context_name)
+  ave                  pbx_log_type              pbx_log_type_name_idx               16 kB      0        btree       
+    DDL: CREATE INDEX pbx_log_type_name_idx ON ave.pbx_log_type USING btree (name)
+  ave                  pbx_request_status        pbx_request_status_name_idx         16 kB      0        btree       
+    DDL: CREATE INDEX pbx_request_status_name_idx ON ave.pbx_request_status USING btree (name)
+  ave                  pbx_request_type          pbx_request_type_name_idx           16 kB      0        btree       
+    DDL: CREATE INDEX pbx_request_type_name_idx ON ave.pbx_request_type USING btree (name)
+  ave                  pbx_scriptrunner_endpoint pbx_scriptrunner_endpoint_name_idx  16 kB      0        btree       
+    DDL: CREATE INDEX pbx_scriptrunner_endpoint_name_idx ON ave.pbx_scriptrunner_endpoint USING btree (name)
+  calllogic            cdr                       idx_accountcode                     8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_accountcode ON calllogic.cdr USING btree (accountcode)
+  calllogic            cdr                       idx_starttime                       8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_starttime ON calllogic.cdr USING btree (starttime)
+  calllogic            cdr                       idx_ddi                             8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_ddi ON calllogic.cdr USING btree (ddi)
+  champs               pop_history               idx_pop_history_company_time        705 MB     0        btree       
+    DDL: CREATE INDEX idx_pop_history_company_time ON champs.pop_history USING btree (company, time_of_pop)
+  champs               pop_history               idx_pop_id                          427 MB     0        btree       
+    DDL: CREATE INDEX idx_pop_id ON champs.pop_history USING btree (pop_id DESC NULLS LAST)
+  etop                 jobs                      idx_25914573_jobs_queue_reserved_at_index 8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_25914573_jobs_queue_reserved_at_index ON etop.jobs USING btree (queue, reserved_at)
+  logger               agent_status              idx_type                            304 MB     0        btree       
+    DDL: CREATE INDEX idx_type ON logger.agent_status USING btree (type NULLS FIRST)
+  logger               app_activity              idx_event_time                      1151 MB    0        btree       
+    DDL: CREATE INDEX idx_event_time ON logger.app_activity USING btree (event_time)
+  logger               app_activity              idx_request_callid                  374 MB     0        btree       
+    DDL: CREATE INDEX idx_request_callid ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'callId'::text)))
+  logger               app_activity              idx_request_destinationdevice       359 MB     0        btree       
+    DDL: CREATE INDEX idx_request_destinationdevice ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'destinationDevice'::text)))
+  logger               app_activity              idx_request_extension               358 MB     0        btree       
+    DDL: CREATE INDEX idx_request_extension ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'extension'::text)))
+  logger               cdr                       idx_direction_starttime             1083 MB    0        btree       
+    DDL: CREATE INDEX idx_direction_starttime ON logger.cdr USING btree (direction, starttime)
+  logger               cdr                       idx_direction_endtime               1075 MB    0        btree       
+    DDL: CREATE INDEX idx_direction_endtime ON logger.cdr USING btree (direction, endtime)
+  logger               cdr                       idx_accountcode                     482 MB     0        btree       
+    DDL: CREATE INDEX idx_accountcode ON logger.cdr USING btree (accountcode)
+  logger               cdr                       idx_device                          185 MB     0        btree       
+    DDL: CREATE INDEX idx_device ON logger.cdr USING btree (device)
+  logger               cdr_messages              idx_cdr_messages_uuid               296 MB     0        btree       
+    DDL: CREATE INDEX idx_cdr_messages_uuid ON logger.cdr_messages USING btree (uuid)
+  logger               cdr_messages              idx_cdr_messages_added              119 MB     0        btree       
+    DDL: CREATE INDEX idx_cdr_messages_added ON logger.cdr_messages USING btree (added)
+  logger               cdr_report_mv             idx_cdr_mv_company_starttime        312 MB     0        btree       
+    DDL: CREATE INDEX idx_cdr_mv_company_starttime ON logger.cdr_report_mv USING btree (company, starttime)
+  logger               cdr_report_mv             idx_cdr_mv_direction_starttime      302 MB     0        btree       
+    DDL: CREATE INDEX idx_cdr_mv_direction_starttime ON logger.cdr_report_mv USING btree (direction, starttime)
+  logger               cdr_report_mv             idx_cdr_mv_agentname_starttime      295 MB     0        btree       
+    DDL: CREATE INDEX idx_cdr_mv_agentname_starttime ON logger.cdr_report_mv USING btree (agentname, starttime)
+  logger               cdr_report_mv             idx_cdr_mv_site_starttime           249 MB     0        btree       
+    DDL: CREATE INDEX idx_cdr_mv_site_starttime ON logger.cdr_report_mv USING btree (site, starttime)
+  logger               cdr_segments              idx_cdr_segments_eventtime_state_huntgroup 2894 MB    0        btree       
+    DDL: CREATE INDEX idx_cdr_segments_eventtime_state_huntgroup ON logger.cdr_segments USING btree (eventtime, state, huntgroup)
+  logger               cdr_segments              eventtime_idx                       1459 MB    0        btree       
+    DDL: CREATE INDEX eventtime_idx ON logger.cdr_segments USING btree (eventtime DESC NULLS LAST)
+  logger               dcdr                      idx_dcdr_recent_valid               375 MB     0        btree       
+    DDL: CREATE INDEX idx_dcdr_recent_valid ON logger.dcdr USING btree (starttime) WHERE ((device)::text <> ALL ((ARRAY['2803'::character varying, '2703'::character varying])::text[]))
+  logger               dcdr                      idx_dcdr_metadata                   101 MB     0        gin         
+    DDL: CREATE INDEX idx_dcdr_metadata ON logger.dcdr USING gin (metadata)
+  logger               dcdr_feedback             idx_dcdr_feedback_id                936 kB     0        btree       
+    DDL: CREATE INDEX idx_dcdr_feedback_id ON logger.dcdr_feedback USING btree (id)
+  logger               fdw_message_all           idx_fdw_msg_all_uuid                62 MB      0        btree       
+    DDL: CREATE INDEX idx_fdw_msg_all_uuid ON logger.fdw_message_all USING btree (uuid) WITH (deduplicate_items='true')
+  router               destinations              idx_destinations_name               16 kB      0        btree       
+    DDL: CREATE INDEX idx_destinations_name ON router.destinations USING btree (display_order)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (28 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  logger               cdr_segments              idx_cdr_segments_eventtime_state_huntgroup 2894 MB      0       
+    DDL: CREATE INDEX idx_cdr_segments_eventtime_state_huntgroup ON logger.cdr_segments USING btree (eventtime, state, huntgroup)
+  logger               cdr_segments              eventtime_idx                       1459 MB      0       
+    DDL: CREATE INDEX eventtime_idx ON logger.cdr_segments USING btree (eventtime DESC NULLS LAST)
+  logger               app_activity              idx_event_time                      1151 MB      0       
+    DDL: CREATE INDEX idx_event_time ON logger.app_activity USING btree (event_time)
+  logger               cdr                       idx_direction_starttime             1083 MB      0       
+    DDL: CREATE INDEX idx_direction_starttime ON logger.cdr USING btree (direction, starttime)
+  logger               cdr                       idx_direction_endtime               1075 MB      0       
+    DDL: CREATE INDEX idx_direction_endtime ON logger.cdr USING btree (direction, endtime)
+  champs               pop_history               idx_pop_history_company_time        705 MB       0       
+    DDL: CREATE INDEX idx_pop_history_company_time ON champs.pop_history USING btree (company, time_of_pop)
+  logger               cdr                       idx_accountcode                     482 MB       0       
+    DDL: CREATE INDEX idx_accountcode ON logger.cdr USING btree (accountcode)
+  champs               pop_history               idx_pop_id                          427 MB       0       
+    DDL: CREATE INDEX idx_pop_id ON champs.pop_history USING btree (pop_id DESC NULLS LAST)
+  logger               dcdr                      idx_dcdr_recent_valid               375 MB       0       
+    DDL: CREATE INDEX idx_dcdr_recent_valid ON logger.dcdr USING btree (starttime) WHERE ((device)::text <> ALL ((ARRAY['2803'::character varying, '2703'::character varying])::text[]))
+  logger               app_activity              idx_request_callid                  374 MB       0       
+    DDL: CREATE INDEX idx_request_callid ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'callId'::text)))
+  logger               app_activity              idx_request_destinationdevice       359 MB       0       
+    DDL: CREATE INDEX idx_request_destinationdevice ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'destinationDevice'::text)))
+  logger               app_activity              idx_request_extension               358 MB       0       
+    DDL: CREATE INDEX idx_request_extension ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'extension'::text)))
+  logger               cdr_report_mv             idx_cdr_mv_company_starttime        312 MB       0       
+    DDL: CREATE INDEX idx_cdr_mv_company_starttime ON logger.cdr_report_mv USING btree (company, starttime)
+  logger               agent_status              idx_type                            304 MB       0       
+    DDL: CREATE INDEX idx_type ON logger.agent_status USING btree (type NULLS FIRST)
+  logger               cdr_report_mv             idx_cdr_mv_direction_starttime      302 MB       0       
+    DDL: CREATE INDEX idx_cdr_mv_direction_starttime ON logger.cdr_report_mv USING btree (direction, starttime)
+  logger               cdr_messages              idx_cdr_messages_uuid               296 MB       0       
+    DDL: CREATE INDEX idx_cdr_messages_uuid ON logger.cdr_messages USING btree (uuid)
+  logger               cdr_report_mv             idx_cdr_mv_agentname_starttime      295 MB       0       
+    DDL: CREATE INDEX idx_cdr_mv_agentname_starttime ON logger.cdr_report_mv USING btree (agentname, starttime)
+  logger               cdr_report_mv             idx_cdr_mv_site_starttime           249 MB       0       
+    DDL: CREATE INDEX idx_cdr_mv_site_starttime ON logger.cdr_report_mv USING btree (site, starttime)
+  logger               cdr                       idx_device                          185 MB       0       
+    DDL: CREATE INDEX idx_device ON logger.cdr USING btree (device)
+  api                  messages                  idx_messages_notifed                166 MB       0       
+    DDL: CREATE INDEX idx_messages_notifed ON api.messages USING btree (notified) WHERE (notified IS FALSE)
+  api                  messages                  idx_messages_forwarded_by           166 MB       0       
+    DDL: CREATE INDEX idx_messages_forwarded_by ON api.messages USING btree (forwarded_by)
+  api                  message_contents          idx_message_contents_call_ref       160 MB       0       
+    DDL: CREATE INDEX idx_message_contents_call_ref ON api.message_contents USING btree (call_ref)
+  logger               cdr_messages              idx_cdr_messages_added              119 MB       0       
+    DDL: CREATE INDEX idx_cdr_messages_added ON logger.cdr_messages USING btree (added)
+  logger               dcdr                      idx_dcdr_metadata                   101 MB       0       
+    DDL: CREATE INDEX idx_dcdr_metadata ON logger.dcdr USING gin (metadata)
+  api                  message_contents_pending  idx_message_contents_pending_availabilities_id 74 MB        0       
+    DDL: CREATE INDEX idx_message_contents_pending_availabilities_id ON api.message_contents_pending USING btree (availabilities_id)
+  logger               fdw_message_all           idx_fdw_msg_all_uuid                62 MB        0       
+    DDL: CREATE INDEX idx_fdw_msg_all_uuid ON logger.fdw_message_all USING btree (uuid) WITH (deduplicate_items='true')
+  api                  message_contents_pending  idx_message_contents_pending_pending 53 MB        0       
+    DDL: CREATE INDEX idx_message_contents_pending_pending ON api.message_contents_pending USING btree (pending) WHERE (pending IS TRUE)
+  api                  audit_log                 idx_audit_log_tbl                   50 MB        0       
+    DDL: CREATE INDEX idx_audit_log_tbl ON api.audit_log USING btree (tbl, pk_value)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (8 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  api                messages               idx_people_id                  idx_messages_people_status_msgcontent 186 MB    
+    Redundant DDL : CREATE INDEX idx_people_id ON api.messages USING btree (people_id) WITH (deduplicate_items='true')
+    Covering  DDL : CREATE INDEX idx_messages_people_status_msgcontent ON api.messages USING btree (people_id, status, message_contents_id)
+  api                messages               idx_people_id                  idx_messages_people_id_updated 186 MB    
+    Redundant DDL : CREATE INDEX idx_people_id ON api.messages USING btree (people_id) WITH (deduplicate_items='true')
+    Covering  DDL : CREATE INDEX idx_messages_people_id_updated ON api.messages USING btree (people_id, updated)
+  champs             pop_history            Idx_time_of_pop                idx_pop_history_time_call      397 MB    
+    Redundant DDL : CREATE INDEX "Idx_time_of_pop" ON champs.pop_history USING btree (time_of_pop DESC NULLS LAST)
+    Covering  DDL : CREATE INDEX idx_pop_history_time_call ON champs.pop_history USING btree (time_of_pop, call_id)
+  logger             cdr                    idx_direction                  idx_direction_starttime        185 MB    
+    Redundant DDL : CREATE INDEX idx_direction ON logger.cdr USING btree (direction)
+    Covering  DDL : CREATE INDEX idx_direction_starttime ON logger.cdr USING btree (direction, starttime)
+  logger             cdr                    idx_direction                  idx_direction_endtime          185 MB    
+    Redundant DDL : CREATE INDEX idx_direction ON logger.cdr USING btree (direction)
+    Covering  DDL : CREATE INDEX idx_direction_endtime ON logger.cdr USING btree (direction, endtime)
+  logger             cdr_segments           eventtime_idx                  idx_cdr_segments_eventtime_state_huntgroup 1459 MB   
+    Redundant DDL : CREATE INDEX eventtime_idx ON logger.cdr_segments USING btree (eventtime DESC NULLS LAST)
+    Covering  DDL : CREATE INDEX idx_cdr_segments_eventtime_state_huntgroup ON logger.cdr_segments USING btree (eventtime, state, huntgroup)
+  logger             dcdr                   idx_dcdr_recent_valid          idx_starttime                  375 MB    
+    Redundant DDL : CREATE INDEX idx_dcdr_recent_valid ON logger.dcdr USING btree (starttime) WHERE ((device)::text <> ALL ((ARRAY['2803'::character varying, '2703'::character varying])::text[]))
+    Covering  DDL : CREATE INDEX idx_starttime ON logger.dcdr USING btree (starttime) INCLUDE (direction) WITH (deduplicate_items='true')
+  logger             dcdr                   idx_dcdr_recent_valid          idx_dcdr_starttime_device      375 MB    
+    Redundant DDL : CREATE INDEX idx_dcdr_recent_valid ON logger.dcdr USING btree (starttime) WHERE ((device)::text <> ALL ((ARRAY['2803'::character varying, '2703'::character varying])::text[]))
+    Covering  DDL : CREATE INDEX idx_dcdr_starttime_device ON logger.dcdr USING btree (starttime, device)
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (3 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  INDEX                          DUPLICATE OF                   SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  logger             app_activity           idx_request_extension          idx_request_destinationdevice  358 MB    
+    Index 1 DDL : CREATE INDEX idx_request_extension ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'extension'::text)))
+    Index 2 DDL : CREATE INDEX idx_request_destinationdevice ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'destinationDevice'::text)))
+  logger             app_activity           idx_request_extension          idx_request_callid             358 MB    
+    Index 1 DDL : CREATE INDEX idx_request_extension ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'extension'::text)))
+    Index 2 DDL : CREATE INDEX idx_request_callid ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'callId'::text)))
+  logger             app_activity           idx_request_destinationdevice  idx_request_callid             359 MB    
+    Index 1 DDL : CREATE INDEX idx_request_destinationdevice ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'destinationDevice'::text)))
+    Index 2 DDL : CREATE INDEX idx_request_callid ON logger.app_activity USING btree (((((data ->> 'request'::text))::json ->> 'callId'::text)))
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY api."idx_activities_companies_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY api."idx_addresses_locations_id"; -- size: 168 kB
+  DROP INDEX CONCURRENTLY api."idx_addresses_country"; -- size: 168 kB
+  DROP INDEX CONCURRENTLY api."idx_audit_log_tbl"; -- size: 50 MB
+  DROP INDEX CONCURRENTLY api."idx_broadcasts_companies_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY api."idx_calls_companies_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY api."idx_communications_method"; -- size: 504 kB
+  DROP INDEX CONCURRENTLY api."idx_communications_kind"; -- size: 496 kB
+  DROP INDEX CONCURRENTLY api."idx_companies_full_name"; -- size: 704 kB
+  DROP INDEX CONCURRENTLY api."companies_idx_billing_address_id"; -- size: 616 kB
+  DROP INDEX CONCURRENTLY api."idx_companies_status"; -- size: 152 kB
+  DROP INDEX CONCURRENTLY api."idx_feedback_pending"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY api."idx_forgot_details_users_ir"; -- size: 96 kB
+  DROP INDEX CONCURRENTLY api."idx_labels_people_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY api."idx_logs_users_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY api."idx_message_contents_call_ref"; -- size: 160 MB
+  DROP INDEX CONCURRENTLY api."idx_message_contents_pending_availabilities_id"; -- size: 74 MB
+  DROP INDEX CONCURRENTLY api."idx_message_contents_pending_pending"; -- size: 53 MB
+  DROP INDEX CONCURRENTLY api."idx_messages_notifed"; -- size: 166 MB
+  DROP INDEX CONCURRENTLY api."idx_messages_forwarded_by"; -- size: 166 MB
+  DROP INDEX CONCURRENTLY api."idx_notes_verified"; -- size: 48 kB
+  DROP INDEX CONCURRENTLY api."idx_person_addresses_id"; -- size: 240 kB
+  DROP INDEX CONCURRENTLY api."people_have_addresses_people_id_addresses_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY api."idx_rota_options_rota_owner_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY api."idx_rota_types_name"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY api."idx_rotas_availabilities_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY api."idx_tokens_users_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY api."idx_trial_numbers_area_codes_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY api."idx_trials_companies_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY api."idx_vips_addresses_id"; -- size: 32 kB
+  DROP INDEX CONCURRENTLY ave."newtable_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."newtable_id_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_scripts_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_scripts_isactive_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_scripts_id_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_step_types_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_step_types_isactive_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."ave_step_types_id_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_audiosocket_endpoint_endpoint_port_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_audiosocket_endpoint_endpoint_ip_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_ave_ivrmenu_id_script_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_ave_request_caller_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_ave_request_requested_time_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_ave_request_agent_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_ave_request_cli_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_communication_date_sent_idx"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY ave."pbx_communication_type_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_context_context_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_log_type_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_request_status_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_request_type_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY ave."pbx_scriptrunner_endpoint_name_idx"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY calllogic."idx_accountcode"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY calllogic."idx_starttime"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY calllogic."idx_ddi"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY champs."idx_pop_history_company_time"; -- size: 705 MB
+  DROP INDEX CONCURRENTLY champs."idx_pop_id"; -- size: 427 MB
+  DROP INDEX CONCURRENTLY etop."idx_25914573_jobs_queue_reserved_at_index"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY logger."idx_type"; -- size: 304 MB
+  DROP INDEX CONCURRENTLY logger."idx_event_time"; -- size: 1151 MB
+  DROP INDEX CONCURRENTLY logger."idx_request_callid"; -- size: 374 MB
+  DROP INDEX CONCURRENTLY logger."idx_request_destinationdevice"; -- size: 359 MB
+  DROP INDEX CONCURRENTLY logger."idx_request_extension"; -- size: 358 MB
+  DROP INDEX CONCURRENTLY logger."idx_direction_starttime"; -- size: 1083 MB
+  DROP INDEX CONCURRENTLY logger."idx_direction_endtime"; -- size: 1075 MB
+  DROP INDEX CONCURRENTLY logger."idx_accountcode"; -- size: 482 MB
+  DROP INDEX CONCURRENTLY logger."idx_device"; -- size: 185 MB
+  DROP INDEX CONCURRENTLY logger."idx_cdr_messages_uuid"; -- size: 296 MB
+  DROP INDEX CONCURRENTLY logger."idx_cdr_messages_added"; -- size: 119 MB
+  DROP INDEX CONCURRENTLY logger."idx_cdr_mv_company_starttime"; -- size: 312 MB
+  DROP INDEX CONCURRENTLY logger."idx_cdr_mv_direction_starttime"; -- size: 302 MB
+  DROP INDEX CONCURRENTLY logger."idx_cdr_mv_agentname_starttime"; -- size: 295 MB
+  DROP INDEX CONCURRENTLY logger."idx_cdr_mv_site_starttime"; -- size: 249 MB
+  DROP INDEX CONCURRENTLY logger."idx_cdr_segments_eventtime_state_huntgroup"; -- size: 2894 MB
+  DROP INDEX CONCURRENTLY logger."eventtime_idx"; -- size: 1459 MB
+  DROP INDEX CONCURRENTLY logger."idx_dcdr_recent_valid"; -- size: 375 MB
+  DROP INDEX CONCURRENTLY logger."idx_dcdr_metadata"; -- size: 101 MB
+  DROP INDEX CONCURRENTLY logger."idx_dcdr_feedback_id"; -- size: 936 kB
+  DROP INDEX CONCURRENTLY logger."idx_fdw_msg_all_uuid"; -- size: 62 MB
+  DROP INDEX CONCURRENTLY router."idx_destinations_name"; -- size: 16 kB
+
+  -- Duplicate indexes (keep one, drop the other):
+  DROP INDEX CONCURRENTLY logger."idx_request_extension"; -- duplicate of idx_request_destinationdevice, size: 358 MB
+  DROP INDEX CONCURRENTLY logger."idx_request_extension"; -- duplicate of idx_request_callid, size: 358 MB
+  DROP INDEX CONCURRENTLY logger."idx_request_destinationdevice"; -- duplicate of idx_request_callid, size: 359 MB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  api                    140        7876 MB         30             
+  asterisk               5          64 kB           0              
+  ave                    50         776 kB          22             
+  callback               2          32 kB           0              
+  calllogic              7          56 kB           3              
+  calllogic_test         0          0 bytes         0              
+  champs                 10         4910 MB         2              
+  etop                   11         27 MB           1              
+  feedback               23         132 MB          0              
+  geodata                3          37 MB           0              
+  logger                 74         23 GB           21             
+  logger_ifl             3          857 MB          0              
+  messaging              10         128 kB          0              
+  minion                 0          0 bytes         0              
+  mitel                  4          176 kB          0              
+  paxton                 1          140 MB          0              
+  public                 6          184 kB          0              
+  quicksight             3          48 kB           0              
+  quicksight_clients     5          80 kB           0              
+  reporting              0          0 bytes         0              
+  router                 13         288 kB          1              
+  signup                 4          80 kB           0              
+  smdr                   0          0 bytes         0              
+  staging_router         10         2168 kB         0              
+  wallboard              2          32 kB           0              
+  wallboard2             3          48 kB           0              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: virtualoffice
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         26
+  Unused indexes (0 scans):                80
+  Large unused (>1MB):                     28
+  Redundant/overlap indexes:               8
+  Exact duplicate indexes:                 3
+  Total drop candidates:                   83
+────────────────────────────────────────────────────────────

@@ -1,0 +1,89 @@
+#!/bin/bash
+# =============================================================
+# Script: add_new_schema.sh
+# Purpose: Create new schema inside a DB + grant global_rw
+# Usage:   ./add_new_schema.sh <database> <schema_name>
+# Example: ./add_new_schema.sh analytics_db reports
+# =============================================================
+
+DB_HOST="172.30.19.51"
+DB_PORT="5432"
+DB_SUPERUSER="postgres"
+ROLE_NAME="global_rw"
+
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <database> <schema_name>"
+  echo "Example: $0 analytics_db reports"
+  exit 1
+fi
+
+TARGET_DB="$1"
+NEW_SCHEMA="$2"
+
+echo "======================================================"
+echo " Database : $TARGET_DB"
+echo " Schema   : $NEW_SCHEMA"
+echo "======================================================"
+
+# Step 1: Check database exists
+DB_EXISTS=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -Atc \
+  "SELECT 1 FROM pg_database WHERE datname = '$TARGET_DB';")
+
+if [ "$DB_EXISTS" != "1" ]; then
+  echo "ERROR: Database '$TARGET_DB' does not exist!"
+  exit 1
+fi
+
+# Step 2: Check schema already exists
+SCHEMA_EXISTS=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$TARGET_DB" -Atc \
+  "SELECT 1 FROM information_schema.schemata WHERE schema_name = '$NEW_SCHEMA';")
+
+if [ "$SCHEMA_EXISTS" = "1" ]; then
+  echo "WARNING: Schema '$NEW_SCHEMA' already exists. Re-applying grants only..."
+else
+  # Create the schema
+  psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$TARGET_DB" \
+    -c "CREATE SCHEMA \"$NEW_SCHEMA\";"
+  echo "✔ Schema '$NEW_SCHEMA' created."
+fi
+
+# Step 3: Apply all grants (each as separate command — avoids heredoc password issues)
+echo "-> Applying grants on schema: $NEW_SCHEMA"
+
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$TARGET_DB" \
+  -c "GRANT USAGE ON SCHEMA \"$NEW_SCHEMA\" TO $ROLE_NAME;"
+
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$TARGET_DB" \
+  -c "GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA \"$NEW_SCHEMA\" TO $ROLE_NAME;"
+
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$TARGET_DB" \
+  -c "GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA \"$NEW_SCHEMA\" TO $ROLE_NAME;"
+
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$TARGET_DB" \
+  -c "GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA \"$NEW_SCHEMA\" TO $ROLE_NAME;"
+
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$TARGET_DB" \
+  -c "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$NEW_SCHEMA\" GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO $ROLE_NAME;"
+
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$TARGET_DB" \
+  -c "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$NEW_SCHEMA\" GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO $ROLE_NAME;"
+
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$TARGET_DB" \
+  -c "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$NEW_SCHEMA\" GRANT EXECUTE ON FUNCTIONS TO $ROLE_NAME;"
+
+# Step 4: Verify grant was applied
+RESULT=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$TARGET_DB" -Atc \
+  "SELECT has_schema_privilege('$ROLE_NAME', '$NEW_SCHEMA', 'USAGE');")
+
+if [ "$RESULT" = "t" ]; then
+  echo "✔ Schema '$NEW_SCHEMA' granted to '$ROLE_NAME' successfully!"
+else
+  echo "❌ ERROR: Grant verification failed for schema '$NEW_SCHEMA'!"
+  echo "   Run manually: GRANT USAGE ON SCHEMA \"$NEW_SCHEMA\" TO $ROLE_NAME;"
+  exit 1
+fi
+
+echo ""
+echo "======================================================"
+echo " ✔ Schema '$NEW_SCHEMA' in '$TARGET_DB' is ready!"
+echo "======================================================"

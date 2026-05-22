@@ -1,0 +1,99 @@
+{
+  "name": "ConnectionProfile",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "db_type": {
+      "type": "string"
+    },
+    "db_category": {
+      "type": "string",
+      "enum": [
+        "rdbms",
+        "nosql"
+      ]
+    },
+    "host": {
+      "type": "string"
+    },
+    "port": {
+      "type": "number"
+    },
+    "database_name": {
+      "type": "string"
+    },
+    "username": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    },
+    "connection_string": {
+      "type": "string"
+    },
+    "ssl_enabled": {
+      "type": "boolean",
+      "default": false
+    },
+    "ssl_cert_path": {
+      "type": "string"
+    },
+    "min_pool_size": {
+      "type": "number",
+      "default": 5
+    },
+    "max_pool_size": {
+      "type": "number",
+      "default": 50
+    },
+    "connection_timeout": {
+      "type": "number",
+      "default": 30
+    },
+    "query_timeout": {
+      "type": "number",
+      "default": 300
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "production",
+        "staging",
+        "development",
+        "testing",
+        "dr"
+      ],
+      "default": "development"
+    },
+    "tags": {
+      "type": "string"
+    },
+    "last_tested": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "connection_status": {
+      "type": "string",
+      "enum": [
+        "connected",
+        "disconnected",
+        "error",
+        "untested"
+      ],
+      "default": "untested"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "db_type"
+  ]
+}

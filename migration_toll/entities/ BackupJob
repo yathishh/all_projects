@@ -1,0 +1,124 @@
+{
+  "name": "BackupJob",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "db_type": {
+      "type": "string"
+    },
+    "db_name": {
+      "type": "string"
+    },
+    "connection_string": {
+      "type": "string"
+    },
+    "backup_type": {
+      "type": "string",
+      "enum": [
+        "full",
+        "incremental",
+        "differential",
+        "transaction_log",
+        "snapshot",
+        "logical",
+        "physical",
+        "hot",
+        "cold",
+        "warm",
+        "dump",
+        "export"
+      ],
+      "default": "full"
+    },
+    "storage_type": {
+      "type": "string",
+      "enum": [
+        "local",
+        "s3",
+        "azure_blob",
+        "gcs",
+        "nfs",
+        "sftp",
+        "ftp"
+      ],
+      "default": "local"
+    },
+    "storage_path": {
+      "type": "string"
+    },
+    "compression": {
+      "type": "string",
+      "enum": [
+        "none",
+        "gzip",
+        "bzip2",
+        "lz4",
+        "zstd"
+      ],
+      "default": "gzip"
+    },
+    "encryption": {
+      "type": "string",
+      "enum": [
+        "none",
+        "aes128",
+        "aes256"
+      ],
+      "default": "none"
+    },
+    "schedule_cron": {
+      "type": "string"
+    },
+    "retention_days": {
+      "type": "number",
+      "default": 30
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "running",
+        "completed",
+        "failed",
+        "scheduled"
+      ],
+      "default": "idle"
+    },
+    "last_run": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "next_run": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "size_mb": {
+      "type": "number",
+      "default": 0
+    },
+    "duration_seconds": {
+      "type": "number",
+      "default": 0
+    },
+    "error_message": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "name",
+    "db_type",
+    "backup_type"
+  ]
+}

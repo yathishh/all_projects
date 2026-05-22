@@ -1,0 +1,115 @@
+# ============================================================
+# Role: postgresql | tasks/main.yml
+# Purpose: Install & harden PostgreSQL on the DB server
+# ============================================================
+
+---
+- name: Install required system packages
+  ansible.builtin.apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - python3-psycopg2   # Required for Ansible postgresql modules
+    state: present
+    update_cache: yes
+
+# ── Add PostgreSQL Official Repo ─────────────────────────────
+- name: Add PostgreSQL APT signing key
+  ansible.builtin.apt_key:
+    url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    state: present
+
+- name: Add PostgreSQL APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb http://apt.postgresql.org/pub/repos/apt {{ ansible_distribution_release }}-pgdg main"
+    state: present
+    filename: pgdg
+
+# ── Install PostgreSQL ───────────────────────────────────────
+- name: Install PostgreSQL {{ pg_version }}
+  ansible.builtin.apt:
+    name:
+      - "postgresql-{{ pg_version }}"
+      - "postgresql-contrib-{{ pg_version }}"
+    state: present
+    update_cache: yes
+
+- name: Ensure PostgreSQL service is started and enabled
+  ansible.builtin.systemd:
+    name: "postgresql@{{ pg_version }}-main"
+    state: started
+    enabled: yes
+
+# ── Configure PostgreSQL ─────────────────────────────────────
+- name: Configure postgresql.conf - listen on all interfaces
+  ansible.builtin.lineinfile:
+    path: "/etc/postgresql/{{ pg_version }}/main/postgresql.conf"
+    regexp: "^#?listen_addresses"
+    line: "listen_addresses = '*'"
+    backup: yes
+  notify: Restart PostgreSQL
+
+- name: Configure postgresql.conf - set max connections
+  ansible.builtin.lineinfile:
+    path: "/etc/postgresql/{{ pg_version }}/main/postgresql.conf"
+    regexp: "^#?max_connections"
+    line: "max_connections = 100"
+  notify: Restart PostgreSQL
+
+- name: Configure postgresql.conf - enable logging
+  ansible.builtin.lineinfile:
+    path: "/etc/postgresql/{{ pg_version }}/main/postgresql.conf"
+    regexp: "^#?log_connections"
+    line: "log_connections = on"
+  notify: Restart PostgreSQL
+
+# ── Allow Migration Server Access (pg_hba.conf) ─────────────
+- name: Allow migration server to connect via md5
+  ansible.builtin.lineinfile:
+    path: "/etc/postgresql/{{ pg_version }}/main/pg_hba.conf"
+    line: "host    {{ pg_database }}    {{ pg_user }}    192.168.1.20/32    md5"
+    insertafter: "^# IPv4 local connections"
+    backup: yes
+  notify: Restart PostgreSQL
+
+# ── Create DB User & Database ────────────────────────────────
+- name: Create PostgreSQL user
+  become: yes
+  become_user: postgres
+  community.postgresql.postgresql_user:
+    name: "{{ pg_user }}"
+    password: "{{ pg_password }}"
+    state: present
+
+- name: Create application database
+  become: yes
+  become_user: postgres
+  community.postgresql.postgresql_db:
+    name: "{{ pg_database }}"
+    owner: "{{ pg_user }}"
+    state: present
+
+- name: Grant all privileges on database
+  become: yes
+  become_user: postgres
+  community.postgresql.postgresql_privs:
+    db: "{{ pg_database }}"
+    role: "{{ pg_user }}"
+    type: database
+    privs: ALL
+    state: present
+
+# ── Firewall ─────────────────────────────────────────────────
+- name: Allow PostgreSQL port from migration server only
+  community.general.ufw:
+    rule: allow
+    src: "192.168.1.20"   # Migration server IP only
+    port: "{{ pg_port }}"
+    proto: tcp
+
+- name: Enable UFW
+  community.general.ufw:
+    state: enabled
+    policy: deny

@@ -1,0 +1,104 @@
+============================================================
+  DATABASE : superset
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:15:25 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (15 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               annotation                ti_dag_state                        8192 bytes 0        btree       
+    DDL: CREATE INDEX ti_dag_state ON public.annotation USING btree (layer_id, start_dttm, end_dttm)
+  public               cache_keys                ix_cache_keys_datasource_uid        8192 bytes 0        btree       
+    DDL: CREATE INDEX ix_cache_keys_datasource_uid ON public.cache_keys USING btree (datasource_uid)
+  public               database_user_oauth2_tokens idx_user_id_database_id             8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_user_id_database_id ON public.database_user_oauth2_tokens USING btree (user_id, database_id)
+  public               key_value                 ix_key_value_expires_on             56 kB      0        btree       
+    DDL: CREATE INDEX ix_key_value_expires_on ON public.key_value USING btree (expires_on)
+  public               logs                      ix_logs_user_id_dttm                2576 kB    0        btree       
+    DDL: CREATE INDEX ix_logs_user_id_dttm ON public.logs USING btree (user_id, dttm)
+  public               query                     ix_query_results_key                16 kB      0        btree       
+    DDL: CREATE INDEX ix_query_results_key ON public.query USING btree (results_key)
+  public               query                     ti_user_id_changed_on               16 kB      0        btree       
+    DDL: CREATE INDEX ti_user_id_changed_on ON public.query USING btree (user_id, changed_on)
+  public               query                     ix_sql_editor_id                    16 kB      0        btree       
+    DDL: CREATE INDEX ix_sql_editor_id ON public.query USING btree (sql_editor_id)
+  public               report_execution_log      ix_report_execution_log_start_dttm  144 kB     0        btree       
+    DDL: CREATE INDEX ix_report_execution_log_start_dttm ON public.report_execution_log USING btree (start_dttm)
+  public               report_execution_log      ix_report_execution_log_report_schedule_id 96 kB      0        btree       
+    DDL: CREATE INDEX ix_report_execution_log_report_schedule_id ON public.report_execution_log USING btree (report_schedule_id)
+  public               report_recipient          ix_report_recipient_report_schedule_id 16 kB      0        btree       
+    DDL: CREATE INDEX ix_report_recipient_report_schedule_id ON public.report_recipient USING btree (report_schedule_id)
+  public               report_schedule           ix_report_schedule_active           16 kB      0        btree       
+    DDL: CREATE INDEX ix_report_schedule_active ON public.report_schedule USING btree (active)
+  public               report_schedule           ix_creation_method                  16 kB      0        btree       
+    DDL: CREATE INDEX ix_creation_method ON public.report_schedule USING btree (creation_method)
+  public               row_level_security_filters ix_row_level_security_filters_filter_type 8192 bytes 0        btree       
+    DDL: CREATE INDEX ix_row_level_security_filters_filter_type ON public.row_level_security_filters USING btree (filter_type)
+  public               tagged_object             ix_tagged_object_object_id          8192 bytes 0        btree       
+    DDL: CREATE INDEX ix_tagged_object_object_id ON public.tagged_object USING btree (object_id)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  public               logs                      ix_logs_user_id_dttm                2576 kB      0       
+    DDL: CREATE INDEX ix_logs_user_id_dttm ON public.logs USING btree (user_id, dttm)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."ti_dag_state"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."ix_cache_keys_datasource_uid"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_user_id_database_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."ix_key_value_expires_on"; -- size: 56 kB
+  DROP INDEX CONCURRENTLY public."ix_logs_user_id_dttm"; -- size: 2576 kB
+  DROP INDEX CONCURRENTLY public."ix_query_results_key"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."ti_user_id_changed_on"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."ix_sql_editor_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."ix_report_execution_log_start_dttm"; -- size: 144 kB
+  DROP INDEX CONCURRENTLY public."ix_report_execution_log_report_schedule_id"; -- size: 96 kB
+  DROP INDEX CONCURRENTLY public."ix_report_recipient_report_schedule_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."ix_report_schedule_active"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."ix_creation_method"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."ix_row_level_security_filters_filter_type"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."ix_tagged_object_object_id"; -- size: 8192 bytes
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 95         6584 kB         15             
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: superset
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                15
+  Large unused (>1MB):                     1
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   15
+────────────────────────────────────────────────────────────

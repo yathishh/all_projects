@@ -1,0 +1,82 @@
+{
+  "name": "MigrationTask",
+  "type": "object",
+  "properties": {
+    "project_id": {
+      "type": "string",
+      "description": "Reference to migration project"
+    },
+    "source_object_name": {
+      "type": "string",
+      "description": "Source table/collection name"
+    },
+    "target_object_name": {
+      "type": "string",
+      "description": "Target table/collection name"
+    },
+    "object_type": {
+      "type": "string",
+      "enum": [
+        "table",
+        "collection",
+        "index",
+        "view",
+        "stored_procedure",
+        "trigger",
+        "sequence",
+        "constraint",
+        "function"
+      ],
+      "description": "Type of database object"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "mapping",
+        "ready",
+        "in_progress",
+        "completed",
+        "failed",
+        "skipped"
+      ],
+      "default": "pending",
+      "description": "Task status"
+    },
+    "record_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of records in this object"
+    },
+    "migrated_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Records migrated"
+    },
+    "schema_mapping": {
+      "type": "string",
+      "description": "JSON string of column/field mappings"
+    },
+    "transformation_rules": {
+      "type": "string",
+      "description": "Data transformation rules"
+    },
+    "error_message": {
+      "type": "string",
+      "description": "Error details if failed"
+    },
+    "warnings": {
+      "type": "string",
+      "description": "Migration warnings"
+    },
+    "size_mb": {
+      "type": "number",
+      "default": 0,
+      "description": "Object size in MB"
+    }
+  },
+  "required": [
+    "project_id",
+    "source_object_name"
+  ]
+}

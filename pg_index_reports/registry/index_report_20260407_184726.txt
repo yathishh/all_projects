@@ -1,0 +1,105 @@
+============================================================
+  DATABASE : registry
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:55:37 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (15 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               artifact                  idx_artifact_push_time              48 kB      0        btree       
+    DDL: CREATE INDEX idx_artifact_push_time ON public.artifact USING btree (push_time)
+  public               artifact                  idx_artifact_repository_name        40 kB      0        btree       
+    DDL: CREATE INDEX idx_artifact_repository_name ON public.artifact USING btree (repository_name)
+  public               artifact_accessory        idx_artifact_accessory_subject_artifact_id 8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_artifact_accessory_subject_artifact_id ON public.artifact_accessory USING btree (subject_artifact_id)
+  public               artifact_reference        idx_artifact_reference_child_id     16 kB      0        btree       
+    DDL: CREATE INDEX idx_artifact_reference_child_id ON public.artifact_reference USING btree (child_id)
+  public               audit_log                 idx_audit_log_project_id_optime     104 kB     0        btree       
+    DDL: CREATE INDEX idx_audit_log_project_id_optime ON public.audit_log USING btree (project_id, op_time)
+  public               audit_log                 idx_audit_log_op_time               80 kB      0        btree       
+    DDL: CREATE INDEX idx_audit_log_op_time ON public.audit_log USING btree (op_time)
+  public               blob                      idx_status                          128 kB     0        btree       
+    DDL: CREATE INDEX idx_status ON public.blob USING btree (status)
+  public               report_vulnerability_record idx_report_vulnerability_record_vuln_record_id 16 kB      0        btree       
+    DDL: CREATE INDEX idx_report_vulnerability_record_vuln_record_id ON public.report_vulnerability_record USING btree (vuln_record_id)
+  public               tag                       idx_tag_push_time                   40 kB      0        btree       
+    DDL: CREATE INDEX idx_tag_push_time ON public.tag USING btree (push_time)
+  public               task                      idx_task_extra_attrs_report_uuids   24 kB      0        gin         
+    DDL: CREATE INDEX idx_task_extra_attrs_report_uuids ON public.task USING gin ((((extra_attrs)::jsonb -> 'report_uuids'::text)))
+  public               vulnerability_record      idx_vulnerability_record_package    16 kB      0        btree       
+    DDL: CREATE INDEX idx_vulnerability_record_package ON public.vulnerability_record USING btree (package)
+  public               vulnerability_record      idx_vulnerability_record_severity   16 kB      0        btree       
+    DDL: CREATE INDEX idx_vulnerability_record_severity ON public.vulnerability_record USING btree (severity)
+  public               vulnerability_record      idx_vulnerability_record_cvss_score_v3 16 kB      0        btree       
+    DDL: CREATE INDEX idx_vulnerability_record_cvss_score_v3 ON public.vulnerability_record USING btree (cvss_score_v3)
+  public               vulnerability_record      idx_vulnerability_registration_uuid 16 kB      0        btree       
+    DDL: CREATE INDEX idx_vulnerability_registration_uuid ON public.vulnerability_record USING btree (registration_uuid)
+  public               vulnerability_record      idx_vulnerability_record_cve_id     16 kB      0        btree       
+    DDL: CREATE INDEX idx_vulnerability_record_cve_id ON public.vulnerability_record USING btree (cve_id)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No large unused indexes found.
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  public             vulnerability_record   idx_vulnerability_record_cve_id vulnerability_record_cve_id_registration_uuid_package_packa_key 16 kB     
+    Redundant DDL : CREATE INDEX idx_vulnerability_record_cve_id ON public.vulnerability_record USING btree (cve_id)
+    Covering  DDL : CREATE UNIQUE INDEX vulnerability_record_cve_id_registration_uuid_package_packa_key ON public.vulnerability_record USING btree (cve_id, registration_uuid, package, package_version)
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_artifact_push_time"; -- size: 48 kB
+  DROP INDEX CONCURRENTLY public."idx_artifact_repository_name"; -- size: 40 kB
+  DROP INDEX CONCURRENTLY public."idx_artifact_accessory_subject_artifact_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_artifact_reference_child_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_audit_log_project_id_optime"; -- size: 104 kB
+  DROP INDEX CONCURRENTLY public."idx_audit_log_op_time"; -- size: 80 kB
+  DROP INDEX CONCURRENTLY public."idx_status"; -- size: 128 kB
+  DROP INDEX CONCURRENTLY public."idx_report_vulnerability_record_vuln_record_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_tag_push_time"; -- size: 40 kB
+  DROP INDEX CONCURRENTLY public."idx_task_extra_attrs_report_uuids"; -- size: 24 kB
+  DROP INDEX CONCURRENTLY public."idx_vulnerability_record_package"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_vulnerability_record_severity"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_vulnerability_record_cvss_score_v3"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_vulnerability_registration_uuid"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_vulnerability_record_cve_id"; -- size: 16 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 114        7824 kB         15             
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: registry
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                15
+  Large unused (>1MB):                     0
+  Redundant/overlap indexes:               1
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   15
+────────────────────────────────────────────────────────────

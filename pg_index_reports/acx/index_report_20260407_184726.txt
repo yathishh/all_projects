@@ -1,0 +1,116 @@
+============================================================
+  DATABASE : acx
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:47:30 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (4 found)
+────────────────────────────────────────────────────────────
+  • acx_core
+  • feedback
+  • oracle
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (13 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  acx_core             monitor_blacklist         idx_spy_blacklist_value             16 kB      0        btree       
+    DDL: CREATE INDEX idx_spy_blacklist_value ON acx_core.monitor_blacklist USING btree (value)
+  acx_core             user_settings             idx_user_settings_gin               528 kB     0        gin         
+    DDL: CREATE INDEX idx_user_settings_gin ON acx_core.user_settings USING gin (settings)
+  oracle               monitor_audit             idx_monitor_audit_monitor_id        16 kB      0        btree       
+    DDL: CREATE INDEX idx_monitor_audit_monitor_id ON oracle.monitor_audit USING btree (monitor_id)
+  oracle               monitor_audit             idx_monitor_audit_call_id           16 kB      0        btree       
+    DDL: CREATE INDEX idx_monitor_audit_call_id ON oracle.monitor_audit USING btree (call_id)
+  oracle               monitor_audit             idx_monitor_audit_qa_ext            16 kB      0        btree       
+    DDL: CREATE INDEX idx_monitor_audit_qa_ext ON oracle.monitor_audit USING btree (qa_ext)
+  oracle               monitor_audit             idx_monitor_audit_agent_ext         16 kB      0        btree       
+    DDL: CREATE INDEX idx_monitor_audit_agent_ext ON oracle.monitor_audit USING btree (agent_ext)
+  oracle               outbound_tracking         idx_call_tracking_scriptcallid      632 kB     0        btree       
+    DDL: CREATE INDEX idx_call_tracking_scriptcallid ON oracle.outbound_tracking USING btree (script_call_id)
+  oracle               outbound_tracking         idx_call_tracking_dialednum         424 kB     0        btree       
+    DDL: CREATE INDEX idx_call_tracking_dialednum ON oracle.outbound_tracking USING btree (dialed_number)
+  oracle               outbound_tracking         idx_call_tracking_username          304 kB     0        btree       
+    DDL: CREATE INDEX idx_call_tracking_username ON oracle.outbound_tracking USING btree (username)
+  oracle               outbound_tracking         idx_call_tracking_company           288 kB     0        btree       
+    DDL: CREATE INDEX idx_call_tracking_company ON oracle.outbound_tracking USING btree (company)
+  oracle               recording_access_log      idx_recording_access_log_call_id    64 kB      0        btree       
+    DDL: CREATE INDEX idx_recording_access_log_call_id ON oracle.recording_access_log USING btree (call_id)
+  oracle               recording_access_log      idx_recording_access_log_share_uuid 56 kB      0        btree       
+    DDL: CREATE INDEX idx_recording_access_log_share_uuid ON oracle.recording_access_log USING btree (share_uuid)
+  oracle               recording_access_log      idx_recording_access_log_accessed_by 40 kB      0        btree       
+    DDL: CREATE INDEX idx_recording_access_log_accessed_by ON oracle.recording_access_log USING btree (accessed_by)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No large unused indexes found.
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (3 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  INDEX                          DUPLICATE OF                   SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  acx_core           monitor_blacklist      monitor_blacklist_value_key    idx_spy_blacklist_value        16 kB     
+    Index 1 DDL : CREATE UNIQUE INDEX monitor_blacklist_value_key ON acx_core.monitor_blacklist USING btree (value)
+    Index 2 DDL : CREATE INDEX idx_spy_blacklist_value ON acx_core.monitor_blacklist USING btree (value)
+  acx_core           user_settings          user_app_unique                idx_user_settings_user_app     16 kB     
+    Index 1 DDL : CREATE UNIQUE INDEX user_app_unique ON acx_core.user_settings USING btree (username, app)
+    Index 2 DDL : CREATE INDEX idx_user_settings_user_app ON acx_core.user_settings USING btree (username, app)
+  oracle             outbound_tracking      outbound_tracking_call_id_key  idx_call_tracking_callid       1136 kB   
+    Index 1 DDL : CREATE UNIQUE INDEX outbound_tracking_call_id_key ON oracle.outbound_tracking USING btree (call_id)
+    Index 2 DDL : CREATE INDEX idx_call_tracking_callid ON oracle.outbound_tracking USING btree (call_id)
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY acx_core."idx_spy_blacklist_value"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY acx_core."idx_user_settings_gin"; -- size: 528 kB
+  DROP INDEX CONCURRENTLY oracle."idx_monitor_audit_monitor_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY oracle."idx_monitor_audit_call_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY oracle."idx_monitor_audit_qa_ext"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY oracle."idx_monitor_audit_agent_ext"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY oracle."idx_call_tracking_scriptcallid"; -- size: 632 kB
+  DROP INDEX CONCURRENTLY oracle."idx_call_tracking_dialednum"; -- size: 424 kB
+  DROP INDEX CONCURRENTLY oracle."idx_call_tracking_username"; -- size: 304 kB
+  DROP INDEX CONCURRENTLY oracle."idx_call_tracking_company"; -- size: 288 kB
+  DROP INDEX CONCURRENTLY oracle."idx_recording_access_log_call_id"; -- size: 64 kB
+  DROP INDEX CONCURRENTLY oracle."idx_recording_access_log_share_uuid"; -- size: 56 kB
+  DROP INDEX CONCURRENTLY oracle."idx_recording_access_log_accessed_by"; -- size: 40 kB
+
+  -- Duplicate indexes (keep one, drop the other):
+  DROP INDEX CONCURRENTLY acx_core."monitor_blacklist_value_key"; -- duplicate of idx_spy_blacklist_value, size: 16 kB
+  DROP INDEX CONCURRENTLY acx_core."user_app_unique"; -- duplicate of idx_user_settings_user_app, size: 16 kB
+  DROP INDEX CONCURRENTLY oracle."outbound_tracking_call_id_key"; -- duplicate of idx_call_tracking_callid, size: 1136 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  acx_core               13         30 MB           2              
+  feedback               0          0 bytes         0              
+  oracle                 17         5496 kB         11             
+  public                 0          0 bytes         0              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: acx
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         4
+  Unused indexes (0 scans):                13
+  Large unused (>1MB):                     0
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 3
+  Total drop candidates:                   16
+────────────────────────────────────────────────────────────

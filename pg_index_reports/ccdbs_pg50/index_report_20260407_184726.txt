@@ -1,0 +1,70 @@
+============================================================
+  DATABASE : ccdbs_pg50
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:50:35 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (3 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               audit_table               idx_audit_table_full                2928 kB    0        btree       
+    DDL: CREATE INDEX idx_audit_table_full ON public.audit_table USING btree (tbl, pk_name, pk_value)
+  public               audit_table               idx_audit_table_tbl                 2872 kB    0        btree       
+    DDL: CREATE INDEX idx_audit_table_tbl ON public.audit_table USING btree (tbl, pk_value)
+  public               members_linked            idx_members_linked                  16 kB      0        btree       
+    DDL: CREATE INDEX idx_members_linked ON public.members_linked USING btree (ca_linked_no)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (2 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  public               audit_table               idx_audit_table_full                2928 kB      0       
+    DDL: CREATE INDEX idx_audit_table_full ON public.audit_table USING btree (tbl, pk_name, pk_value)
+  public               audit_table               idx_audit_table_tbl                 2872 kB      0       
+    DDL: CREATE INDEX idx_audit_table_tbl ON public.audit_table USING btree (tbl, pk_value)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_audit_table_full"; -- size: 2928 kB
+  DROP INDEX CONCURRENTLY public."idx_audit_table_tbl"; -- size: 2872 kB
+  DROP INDEX CONCURRENTLY public."idx_members_linked"; -- size: 16 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 21         265 MB          3              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: ccdbs_pg50
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                3
+  Large unused (>1MB):                     2
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   3
+────────────────────────────────────────────────────────────

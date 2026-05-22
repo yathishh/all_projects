@@ -1,0 +1,199 @@
+# ============================================================
+# Role: liquibase | tasks/main.yml
+# Purpose: Install Liquibase + Java + Python on migration server
+# ============================================================
+
+---
+# ── System Prep ──────────────────────────────────────────────
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Install system dependencies
+  ansible.builtin.apt:
+    name:
+      - curl
+      - gnupg
+      - apt-transport-https
+      - ca-certificates
+      - unzip
+      - git
+      - python3
+      - python3-pip
+      - python3-venv
+    state: present
+
+# ── Create Dedicated System User ─────────────────────────────
+- name: Create liquibase system group
+  ansible.builtin.group:
+    name: "{{ app_group }}"
+    state: present
+    system: yes
+
+- name: Create liquibase system user
+  ansible.builtin.user:
+    name: "{{ app_user }}"
+    group: "{{ app_group }}"
+    system: yes
+    shell: /bin/bash
+    home: "/home/{{ app_user }}"
+    create_home: yes
+    state: present
+
+# ── Install Java 17 ──────────────────────────────────────────
+- name: Install OpenJDK 17
+  ansible.builtin.apt:
+    name: "{{ java_package }}"
+    state: present
+
+- name: Set JAVA_HOME in /etc/environment
+  ansible.builtin.lineinfile:
+    path: /etc/environment
+    regexp: "^JAVA_HOME"
+    line: 'JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"'
+
+- name: Verify Java installation
+  ansible.builtin.command: java -version
+  register: java_version
+  changed_when: false
+
+- name: Print Java version
+  ansible.builtin.debug:
+    msg: "Java installed: {{ java_version.stderr }}"
+
+# ── Install Liquibase via Official APT Repo ──────────────────
+- name: Add Liquibase GPG key
+  ansible.builtin.shell: |
+    curl -fsSL https://repo.liquibase.com/liquibase.asc | \
+    gpg --dearmor -o /usr/share/keyrings/liquibase-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/liquibase-keyring.gpg
+
+- name: Add Liquibase APT repository
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/liquibase-keyring.gpg] https://repo.liquibase.com stable main"
+    state: present
+    filename: liquibase
+
+- name: Install Liquibase {{ liquibase_version }}
+  ansible.builtin.apt:
+    name: "liquibase={{ liquibase_version }}"
+    state: present
+    update_cache: yes
+
+- name: Prevent Liquibase from being auto-upgraded
+  ansible.builtin.dpkg_selections:
+    name: liquibase
+    selection: hold
+
+- name: Verify Liquibase installation
+  ansible.builtin.command: liquibase --version
+  register: lb_version
+  changed_when: false
+
+- name: Print Liquibase version
+  ansible.builtin.debug:
+    msg: "Liquibase installed: {{ lb_version.stdout }}"
+
+# ── Download PostgreSQL JDBC Driver ──────────────────────────
+- name: Create JDBC drivers directory
+  ansible.builtin.file:
+    path: "{{ jdbc_driver_dir }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0755"
+
+- name: Download PostgreSQL JDBC driver v{{ jdbc_driver_version }}
+  ansible.builtin.get_url:
+    url: "https://jdbc.postgresql.org/download/postgresql-{{ jdbc_driver_version }}.jar"
+    dest: "{{ jdbc_driver_dir }}/postgresql-{{ jdbc_driver_version }}.jar"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0644"
+
+# ── Set Up Liquibase Project Directory ───────────────────────
+- name: Create Liquibase project directory structure
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0755"
+  loop:
+    - "{{ liquibase_project_dir }}"
+    - "{{ liquibase_project_dir }}/changelog"
+    - "{{ liquibase_project_dir }}/changelog/migrations"
+
+# ── Deploy liquibase.properties ──────────────────────────────
+- name: Deploy liquibase.properties from template
+  ansible.builtin.template:
+    src: liquibase.properties.j2
+    dest: "{{ liquibase_project_dir }}/liquibase.properties"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0640"        # owner read/write only — contains password
+
+# ── Deploy Root Changelog ─────────────────────────────────────
+- name: Deploy root changelog file
+  ansible.builtin.template:
+    src: db.changelog-root.xml.j2
+    dest: "{{ liquibase_project_dir }}/changelog/db.changelog-root.xml"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0644"
+
+# ── Deploy Example First Migration ───────────────────────────
+- name: Deploy example first migration
+  ansible.builtin.template:
+    src: 001_create_users.sql.j2
+    dest: "{{ liquibase_project_dir }}/changelog/migrations/001_create_users.sql"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: "0644"
+
+# ── Python Virtual Environment ───────────────────────────────
+- name: Create Python virtual environment
+  ansible.builtin.command:
+    cmd: python3 -m venv /opt/liquibase-venv
+    creates: /opt/liquibase-venv/bin/activate
+
+- name: Install Python dependencies in venv
+  ansible.builtin.pip:
+    name:
+      - psycopg2-binary
+      - python-dotenv
+      - pytest
+    virtualenv: /opt/liquibase-venv
+    state: present
+
+- name: Set ownership of venv
+  ansible.builtin.file:
+    path: /opt/liquibase-venv
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    recurse: yes
+
+# ── Deploy Run Script ─────────────────────────────────────────
+- name: Deploy migration run script
+  ansible.builtin.template:
+    src: run_migration.sh.j2
+    dest: /usr/local/bin/run-migration
+    owner: root
+    group: root
+    mode: "0755"
+
+# ── Validate DB Connection ────────────────────────────────────
+- name: Test Liquibase connection to PostgreSQL
+  ansible.builtin.command:
+    cmd: liquibase --defaultsFile={{ liquibase_project_dir }}/liquibase.properties status
+  become: yes
+  become_user: "{{ app_user }}"
+  register: lb_status
+  changed_when: false
+  failed_when: false
+
+- name: Print connection test result
+  ansible.builtin.debug:
+    msg: "{{ lb_status.stdout | default(lb_status.stderr) }}"

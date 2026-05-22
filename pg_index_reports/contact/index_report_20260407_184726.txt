@@ -1,0 +1,80 @@
+============================================================
+  DATABASE : contact
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:51:05 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (7 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               calls                     idx_calls_uuid                      10032 kB   0        btree       
+    DDL: CREATE INDEX idx_calls_uuid ON public.calls USING btree (contacts_id, uuid)
+  public               contacts                  idx_contacts_forename               272 kB     0        btree       
+    DDL: CREATE INDEX idx_contacts_forename ON public.contacts USING btree (forename)
+  public               contacts_details          idx_contacts_id                     16 kB      0        btree       
+    DDL: CREATE INDEX idx_contacts_id ON public.contacts_details USING btree (contacts_id)
+  public               messages                  idx_messages_added                  72 kB      0        btree       
+    DDL: CREATE INDEX idx_messages_added ON public.messages USING btree (added)
+  public               messages                  idx_messages_contacts_id            40 kB      0        btree       
+    DDL: CREATE INDEX idx_messages_contacts_id ON public.messages USING btree (contacts_id)
+  public               messages                  idx_messages_state                  32 kB      0        btree       
+    DDL: CREATE INDEX idx_messages_state ON public.messages USING btree (mstate) WHERE (((mstate)::text = 'New'::text) OR ((mstate)::text = 'Open'::text))
+  public               notes                     idx_notes                           16 kB      0        btree       
+    DDL: CREATE INDEX idx_notes ON public.notes USING btree (notes_group, notes_pk)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  public               calls                     idx_calls_uuid                      10032 kB     0       
+    DDL: CREATE INDEX idx_calls_uuid ON public.calls USING btree (contacts_id, uuid)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_calls_uuid"; -- size: 10032 kB
+  DROP INDEX CONCURRENTLY public."idx_contacts_forename"; -- size: 272 kB
+  DROP INDEX CONCURRENTLY public."idx_contacts_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_messages_added"; -- size: 72 kB
+  DROP INDEX CONCURRENTLY public."idx_messages_contacts_id"; -- size: 40 kB
+  DROP INDEX CONCURRENTLY public."idx_messages_state"; -- size: 32 kB
+  DROP INDEX CONCURRENTLY public."idx_notes"; -- size: 16 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 45         486 MB          7              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: contact
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                7
+  Large unused (>1MB):                     1
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   7
+────────────────────────────────────────────────────────────

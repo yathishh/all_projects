@@ -1,0 +1,111 @@
+============================================================
+  DATABASE : adhki
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:06:20 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (4 found)
+────────────────────────────────────────────────────────────
+  • acme
+  • email_forms
+  • forms
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (14 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  email_forms          audit_log                 idx_audit_log_table_pk              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_audit_log_table_pk ON email_forms.audit_log USING btree (table_name, primary_key_value)
+  email_forms          audit_log                 idx_audit_log_table_name            8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_audit_log_table_name ON email_forms.audit_log USING btree (table_name)
+  email_forms          audit_log                 idx_audit_log_changed_at            8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_audit_log_changed_at ON email_forms.audit_log USING btree (changed_at)
+  email_forms          clients                   idx_clients_company_name            16 kB      0        btree       
+    DDL: CREATE INDEX idx_clients_company_name ON email_forms.clients USING btree (company_name)
+  email_forms          clients                   idx_clients_sla_id                  16 kB      0        btree       
+    DDL: CREATE INDEX idx_clients_sla_id ON email_forms.clients USING btree (sla_id)
+  email_forms          clients                   idx_clients_email_config_id         16 kB      0        btree       
+    DDL: CREATE INDEX idx_clients_email_config_id ON email_forms.clients USING btree (email_config_id)
+  email_forms          clients                   idx_clients_is_active               16 kB      0        btree       
+    DDL: CREATE INDEX idx_clients_is_active ON email_forms.clients USING btree (is_active)
+  email_forms          email_configurations      idx_email_config_last_poll_time     16 kB      0        btree       
+    DDL: CREATE INDEX idx_email_config_last_poll_time ON email_forms.email_configurations USING btree (last_poll_time)
+  email_forms          emails                    idx_emails_client_id                8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_emails_client_id ON email_forms.emails USING btree (client_id)
+  email_forms          emails                    idx_emails_completion_deadline      8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_emails_completion_deadline ON email_forms.emails USING btree (sla)
+  email_forms          polling_hours             idx_polling_hours_client_id         16 kB      0        btree       
+    DDL: CREATE INDEX idx_polling_hours_client_id ON email_forms.polling_hours USING btree (client_id)
+  email_forms          polling_hours             idx_polling_hours_client_day        16 kB      0        btree       
+    DDL: CREATE INDEX idx_polling_hours_client_day ON email_forms.polling_hours USING btree (client_id, day_of_week)
+  email_forms          polling_hours             idx_polling_hours_day_of_week       16 kB      0        btree       
+    DDL: CREATE INDEX idx_polling_hours_day_of_week ON email_forms.polling_hours USING btree (day_of_week)
+  email_forms          sla                       idx_sla_max_response_time           16 kB      0        btree       
+    DDL: CREATE INDEX idx_sla_max_response_time ON email_forms.sla USING btree (max_response_time)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No large unused indexes found.
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (2 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  email_forms        audit_log              idx_audit_log_table_name       idx_audit_log_table_pk         8192 bytes
+    Redundant DDL : CREATE INDEX idx_audit_log_table_name ON email_forms.audit_log USING btree (table_name)
+    Covering  DDL : CREATE INDEX idx_audit_log_table_pk ON email_forms.audit_log USING btree (table_name, primary_key_value)
+  email_forms        polling_hours          idx_polling_hours_client_id    idx_polling_hours_client_day   16 kB     
+    Redundant DDL : CREATE INDEX idx_polling_hours_client_id ON email_forms.polling_hours USING btree (client_id)
+    Covering  DDL : CREATE INDEX idx_polling_hours_client_day ON email_forms.polling_hours USING btree (client_id, day_of_week)
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY email_forms."idx_audit_log_table_pk"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY email_forms."idx_audit_log_table_name"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY email_forms."idx_audit_log_changed_at"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY email_forms."idx_clients_company_name"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY email_forms."idx_clients_sla_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY email_forms."idx_clients_email_config_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY email_forms."idx_clients_is_active"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY email_forms."idx_email_config_last_poll_time"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY email_forms."idx_emails_client_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY email_forms."idx_emails_completion_deadline"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY email_forms."idx_polling_hours_client_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY email_forms."idx_polling_hours_client_day"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY email_forms."idx_polling_hours_day_of_week"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY email_forms."idx_sla_max_response_time"; -- size: 16 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  acme                   2          680 kB          0              
+  email_forms            23         312 kB          14             
+  forms                  11         128 kB          0              
+  public                 25         408 kB          0              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: adhki
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         4
+  Unused indexes (0 scans):                14
+  Large unused (>1MB):                     0
+  Redundant/overlap indexes:               2
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   14
+────────────────────────────────────────────────────────────

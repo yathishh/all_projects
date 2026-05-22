@@ -1,0 +1,661 @@
+#!/bin/bash
+# ============================================================
+# migrate-existing-to-liquibase.sh
+# Copies EXACT current structure from DB — no new format
+# Extracts: roles, users, grants, tables, views,
+#           indexes, functions, procedures as-is
+# ============================================================
+
+# ── CONFIG ───────────────────────────────────────────────────
+#DB_HOST="pgsql_cluster.dev1.adhkistaging.com"
+DB_HOST="pgsql_cluster.adhkiapps.com"
+DB_PORT="5001"
+DB_USER="postgres"
+export PGPASSWORD="postgres"
+REPO="$HOME/liquibase-CI-CD"
+
+DATABASES=(
+    "acx"
+    "adhki_messaging"
+    "agent_session"
+    "autoform"
+    "ave"
+    "aws_connect"
+    "basic_ivrs"
+    "billing_pg50"
+    "cardstream"
+    "ccdbs_pg50"
+    "cgno"
+    "cogno_db"
+    "cogno-v2"
+    "contact"
+    "ellie_ai_chatbot"
+    "harbor-dev1"
+    "keep"
+    "line_testing"
+    "loneworkerdb"
+    "medihub"
+    "msgreports_pg50"
+    "msgstore_pg50"
+    "new_test_db"
+    "qip_db"
+    "recordings_manager"
+    "references"
+    "reportdb"
+    "robo_agent"
+    "single_telephony"
+    "superseva"
+    "switchboard"
+    "ttsdb"
+    "virtualoffice"
+    "wise"
+)
+# ─────────────────────────────────────────────────────────────
+
+safe_name() { echo "$1" | tr '-' '_'; }
+
+run_psql() {
+    local DB=$1
+    local QUERY=$2
+    psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d "$DB" -t -A -c "$QUERY" 2>/dev/null
+}
+
+echo "============================================"
+echo " Liquibase Migration — Copy Exact Structure"
+echo " Host : $DB_HOST"
+echo " DBs  : ${#DATABASES[@]}"
+echo "============================================"
+
+for DB_NAME in "${DATABASES[@]}"; do
+
+    SAFE_DB=$(safe_name "$DB_NAME")
+
+    echo ""
+    echo "──────────────────────────────────────────"
+    echo " Processing: $DB_NAME"
+    echo "──────────────────────────────────────────"
+
+    # ── Check connectivity ────────────────────────────────────
+    if ! psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d "$DB_NAME" -c "\q" 2>/dev/null; then
+        echo "  ⚠️  Cannot connect to $DB_NAME — skipping"
+        continue
+    fi
+
+    # ── Discover schemas with tables ─────────────────────────
+    SCHEMAS=$(run_psql "$DB_NAME" \
+        "SELECT schema_name FROM information_schema.schemata
+         WHERE schema_name NOT IN ('pg_toast','pg_catalog','information_schema')
+         AND schema_name NOT LIKE 'pg_%'
+         ORDER BY CASE WHEN schema_name='public' THEN 1 ELSE 0 END, schema_name;")
+
+    SCHEMAS_WITH_OBJECTS=""
+    while IFS= read -r SCH; do
+        SCH=$(echo "$SCH" | xargs); [ -z "$SCH" ] && continue
+        CNT=$(run_psql "$DB_NAME" \
+            "SELECT COUNT(*) FROM information_schema.tables
+             WHERE table_schema='$SCH' AND table_type='BASE TABLE';")
+        VCNT=$(run_psql "$DB_NAME" \
+            "SELECT COUNT(*) FROM information_schema.views
+             WHERE table_schema='$SCH';")
+        TOTAL=$((${CNT:-0} + ${VCNT:-0}))
+        if [ "$TOTAL" -gt 0 ]; then
+            SCHEMAS_WITH_OBJECTS="$SCHEMAS_WITH_OBJECTS $SCH"
+            echo "  Schema: $SCH (tables:${CNT} views:${VCNT})"
+        fi
+    done <<< "$SCHEMAS"
+
+    [ -z "$SCHEMAS_WITH_OBJECTS" ] && echo "  ⚠️  No objects found — skipping" && continue
+
+    mkdir -p $REPO/databases/$DB_NAME
+
+    cat > $REPO/databases/$DB_NAME/liquibase.properties << EOF
+changeLogFile: changelog-root.xml
+searchPath: .
+EOF
+
+    # ── Start changelog-root.xml ──────────────────────────────
+    cat > $REPO/databases/$DB_NAME/changelog-root.xml << EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.26.xsd">
+
+    <!-- Database  : $DB_NAME -->
+    <!-- Generated : $(date) -->
+    <!-- NOTE: This is copied from existing DB — not new format -->
+
+EOF
+
+    IS_FIRST=true
+
+    for SCHEMA in $SCHEMAS_WITH_OBJECTS; do
+        SCHEMA=$(echo "$SCHEMA" | xargs); [ -z "$SCHEMA" ] && continue
+        SAFE_SCH=$(safe_name "$SCHEMA")
+
+        echo ""
+        echo "  → Schema: $SCHEMA"
+
+        mkdir -p $REPO/databases/$DB_NAME/modules/$SCHEMA
+
+        # ── Decide which files to include based on what exists ─
+
+        # Check roles exist in this DB
+        ROLE_COUNT=$(run_psql "$DB_NAME" \
+            "SELECT COUNT(*) FROM pg_roles
+             WHERE rolname NOT LIKE 'pg_%'
+             AND rolname NOT IN ('postgres','replication','monitor');")
+
+        # Check users (login roles) exist
+        USER_COUNT=$(run_psql "$DB_NAME" \
+            "SELECT COUNT(*) FROM pg_roles
+             WHERE rolcanlogin = true
+             AND rolname NOT IN ('postgres','replication','monitor')
+             AND rolname NOT LIKE 'pg_%';")
+
+        # Check tables
+        TABLE_COUNT=$(run_psql "$DB_NAME" \
+            "SELECT COUNT(*) FROM information_schema.tables
+             WHERE table_schema='$SCHEMA' AND table_type='BASE TABLE';")
+
+        # Check views
+        VIEW_COUNT=$(run_psql "$DB_NAME" \
+            "SELECT COUNT(*) FROM information_schema.views
+             WHERE table_schema='$SCHEMA';")
+
+        # Check indexes
+        INDEX_COUNT=$(run_psql "$DB_NAME" \
+            "SELECT COUNT(*) FROM pg_indexes
+             WHERE schemaname='$SCHEMA' AND indexname NOT LIKE '%_pkey';")
+
+        # Check functions
+        FUNC_COUNT=$(run_psql "$DB_NAME" \
+            "SELECT COUNT(*) FROM information_schema.routines
+             WHERE routine_schema='$SCHEMA' AND routine_type='FUNCTION';")
+
+        # Check procedures
+        PROC_COUNT=$(run_psql "$DB_NAME" \
+            "SELECT COUNT(*) FROM information_schema.routines
+             WHERE routine_schema='$SCHEMA' AND routine_type='PROCEDURE';")
+
+        echo "     roles:${ROLE_COUNT} users:${USER_COUNT} tables:${TABLE_COUNT} views:${VIEW_COUNT} indexes:${INDEX_COUNT} functions:${FUNC_COUNT} procedures:${PROC_COUNT}"
+
+        # ── Add only files that have content ──────────────────
+        echo "" >> $REPO/databases/$DB_NAME/changelog-root.xml
+        echo "    <!-- ── $SCHEMA ── -->" >> $REPO/databases/$DB_NAME/changelog-root.xml
+
+        # 001-roles.sql — only if roles exist
+        if [ "${ROLE_COUNT:-0}" -gt 0 ] && [ "$IS_FIRST" = "true" ]; then
+            echo "    <include file=\"modules/$SCHEMA/001-roles.sql\"/>" >> $REPO/databases/$DB_NAME/changelog-root.xml
+
+            cat > $REPO/databases/$DB_NAME/modules/$SCHEMA/001-roles.sql << EOF
+--liquibase formatted sql
+
+-- ============================================================
+-- 001-roles.sql — $DB_NAME
+-- Copied from existing DB — exact current roles
+-- ============================================================
+
+--changeset dba:${SAFE_DB}-${SAFE_SCH}-roles-001 runOnChange:true endDelimiter:\$\$END
+DO \$\$
+BEGIN
+
+EOF
+            # Extract actual roles from DB
+            ROLES=$(run_psql "$DB_NAME" \
+                "SELECT rolname,
+                        CASE WHEN rolsuper THEN 'SUPERUSER' ELSE '' END,
+                        CASE WHEN rolcreatedb THEN 'CREATEDB' ELSE '' END,
+                        CASE WHEN rolcreaterole THEN 'CREATEROLE' ELSE '' END,
+                        CASE WHEN rolinherit THEN 'INHERIT' ELSE 'NOINHERIT' END,
+                        CASE WHEN rolcanlogin THEN 'LOGIN' ELSE 'NOLOGIN' END,
+                        CASE WHEN rolreplication THEN 'REPLICATION' ELSE '' END
+                 FROM pg_roles
+                 WHERE rolname NOT LIKE 'pg_%'
+                 AND rolname NOT IN ('postgres','replication','monitor')
+                 AND rolcanlogin = false
+                 ORDER BY rolname;")
+
+            while IFS='|' read -r RNAME RSUPER RCREATEDB RCREATEROLE RINHERIT RLOGIN RREPL; do
+                RNAME=$(echo "$RNAME" | xargs); [ -z "$RNAME" ] && continue
+                ATTRS=$(echo "$RSUPER $RCREATEDB $RCREATEROLE $RINHERIT $RLOGIN $RREPL" | xargs)
+                cat >> $REPO/databases/$DB_NAME/modules/$SCHEMA/001-roles.sql << EOF
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '$RNAME') THEN
+        CREATE ROLE $RNAME $ATTRS;
+        RAISE NOTICE 'Created role: $RNAME';
+    ELSE
+        RAISE NOTICE 'Skipped: $RNAME (already exists)';
+    END IF;
+
+EOF
+            done <<< "$ROLES"
+
+            # Extract role memberships
+            MEMBERSHIPS=$(run_psql "$DB_NAME" \
+                "SELECT r.rolname AS role, m.rolname AS member
+                 FROM pg_auth_members am
+                 JOIN pg_roles r ON r.oid = am.roleid
+                 JOIN pg_roles m ON m.oid = am.member
+                 WHERE r.rolname NOT LIKE 'pg_%'
+                 AND m.rolname NOT LIKE 'pg_%'
+                 AND r.rolname NOT IN ('postgres')
+                 AND m.rolname NOT IN ('postgres')
+                 ORDER BY r.rolname, m.rolname;")
+
+            if [ -n "$MEMBERSHIPS" ]; then
+                echo "" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/001-roles.sql
+                echo "    -- Role memberships" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/001-roles.sql
+                while IFS='|' read -r GROLE GMEMBER; do
+                    GROLE=$(echo "$GROLE" | xargs); GMEMBER=$(echo "$GMEMBER" | xargs)
+                    [ -z "$GROLE" ] || [ -z "$GMEMBER" ] && continue
+                    echo "    EXECUTE 'GRANT $GROLE TO $GMEMBER';" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/001-roles.sql
+                done <<< "$MEMBERSHIPS"
+            fi
+
+            cat >> $REPO/databases/$DB_NAME/modules/$SCHEMA/001-roles.sql << EOF
+
+END
+\$\$
+\$\$END
+
+--rollback SELECT 'manual rollback — check roles before dropping';
+EOF
+            echo "     ✅ 001-roles.sql (${ROLE_COUNT} roles)"
+        fi
+
+        # 002-users.sql — only if login users exist
+        if [ "${USER_COUNT:-0}" -gt 0 ] && [ "$IS_FIRST" = "true" ]; then
+            echo "    <include file=\"modules/$SCHEMA/002-users.sql\"/>" >> $REPO/databases/$DB_NAME/changelog-root.xml
+
+            cat > $REPO/databases/$DB_NAME/modules/$SCHEMA/002-users.sql << EOF
+--liquibase formatted sql
+
+-- ============================================================
+-- 002-users.sql — $DB_NAME
+-- Copied from existing DB — exact current users + grants
+-- NOTE: Passwords set to placeholder — update in GitHub Secrets
+-- ============================================================
+
+--changeset dba:${SAFE_DB}-${SAFE_SCH}-users-001 runOnChange:true endDelimiter:\$\$END
+DO \$\$
+BEGIN
+
+EOF
+            # Extract actual login users
+            USERS=$(run_psql "$DB_NAME" \
+                "SELECT rolname,
+                        CASE WHEN rolinherit THEN 'INHERIT' ELSE 'NOINHERIT' END,
+                        CASE WHEN rolsuper THEN 'SUPERUSER' ELSE '' END,
+                        CASE WHEN rolcreatedb THEN 'CREATEDB' ELSE '' END,
+                        CASE WHEN rolcreaterole THEN 'CREATEROLE' ELSE '' END
+                 FROM pg_roles
+                 WHERE rolcanlogin = true
+                 AND rolname NOT IN ('postgres','replication','monitor')
+                 AND rolname NOT LIKE 'pg_%'
+                 ORDER BY rolname;")
+
+            while IFS='|' read -r UNAME UINHERIT USUPER UCREATEDB UCREATEROLE; do
+                UNAME=$(echo "$UNAME" | xargs); [ -z "$UNAME" ] && continue
+                UATTRS=$(echo "$UINHERIT $USUPER $UCREATEDB $UCREATEROLE" | xargs)
+                UUPPER=$(echo "${UNAME^^}" | tr '-' '_')
+                cat >> $REPO/databases/$DB_NAME/modules/$SCHEMA/002-users.sql << EOF
+    IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '$UNAME') THEN
+        CREATE USER $UNAME WITH PASSWORD '\${${UUPPER}_PASSWORD}' $UATTRS;
+        RAISE NOTICE 'Created user: $UNAME';
+    ELSE
+        RAISE NOTICE 'Skipped: $UNAME (already exists)';
+    END IF;
+
+EOF
+            done <<< "$USERS"
+
+            cat >> $REPO/databases/$DB_NAME/modules/$SCHEMA/002-users.sql << EOF
+END
+\$\$
+\$\$END
+
+-- ── Exact grants copied from DB ───────────────────────────────
+--changeset dba:${SAFE_DB}-${SAFE_SCH}-grants-001 runOnChange:true
+EOF
+
+            # Extract DB-level grants
+            DB_GRANTS=$(run_psql "$DB_NAME" \
+                "SELECT 'GRANT ' || privilege_type || ' ON DATABASE \"$DB_NAME\" TO ' || grantee || ';'
+                 FROM information_schema.role_table_grants
+                 WHERE table_catalog = '$DB_NAME'
+                 UNION
+                 SELECT 'GRANT CONNECT ON DATABASE \"$DB_NAME\" TO ' || r.rolname || ';'
+                 FROM pg_roles r
+                 WHERE r.rolcanlogin = true
+                 AND r.rolname NOT IN ('postgres')
+                 AND r.rolname NOT LIKE 'pg_%'
+                 AND has_database_privilege(r.rolname, '$DB_NAME', 'CONNECT');")
+
+            echo "$DB_GRANTS" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/002-users.sql
+            echo "" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/002-users.sql
+            echo "--rollback SELECT 'manual rollback — check users before dropping';" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/002-users.sql
+
+            echo "     ✅ 002-users.sql (${USER_COUNT} users)"
+        fi
+
+        # 003-schema.sql — always
+        echo "    <include file=\"modules/$SCHEMA/003-schema.sql\"/>" >> $REPO/databases/$DB_NAME/changelog-root.xml
+
+        cat > $REPO/databases/$DB_NAME/modules/$SCHEMA/003-schema.sql << EOF
+--liquibase formatted sql
+
+-- ============================================================
+-- 003-schema.sql — $DB_NAME / $SCHEMA
+-- Copied exact schema grants from DB
+-- ============================================================
+
+--changeset dba:${SAFE_DB}-${SAFE_SCH}-schema-001 runOnChange:true
+CREATE SCHEMA IF NOT EXISTS $SCHEMA;
+
+EOF
+        # Extract exact schema ACL
+        SCHEMA_GRANTS=$(run_psql "$DB_NAME" \
+            "SELECT 'GRANT ' || privilege_type || ' ON SCHEMA $SCHEMA TO ' || grantee || ';'
+             FROM information_schema.usage_privileges
+             WHERE object_schema = '$SCHEMA'
+             AND object_type = 'SCHEMA'
+             AND grantee NOT IN ('postgres','PUBLIC')
+             AND grantee NOT LIKE 'pg_%';")
+        [ -n "$SCHEMA_GRANTS" ] && echo "$SCHEMA_GRANTS" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/003-schema.sql
+
+        echo "" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/003-schema.sql
+        echo "--rollback DROP SCHEMA IF EXISTS $SCHEMA CASCADE;" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/003-schema.sql
+        echo "     ✅ 003-schema.sql"
+
+        # 004-tables.sql — only if tables exist
+        if [ "${TABLE_COUNT:-0}" -gt 0 ]; then
+            echo "    <include file=\"modules/$SCHEMA/004-tables.sql\"/>" >> $REPO/databases/$DB_NAME/changelog-root.xml
+
+            cat > $REPO/databases/$DB_NAME/modules/$SCHEMA/004-tables.sql << EOF
+--liquibase formatted sql
+
+-- ============================================================
+-- 004-tables.sql — $DB_NAME / $SCHEMA
+-- Copied exact table structure from DB
+-- ADD NEW TABLES at the bottom following same pattern
+-- ============================================================
+
+--changeset dba:${SAFE_DB}-${SAFE_SCH}-tables runOnChange:true endDelimiter:\$\$END
+DO \$\$
+BEGIN
+
+    SET LOCAL ROLE SESSION_USER;
+
+EOF
+            TABLES=$(run_psql "$DB_NAME" \
+                "SELECT table_name FROM information_schema.tables
+                 WHERE table_schema='$SCHEMA' AND table_type='BASE TABLE'
+                 ORDER BY table_name;")
+
+            while IFS= read -r TBL; do
+                TBL=$(echo "$TBL" | xargs); [ -z "$TBL" ] && continue
+                echo "       + table: $TBL"
+
+                # Get exact DDL using pg_dump (no-privileges — grants handled separately below)
+                TBL_DDL=$(pg_dump -h $DB_HOST -p $DB_PORT -U $DB_USER \
+                    -d "$DB_NAME" \
+                    --schema="$SCHEMA" \
+                    --table="$SCHEMA.$TBL" \
+                    --schema-only \
+                    --no-owner \
+                    --no-privileges \
+                    --no-comments \
+                    2>/dev/null | grep -v "^--" | grep -v "^SET" | grep -v "^SELECT" | grep -v "^$" | grep -A1000 "CREATE TABLE")
+
+                cat >> $REPO/databases/$DB_NAME/modules/$SCHEMA/004-tables.sql << EOF
+    -- ── $TBL ─────────────────────────────────────────────
+    IF NOT EXISTS (
+        SELECT FROM pg_tables
+        WHERE schemaname='$SCHEMA' AND tablename='$TBL'
+    ) THEN
+$TBL_DDL
+        RAISE NOTICE 'Created table: $TBL';
+    ELSE
+        RAISE NOTICE 'Skipped: $TBL (already exists)';
+    END IF;
+
+EOF
+            done <<< "$TABLES"
+
+            cat >> $REPO/databases/$DB_NAME/modules/$SCHEMA/004-tables.sql << EOF
+    -- ADD NEW TABLES BELOW ──────────────────────────────────
+
+END
+\$\$
+\$\$END
+
+--rollback SELECT 'manual rollback required';
+EOF
+            echo "     ✅ 004-tables.sql (${TABLE_COUNT} tables)"
+
+            # ── Extract exact table-level grants from DB ───────
+            TABLE_GRANTS=$(run_psql "$DB_NAME" \
+                "SELECT 'GRANT ' || string_agg(privilege_type, ', ' ORDER BY privilege_type) || ' ON TABLE ' || table_schema || '.' || table_name || ' TO ' || grantee || ';' FROM information_schema.role_table_grants WHERE table_schema = '$SCHEMA' AND grantor != grantee AND grantee NOT IN ('postgres','PUBLIC') AND grantee NOT LIKE 'pg_%' GROUP BY table_schema, table_name, grantee ORDER BY table_name, grantee;")
+
+            SEQ_GRANTS=$(run_psql "$DB_NAME" \
+                "SELECT 'GRANT ' || privilege_type || ' ON SEQUENCE ' || object_schema || '.' || object_name || ' TO ' || grantee || ';' FROM information_schema.usage_privileges WHERE object_schema = '$SCHEMA' AND object_type = 'SEQUENCE' AND grantee NOT IN ('postgres','PUBLIC') AND grantee NOT LIKE 'pg_%' ORDER BY object_name, grantee;")
+
+            if [ -n "$TABLE_GRANTS" ] || [ -n "$SEQ_GRANTS" ]; then
+                printf "
+-- Table & Sequence GRANTS — copied exact from DB
+" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/004-tables.sql
+                printf -- "--changeset dba:${SAFE_DB}-${SAFE_SCH}-table-grants runOnChange:true
+" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/004-tables.sql
+                [ -n "$TABLE_GRANTS" ] && echo "$TABLE_GRANTS" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/004-tables.sql
+                [ -n "$SEQ_GRANTS" ] && echo "" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/004-tables.sql && echo "-- Sequence grants" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/004-tables.sql && echo "$SEQ_GRANTS" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/004-tables.sql
+                printf "
+--rollback SELECT 'manual rollback for table grants';
+" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/004-tables.sql
+                GRANT_COUNT=$(echo "$TABLE_GRANTS" | grep -c "GRANT" 2>/dev/null || echo 0)
+                echo "     ✅ Table grants: ${GRANT_COUNT} statements copied"
+            else
+                echo "     ℹ️  No table-level grants found in $SCHEMA"
+            fi
+        fi
+
+        # 005-views.sql — only if views exist
+        if [ "${VIEW_COUNT:-0}" -gt 0 ]; then
+            echo "    <include file=\"modules/$SCHEMA/005-views.sql\"/>" >> $REPO/databases/$DB_NAME/changelog-root.xml
+
+            cat > $REPO/databases/$DB_NAME/modules/$SCHEMA/005-views.sql << EOF
+--liquibase formatted sql
+
+-- ============================================================
+-- 005-views.sql — $DB_NAME / $SCHEMA
+-- Copied exact view definitions from DB
+-- ============================================================
+
+EOF
+            VIEWS=$(run_psql "$DB_NAME" \
+                "SELECT table_name FROM information_schema.views
+                 WHERE table_schema='$SCHEMA'
+                 ORDER BY table_name;")
+
+            while IFS= read -r VW; do
+                VW=$(echo "$VW" | xargs); [ -z "$VW" ] && continue
+                echo "       + view: $VW"
+
+                VIEW_DEF=$(run_psql "$DB_NAME" \
+                    "SELECT 'CREATE OR REPLACE VIEW $SCHEMA.$VW AS ' || view_definition
+                     FROM information_schema.views
+                     WHERE table_schema='$SCHEMA' AND table_name='$VW';")
+
+                cat >> $REPO/databases/$DB_NAME/modules/$SCHEMA/005-views.sql << EOF
+--changeset dba:${SAFE_DB}-${SAFE_SCH}-view-${VW} runOnChange:true
+$VIEW_DEF
+
+--rollback DROP VIEW IF EXISTS $SCHEMA.$VW;
+EOF
+            done <<< "$VIEWS"
+            echo "     ✅ 005-views.sql (${VIEW_COUNT} views)"
+        fi
+
+        # 006-indexes.sql — only if indexes exist
+        if [ "${INDEX_COUNT:-0}" -gt 0 ]; then
+            echo "    <include file=\"modules/$SCHEMA/006-indexes.sql\"/>" >> $REPO/databases/$DB_NAME/changelog-root.xml
+
+            cat > $REPO/databases/$DB_NAME/modules/$SCHEMA/006-indexes.sql << EOF
+--liquibase formatted sql
+
+-- ============================================================
+-- 006-indexes.sql — $DB_NAME / $SCHEMA
+-- Copied exact index definitions from DB
+-- ============================================================
+
+--changeset dba:${SAFE_DB}-${SAFE_SCH}-indexes runOnChange:true
+
+EOF
+            INDEXES=$(run_psql "$DB_NAME" \
+                "SELECT indexdef FROM pg_indexes
+                 WHERE schemaname='$SCHEMA'
+                 AND indexname NOT LIKE '%_pkey'
+                 ORDER BY indexname;")
+
+            while IFS= read -r IDX; do
+                IDX=$(echo "$IDX" | xargs); [ -z "$IDX" ] && continue
+                SAFE_IDX=$(echo "$IDX" \
+                    | sed 's/CREATE INDEX /CREATE INDEX IF NOT EXISTS /g' \
+                    | sed 's/CREATE UNIQUE INDEX /CREATE UNIQUE INDEX IF NOT EXISTS /g')
+                echo "${SAFE_IDX};" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/006-indexes.sql
+                echo "" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/006-indexes.sql
+            done <<< "$INDEXES"
+
+            echo "--rollback SELECT 'manual rollback for indexes';" >> $REPO/databases/$DB_NAME/modules/$SCHEMA/006-indexes.sql
+            echo "     ✅ 006-indexes.sql (${INDEX_COUNT} indexes)"
+        fi
+
+        # 007-functions.sql — only if functions exist
+        if [ "${FUNC_COUNT:-0}" -gt 0 ]; then
+            echo "    <include file=\"modules/$SCHEMA/007-functions.sql\"/>" >> $REPO/databases/$DB_NAME/changelog-root.xml
+
+            cat > $REPO/databases/$DB_NAME/modules/$SCHEMA/007-functions.sql << EOF
+--liquibase formatted sql
+
+-- ============================================================
+-- 007-functions.sql — $DB_NAME / $SCHEMA
+-- Copied exact function definitions from DB
+-- ============================================================
+
+EOF
+            FUNCS=$(run_psql "$DB_NAME" \
+                "SELECT DISTINCT routine_name
+                 FROM information_schema.routines
+                 WHERE routine_schema='$SCHEMA'
+                 AND routine_type='FUNCTION'
+                 ORDER BY routine_name;")
+
+            while IFS= read -r FN; do
+                FN=$(echo "$FN" | xargs); [ -z "$FN" ] && continue
+                echo "       + function: $FN"
+                FNDEF=$(run_psql "$DB_NAME" \
+                    "SELECT pg_get_functiondef(oid)
+                     FROM pg_proc
+                     WHERE proname='$FN'
+                     AND prokind='f'
+                     AND pronamespace=(SELECT oid FROM pg_namespace WHERE nspname='$SCHEMA')
+                     LIMIT 1;")
+                if [ -n "$FNDEF" ]; then
+                    cat >> $REPO/databases/$DB_NAME/modules/$SCHEMA/007-functions.sql << EOF
+--changeset dba:${SAFE_DB}-${SAFE_SCH}-func-${FN} runOnChange:true endDelimiter:\$\$END
+$FNDEF
+\$\$END
+
+--rollback DROP FUNCTION IF EXISTS $SCHEMA.$FN;
+EOF
+                fi
+            done <<< "$FUNCS"
+            echo "     ✅ 007-functions.sql (${FUNC_COUNT} functions)"
+        fi
+
+        # 008-procedures.sql — only if procedures exist
+        if [ "${PROC_COUNT:-0}" -gt 0 ]; then
+            echo "    <include file=\"modules/$SCHEMA/008-procedures.sql\"/>" >> $REPO/databases/$DB_NAME/changelog-root.xml
+
+            cat > $REPO/databases/$DB_NAME/modules/$SCHEMA/008-procedures.sql << EOF
+--liquibase formatted sql
+
+-- ============================================================
+-- 008-procedures.sql — $DB_NAME / $SCHEMA
+-- Copied exact procedure definitions from DB
+-- ============================================================
+
+EOF
+            PROCS=$(run_psql "$DB_NAME" \
+                "SELECT DISTINCT routine_name
+                 FROM information_schema.routines
+                 WHERE routine_schema='$SCHEMA'
+                 AND routine_type='PROCEDURE'
+                 ORDER BY routine_name;")
+
+            while IFS= read -r PR; do
+                PR=$(echo "$PR" | xargs); [ -z "$PR" ] && continue
+                echo "       + procedure: $PR"
+                PRDEF=$(run_psql "$DB_NAME" \
+                    "SELECT pg_get_functiondef(oid)
+                     FROM pg_proc
+                     WHERE proname='$PR'
+                     AND prokind='p'
+                     AND pronamespace=(SELECT oid FROM pg_namespace WHERE nspname='$SCHEMA')
+                     LIMIT 1;")
+                if [ -n "$PRDEF" ]; then
+                    cat >> $REPO/databases/$DB_NAME/modules/$SCHEMA/008-procedures.sql << EOF
+--changeset dba:${SAFE_DB}-${SAFE_SCH}-proc-${PR} runOnChange:true endDelimiter:\$\$END
+$PRDEF
+\$\$END
+
+--rollback DROP PROCEDURE IF EXISTS $SCHEMA.$PR;
+EOF
+                fi
+            done <<< "$PROCS"
+            echo "     ✅ 008-procedures.sql (${PROC_COUNT} procedures)"
+        fi
+
+        echo "" >> $REPO/databases/$DB_NAME/changelog-root.xml
+        IS_FIRST=false
+        echo "  ✅ Schema $SCHEMA done"
+    done
+
+    echo "</databaseChangeLog>" >> $REPO/databases/$DB_NAME/changelog-root.xml
+
+    # ── Mark all existing as already applied ──────────────────
+    echo ""
+    echo "  Running changelog-sync for $DB_NAME..."
+    cd $REPO/databases/$DB_NAME
+
+    liquibase \
+        --url="jdbc:postgresql://$DB_HOST:$DB_PORT/$DB_NAME" \
+        --username=$DB_USER \
+        --search-path="$(pwd)" \
+        --changeLogFile="changelog-root.xml" \
+        changelog-sync 2>&1 | tail -3
+
+    echo "  ✅ $DB_NAME done!"
+    cd $REPO
+
+done
+
+echo ""
+echo "============================================"
+echo " ✅ All databases migrated!"
+echo ""
+echo " Files created only where content exists:"
+echo "   001-roles.sql      → only if roles found"
+echo "   002-users.sql      → only if users found"
+echo "   003-schema.sql     → always"
+echo "   004-tables.sql     → only if tables found"
+echo "   005-views.sql      → only if views found"
+echo "   006-indexes.sql    → only if indexes found"
+echo "   007-functions.sql  → only if functions found"
+echo "   008-procedures.sql → only if procedures found"
+echo ""
+echo " Next steps:"
+echo "   git add databases/"
+echo "   git commit -m 'feat: copy exact structure from all DBs'"
+echo "   git push origin development"
+echo "============================================"

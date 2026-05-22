@@ -1,0 +1,30 @@
+# ── PostgreSQL Connection (your existing server) ─────────────
+pg_host: "10.0.0.10"              
+pg_port: 5432
+pg_database: "devdb"
+pg_user: "devuser"
+pg_password: "" 
+
+# -- Liquibase 
+liquibase_version: "4.33.0"
+jdbc_driver_version: "42.7.1"
+jdbc_driver_dir: "/opt/liquibase/drivers"
+liquibase_project_dir: "/opt/liquibase-project"
+liquibase_log_dir: "/var/log/liquibase"
+
+# -- Java 
+java_home: "/usr/lib/jvm/java-17-openjdk-amd64"
+
+# -- Deploy User (used by GitHub Actions to SSH in)
+deploy_user: "deployer"
+deploy_group: "deployer"
+deploy_home: "/home/deployer"
+
+# GitHub Actions will use this public key to authenticate.
+# Generate with: ssh-keygen -t ed25519 -C "github-actions-deployer"
+# Paste the PUBLIC key here, store PRIVATE key in GitHub Actions secret.
+deploy_ssh_public_key: "ssh-ed25519 AAAAC3Nza... github-actions-deployer"  # ← Replace!
+
+# -- UFW Firewall 
+# Allow SSH from anywhere (restrict to GitHub IP ranges in production)
+allow_ssh_from: "any"

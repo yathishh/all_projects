@@ -1,0 +1,10 @@
+# ============================================================
+# playbooks/deploy_postgresql.yml
+# Run individually: ansible-playbook -i inventories/hosts.ini playbooks/deploy_postgresql.yml
+# ============================================================
+---
+- name: Deploy PostgreSQL Only
+  hosts: postgresql
+  become: yes
+  roles:
+    - role: postgresql

@@ -1,0 +1,81 @@
+============================================================
+  PostgreSQL Index Health Report
+  Host      : pgsql_cluster.adhkiapps.com:5001
+  User      : postgres
+  Generated : Tue Apr  7 19:06:06 IST 2026
+============================================================
+
+  DB: acx                        Unused: 15     Redundant: 0      Duplicate: 3      Schemas: 4
+  DB: adhki                      Unused: 14     Redundant: 2      Duplicate: 0      Schemas: 4
+  DB: adhki_messaging            Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 2
+  DB: agent_session              Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: autoform                   Unused: 11     Redundant: 0      Duplicate: 0      Schemas: 3
+  DB: ave                        Unused: 22     Redundant: 0      Duplicate: 0      Schemas: 2
+  DB: aws_connect                Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 2
+  DB: basic_ivrs                 Unused: 1      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: billing                    Unused: 63     Redundant: 1      Duplicate: 2      Schemas: 2
+  DB: billing_pg50               Unused: 62     Redundant: 1      Duplicate: 3      Schemas: 1
+  DB: billing_replica_old        Unused: 65     Redundant: 1      Duplicate: 2      Schemas: 1
+  DB: bookmarks                  Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: caams                      Unused: 9      Redundant: 1      Duplicate: 0      Schemas: 3
+  DB: cardstream                 Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: ccdbs                      Unused: 7      Redundant: 0      Duplicate: 1      Schemas: 1
+  DB: ccdbs222                   Unused: 7      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: ccdbs_pg50                 Unused: 7      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: cdr                        Unused: 10     Redundant: 1      Duplicate: 1      Schemas: 1
+  DB: cogno_db                   Unused: 5      Redundant: 0      Duplicate: 0      Schemas: 2
+  DB: contact                    Unused: 16     Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: croud                      Unused: 6      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: dbsync                     Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: dcdr_gw1                   Unused: 2      Redundant: 0      Duplicate: 0      Schemas: 2
+  DB: django                     Unused: 14     Redundant: 4      Duplicate: 2      Schemas: 1
+  DB: epdq_payments              Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: feedback                   Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: homer_config               Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: homer_data                 Unused: 17152  Redundant: 0      Duplicate: 65910  Schemas: 1
+  DB: keycloack_v2               Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: keycloak                   Unused: 83     Redundant: 14     Duplicate: 0      Schemas: 1
+  DB: keycloak40                 Unused: 84     Redundant: 14     Duplicate: 0      Schemas: 1
+  DB: keycloak_v2                Unused: 83     Redundant: 14     Duplicate: 0      Schemas: 1
+  DB: keycloak_v21               Unused: 83     Redundant: 14     Duplicate: 0      Schemas: 1
+  DB: loneworkerdb               Unused: 35     Redundant: 0      Duplicate: 1      Schemas: 2
+  DB: msgreports                 Unused: 9      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: msgreports_pg50            Unused: 9      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: msgstore                   Unused: 31     Redundant: 1      Duplicate: 0      Schemas: 1
+  DB: msgstore_pg50              Unused: 32     Redundant: 1      Duplicate: 0      Schemas: 1
+  DB: n8n                        Unused: 16     Redundant: 3      Duplicate: 0      Schemas: 1
+  DB: netbox                     Unused: 453    Redundant: 151    Duplicate: 91     Schemas: 1
+  DB: notes                      Unused: 1      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: phantom                    Unused: 3      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: recordings_manager         Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 2
+  DB: references                 Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: registry                   Unused: 23     Redundant: 1      Duplicate: 0      Schemas: 1
+  DB: registry_ifl               Unused: 23     Redundant: 1      Duplicate: 0      Schemas: 1
+  DB: single_telephony           Unused: 5      Redundant: 1      Duplicate: 1      Schemas: 3
+  DB: superset                   Unused: 15     Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: switchboard                Unused: 18     Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: test                       Unused: 1      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: test-billing               Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: test-sagepay               Unused: 2      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: tts_db                     Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 2
+  DB: users                      Unused: 0      Redundant: 0      Duplicate: 1      Schemas: 1
+  DB: virtualoffice              Unused: 115    Redundant: 8      Duplicate: 3      Schemas: 26
+  DB: vtlogger                   Unused: 0      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: widgets                    Unused: 3      Redundant: 1      Duplicate: 0      Schemas: 3
+  DB: z_messagereports           Unused: 9      Redundant: 0      Duplicate: 0      Schemas: 1
+  DB: z_messagestore             Unused: 35     Redundant: 1      Duplicate: 0      Schemas: 1
+  DB: z_v2                       Unused: 101    Redundant: 0      Duplicate: 0      Schemas: 25
+  DB: z_voffice                  Unused: 101    Redundant: 0      Duplicate: 0      Schemas: 25
+  DB: zz_widgets                 Unused: 1      Redundant: 0      Duplicate: 0      Schemas: 3
+  DB: zzz_billing                Unused: 65     Redundant: 1      Duplicate: 2      Schemas: 1
+
+============================================================
+  GRAND TOTALS ACROSS ALL DATABASES
+============================================================
+  Total unused indexes:                    18927
+  Total large unused (>1MB):               1564
+  Total redundant indexes:                 66260
+------------------------------------------------------------
+  Output directory : ./pg_ix_replica_reports
+  Summary file     : ./pg_ix_replica_reports/SUMMARY_20260407_190603.txt
+============================================================

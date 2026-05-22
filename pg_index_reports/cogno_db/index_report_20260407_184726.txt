@@ -1,0 +1,75 @@
+============================================================
+  DATABASE : cogno_db
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:50:53 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (2 found)
+────────────────────────────────────────────────────────────
+  • cogno
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (4 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  cogno                action_logs               idx_al_details                      18 MB      0        gin         
+    DDL: CREATE INDEX idx_al_details ON cogno.action_logs USING gin (details)
+  cogno                action_logs               idx_al_performed_by                 1120 kB    0        btree       
+    DDL: CREATE INDEX idx_al_performed_by ON cogno.action_logs USING btree (performed_by)
+  cogno                action_logs               idx_al_action_type                  976 kB     0        btree       
+    DDL: CREATE INDEX idx_al_action_type ON cogno.action_logs USING btree (action_type)
+  cogno                action_logs               idx_al_details_callid               848 kB     0        btree       
+    DDL: CREATE INDEX idx_al_details_callid ON cogno.action_logs USING btree (((details ->> 'callid'::text)))
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (2 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  cogno                action_logs               idx_al_details                      18 MB        0       
+    DDL: CREATE INDEX idx_al_details ON cogno.action_logs USING gin (details)
+  cogno                action_logs               idx_al_performed_by                 1120 kB      0       
+    DDL: CREATE INDEX idx_al_performed_by ON cogno.action_logs USING btree (performed_by)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY cogno."idx_al_details"; -- size: 18 MB
+  DROP INDEX CONCURRENTLY cogno."idx_al_performed_by"; -- size: 1120 kB
+  DROP INDEX CONCURRENTLY cogno."idx_al_action_type"; -- size: 976 kB
+  DROP INDEX CONCURRENTLY cogno."idx_al_details_callid"; -- size: 848 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  cogno                  59         1774 MB         4              
+  public                 0          0 bytes         0              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: cogno_db
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         2
+  Unused indexes (0 scans):                4
+  Large unused (>1MB):                     2
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   4
+────────────────────────────────────────────────────────────

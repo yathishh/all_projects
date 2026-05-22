@@ -1,0 +1,127 @@
+#!/bin/bash
+# =============================================================
+# Script: setup_global_rw.sh
+# Purpose: Grant RW permissions to global_rw role across ALL
+#          databases and schemas in the cluster
+# Usage:   ./setup_global_rw.sh
+# Note:    Run ONCE when setting up the cluster
+#          CONNECT is NOT granted at role level (per user only)
+# =============================================================
+
+DB_HOST="172.30.19.51"
+DB_PORT="5432"
+DB_SUPERUSER="postgres"
+ROLE_NAME="global_rw"
+
+# Use .pgpass for password-free execution (recommended)
+# echo "DB_HOST:5432:*:postgres:your_password" >> ~/.pgpass && chmod 600 ~/.pgpass
+
+echo "======================================================"
+echo " Setting up role: $ROLE_NAME across all databases"
+echo "======================================================"
+
+# Step 1: Create global_rw role if not exists
+ROLE_EXISTS=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -Atc \
+  "SELECT 1 FROM pg_roles WHERE rolname = '$ROLE_NAME';")
+
+if [ "$ROLE_EXISTS" = "1" ]; then
+  echo "✔ Role '$ROLE_NAME' already exists. Skipping creation."
+else
+  psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d postgres -c "
+    CREATE ROLE $ROLE_NAME WITH
+      NOSUPERUSER
+      NOCREATEDB
+      NOCREATEROLE
+      INHERIT
+      NOLOGIN
+      NOREPLICATION
+      NOBYPASSRLS
+      CONNECTION LIMIT -1;
+  "
+  echo "✔ Role '$ROLE_NAME' created."
+fi
+
+# Step 2: Get all databases (exclude system DBs)
+DATABASES=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -Atc "
+  SELECT datname FROM pg_database
+  WHERE datistemplate = false
+  AND datname NOT IN ('postgres', 'rdsadmin')
+  ORDER BY datname;
+")
+
+if [ -z "$DATABASES" ]; then
+  echo "ERROR: No databases found!"
+  exit 1
+fi
+
+echo ""
+echo "Found databases:"
+echo "$DATABASES"
+echo ""
+
+# Step 3: Loop through each database and grant schema permissions
+# NOTE: CONNECT is NOT granted to the role — only to individual users
+for DB in $DATABASES; do
+  echo "------------------------------------------------------"
+  echo " Processing database: $DB"
+  echo "------------------------------------------------------"
+
+  # Get all non-system schemas
+  SCHEMAS=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -Atc "
+    SELECT schema_name FROM information_schema.schemata
+    WHERE schema_name NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
+    AND schema_name NOT LIKE 'pg_%'
+    ORDER BY schema_name;
+  ")
+
+  if [ -z "$SCHEMAS" ]; then
+    echo "  No user schemas found in $DB, skipping..."
+    continue
+  fi
+
+  echo "  Schemas: $SCHEMAS"
+
+  for SCHEMA in $SCHEMAS; do
+    echo "  -> Granting on schema: $SCHEMA"
+
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" \
+      -c "GRANT USAGE ON SCHEMA \"$SCHEMA\" TO $ROLE_NAME;"
+
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" \
+      -c "GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA \"$SCHEMA\" TO $ROLE_NAME;"
+
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" \
+      -c "GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA \"$SCHEMA\" TO $ROLE_NAME;"
+
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" \
+      -c "GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA \"$SCHEMA\" TO $ROLE_NAME;"
+
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" \
+      -c "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$SCHEMA\" GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO $ROLE_NAME;"
+
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" \
+      -c "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$SCHEMA\" GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO $ROLE_NAME;"
+
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" \
+      -c "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$SCHEMA\" GRANT EXECUTE ON FUNCTIONS TO $ROLE_NAME;"
+
+    # Verify
+    RESULT=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -Atc \
+      "SELECT has_schema_privilege('$ROLE_NAME', '$SCHEMA', 'USAGE');")
+
+    if [ "$RESULT" = "t" ]; then
+      echo "  ✔ Done: $DB -> $SCHEMA"
+    else
+      echo "  ❌ FAILED: $DB -> $SCHEMA (verify manually!)"
+    fi
+  done
+
+  echo " ✔ Completed: $DB"
+  echo ""
+done
+
+echo "======================================================"
+echo " global_rw setup COMPLETE across all databases!"
+echo " NOTE: CONNECT is NOT granted at role level."
+echo "       Grant CONNECT per user using create_app_user.sh"
+echo "======================================================"

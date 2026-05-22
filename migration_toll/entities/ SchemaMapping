@@ -1,0 +1,84 @@
+{
+  "name": "SchemaMapping",
+  "type": "object",
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "description": "Reference to migration task"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Reference to migration project"
+    },
+    "source_field": {
+      "type": "string",
+      "description": "Source column/field name"
+    },
+    "source_type": {
+      "type": "string",
+      "description": "Source data type"
+    },
+    "target_field": {
+      "type": "string",
+      "description": "Target column/field name"
+    },
+    "target_type": {
+      "type": "string",
+      "description": "Target data type"
+    },
+    "transformation": {
+      "type": "string",
+      "enum": [
+        "direct",
+        "cast",
+        "custom_function",
+        "split",
+        "merge",
+        "lookup",
+        "default_value",
+        "skip"
+      ],
+      "default": "direct",
+      "description": "Transformation type"
+    },
+    "transformation_expression": {
+      "type": "string",
+      "description": "Custom transformation expression"
+    },
+    "is_primary_key": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a primary key field"
+    },
+    "is_nullable": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the field is nullable"
+    },
+    "default_value": {
+      "type": "string",
+      "description": "Default value if source is null"
+    },
+    "validation_status": {
+      "type": "string",
+      "enum": [
+        "valid",
+        "warning",
+        "error",
+        "unchecked"
+      ],
+      "default": "unchecked",
+      "description": "Mapping validation status"
+    },
+    "validation_message": {
+      "type": "string",
+      "description": "Validation result message"
+    }
+  },
+  "required": [
+    "task_id",
+    "project_id",
+    "source_field",
+    "target_field"
+  ]
+}

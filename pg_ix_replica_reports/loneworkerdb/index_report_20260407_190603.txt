@@ -1,0 +1,170 @@
+============================================================
+  DATABASE : loneworkerdb
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:13:01 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (2 found)
+────────────────────────────────────────────────────────────
+  • loneworker
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (35 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  loneworker           companies                 idx_company_entity_status           16 kB      0        btree       
+    DDL: CREATE INDEX idx_company_entity_status ON loneworker.companies USING btree (entity_status)
+  loneworker           companies                 idx_company_contact_phone           16 kB      0        btree       
+    DDL: CREATE INDEX idx_company_contact_phone ON loneworker.companies USING btree (contact_phone)
+  loneworker           companies                 idx_company_name                    16 kB      0        btree       
+    DDL: CREATE INDEX idx_company_name ON loneworker.companies USING btree (name)
+  loneworker           dt_absences               idx_dt_absences_worker              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_dt_absences_worker ON loneworker.dt_absences USING btree (id_worker)
+  loneworker           dt_absences               idx_dt_absences_status              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_dt_absences_status ON loneworker.dt_absences USING btree (id_leave_status)
+  loneworker           email_audit               idx_email_audit_email_type          16 kB      0        btree       
+    DDL: CREATE INDEX idx_email_audit_email_type ON loneworker.email_audit USING btree (email_type)
+  loneworker           email_audit               idx_email_audit_send_at             16 kB      0        btree       
+    DDL: CREATE INDEX idx_email_audit_send_at ON loneworker.email_audit USING btree (send_at)
+  loneworker           email_audit               idx_email_audit_pending             16 kB      0        btree       
+    DDL: CREATE INDEX idx_email_audit_pending ON loneworker.email_audit USING btree (pending)
+  loneworker           email_audit               idx_email_audit_status              16 kB      0        btree       
+    DDL: CREATE INDEX idx_email_audit_status ON loneworker.email_audit USING btree (status)
+  loneworker           email_audit               idx_email_audit_mto                 16 kB      0        btree       
+    DDL: CREATE INDEX idx_email_audit_mto ON loneworker.email_audit USING btree (mto)
+  loneworker           emergency_contacts        idx_emergency_contacts_site_id      16 kB      0        btree       
+    DDL: CREATE INDEX idx_emergency_contacts_site_id ON loneworker.emergency_contacts USING btree (site_id)
+  loneworker           escalation_attempts       idx_escalation_attempts_status      48 kB      0        btree       
+    DDL: CREATE INDEX idx_escalation_attempts_status ON loneworker.escalation_attempts USING btree (attempt_status)
+  loneworker           escalation_attempts       idx_escalation_attempts_time        48 kB      0        btree       
+    DDL: CREATE INDEX idx_escalation_attempts_time ON loneworker.escalation_attempts USING btree (attempt_time)
+  loneworker           escalation_attempts       idx_escalation_attempts_escalation_id 40 kB      0        btree       
+    DDL: CREATE INDEX idx_escalation_attempts_escalation_id ON loneworker.escalation_attempts USING btree (escalation_id)
+  loneworker           escalation_attempts       idx_escalation_attempts_workflow_id 32 kB      0        btree       
+    DDL: CREATE INDEX idx_escalation_attempts_workflow_id ON loneworker.escalation_attempts USING btree (workflow_id)
+  loneworker           escalation_attempts       idx_escalation_attempts_action_type 32 kB      0        btree       
+    DDL: CREATE INDEX idx_escalation_attempts_action_type ON loneworker.escalation_attempts USING btree (action_type)
+  loneworker           escalation_workflows      idx_workflow_site_active            16 kB      0        btree       
+    DDL: CREATE INDEX idx_workflow_site_active ON loneworker.escalation_workflows USING btree (site_id, is_active)
+  loneworker           escalation_workflows      idx_workflow_default_active         16 kB      0        btree       
+    DDL: CREATE INDEX idx_workflow_default_active ON loneworker.escalation_workflows USING btree (is_default, is_active)
+  loneworker           escalations               idx_escalation_status               16 kB      0        btree       
+    DDL: CREATE INDEX idx_escalation_status ON loneworker.escalations USING btree (escalation_status)
+  loneworker           lone_worker_sessions      idx_session_worker_status           16 kB      0        btree       
+    DDL: CREATE INDEX idx_session_worker_status ON loneworker.lone_worker_sessions USING btree (worker_id, session_status)
+  loneworker           otp_details               idx_otp_details_user_email          16 kB      0        btree       
+    DDL: CREATE INDEX idx_otp_details_user_email ON loneworker.otp_details USING btree (user_email)
+  loneworker           scheduled_checkins        idx_checkin_session_id              40 kB      0        btree       
+    DDL: CREATE INDEX idx_checkin_session_id ON loneworker.scheduled_checkins USING btree (session_id)
+  loneworker           session_breaks            idx_break_status_expected_end       16 kB      0        btree       
+    DDL: CREATE INDEX idx_break_status_expected_end ON loneworker.session_breaks USING btree (break_status, expected_end_at)
+  loneworker           shift_assignment_history  idx_assignment_lookup               16 kB      0        btree       
+    DDL: CREATE INDEX idx_assignment_lookup ON loneworker.shift_assignment_history USING btree (worker_id, shift_id, is_current)
+  loneworker           shifts                    idx_shift_name_company              16 kB      0        btree       
+    DDL: CREATE INDEX idx_shift_name_company ON loneworker.shifts USING btree (name, company_id)
+  loneworker           shifts                    idx_shift_company_site              16 kB      0        btree       
+    DDL: CREATE INDEX idx_shift_company_site ON loneworker.shifts USING btree (company_id, site_id)
+  loneworker           sites                     idx_sites_company_entity_status     16 kB      0        btree       
+    DDL: CREATE INDEX idx_sites_company_entity_status ON loneworker.sites USING btree (company_id, entity_status)
+  loneworker           user_sites                idx_user_sites_user_id              16 kB      0        btree       
+    DDL: CREATE INDEX idx_user_sites_user_id ON loneworker.user_sites USING btree (user_id)
+  loneworker           user_sites                idx_user_sites_site_id              16 kB      0        btree       
+    DDL: CREATE INDEX idx_user_sites_site_id ON loneworker.user_sites USING btree (site_id)
+  loneworker           worker_absences           idx_absence_worker_dates            16 kB      0        btree       
+    DDL: CREATE INDEX idx_absence_worker_dates ON loneworker.worker_absences USING btree (worker_id, start_date, end_date)
+  loneworker           worker_absences           idx_absence_approval_status         16 kB      0        btree       
+    DDL: CREATE INDEX idx_absence_approval_status ON loneworker.worker_absences USING btree (approval_status, entity_status)
+  loneworker           worker_absences           idx_absence_site_status             16 kB      0        btree       
+    DDL: CREATE INDEX idx_absence_site_status ON loneworker.worker_absences USING btree (site_id, entity_status)
+  loneworker           workers                   idx_worker_phone                    16 kB      0        btree       
+    DDL: CREATE INDEX idx_worker_phone ON loneworker.workers USING btree (phone)
+  loneworker           workers                   idx_worker_company_site             16 kB      0        btree       
+    DDL: CREATE INDEX idx_worker_company_site ON loneworker.workers USING btree (company_id, site_id)
+  loneworker           workers                   idx_worker_status_deleted           16 kB      0        btree       
+    DDL: CREATE INDEX idx_worker_status_deleted ON loneworker.workers USING btree (entity_status, deleted_at)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No large unused indexes found.
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  INDEX                          DUPLICATE OF                   SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  loneworker         otp_details            unique_otp_user_email          idx_otp_details_user_email     16 kB     
+    Index 1 DDL : CREATE UNIQUE INDEX unique_otp_user_email ON loneworker.otp_details USING btree (user_email)
+    Index 2 DDL : CREATE INDEX idx_otp_details_user_email ON loneworker.otp_details USING btree (user_email)
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY loneworker."idx_company_entity_status"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_company_contact_phone"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_company_name"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_dt_absences_worker"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY loneworker."idx_dt_absences_status"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY loneworker."idx_email_audit_email_type"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_email_audit_send_at"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_email_audit_pending"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_email_audit_status"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_email_audit_mto"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_emergency_contacts_site_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_escalation_attempts_status"; -- size: 48 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_escalation_attempts_time"; -- size: 48 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_escalation_attempts_escalation_id"; -- size: 40 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_escalation_attempts_workflow_id"; -- size: 32 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_escalation_attempts_action_type"; -- size: 32 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_workflow_site_active"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_workflow_default_active"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_escalation_status"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_session_worker_status"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_otp_details_user_email"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_checkin_session_id"; -- size: 40 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_break_status_expected_end"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_assignment_lookup"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_shift_name_company"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_shift_company_site"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_sites_company_entity_status"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_user_sites_user_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_user_sites_site_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_absence_worker_dates"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_absence_approval_status"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_absence_site_status"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_worker_phone"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_worker_company_site"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY loneworker."idx_worker_status_deleted"; -- size: 16 kB
+
+  -- Duplicate indexes (keep one, drop the other):
+  DROP INDEX CONCURRENTLY loneworker."unique_otp_user_email"; -- duplicate of idx_otp_details_user_email, size: 16 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  loneworker             82         2080 kB         35             
+  public                 0          0 bytes         0              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: loneworkerdb
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         2
+  Unused indexes (0 scans):                35
+  Large unused (>1MB):                     0
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 1
+  Total drop candidates:                   36
+────────────────────────────────────────────────────────────

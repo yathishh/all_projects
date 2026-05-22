@@ -1,0 +1,83 @@
+============================================================
+  DATABASE : croud
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:51:16 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (6 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               audit_table               idx_audit_table_full                24 MB      0        btree       
+    DDL: CREATE INDEX idx_audit_table_full ON public.audit_table USING btree (tbl, pk_name, pk_value)
+  public               audit_table               idx_audit_table_tbl                 23 MB      0        btree       
+    DDL: CREATE INDEX idx_audit_table_tbl ON public.audit_table USING btree (tbl, pk_value)
+  public               blacklist                 idx_blacklist_members_id            16 kB      0        btree       
+    DDL: CREATE INDEX idx_blacklist_members_id ON public.blacklist USING btree (members_id)
+  public               ddis                      idx_ddis_ddi                        1240 kB    0        btree       
+    DDL: CREATE INDEX idx_ddis_ddi ON public.ddis USING btree (ddi)
+  public               ddis                      idx_ddis_members_id                 1224 kB    0        btree       
+    DDL: CREATE INDEX idx_ddis_members_id ON public.ddis USING btree (members_id)
+  public               destinations              idx_destinations_name               16 kB      0        btree       
+    DDL: CREATE INDEX idx_destinations_name ON public.destinations USING btree (name)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (4 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  public               audit_table               idx_audit_table_full                24 MB        0       
+    DDL: CREATE INDEX idx_audit_table_full ON public.audit_table USING btree (tbl, pk_name, pk_value)
+  public               audit_table               idx_audit_table_tbl                 23 MB        0       
+    DDL: CREATE INDEX idx_audit_table_tbl ON public.audit_table USING btree (tbl, pk_value)
+  public               ddis                      idx_ddis_ddi                        1240 kB      0       
+    DDL: CREATE INDEX idx_ddis_ddi ON public.ddis USING btree (ddi)
+  public               ddis                      idx_ddis_members_id                 1224 kB      0       
+    DDL: CREATE INDEX idx_ddis_members_id ON public.ddis USING btree (members_id)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_audit_table_full"; -- size: 24 MB
+  DROP INDEX CONCURRENTLY public."idx_audit_table_tbl"; -- size: 23 MB
+  DROP INDEX CONCURRENTLY public."idx_blacklist_members_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_ddis_ddi"; -- size: 1240 kB
+  DROP INDEX CONCURRENTLY public."idx_ddis_members_id"; -- size: 1224 kB
+  DROP INDEX CONCURRENTLY public."idx_destinations_name"; -- size: 16 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 15         127 MB          6              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: croud
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                6
+  Large unused (>1MB):                     4
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   6
+────────────────────────────────────────────────────────────

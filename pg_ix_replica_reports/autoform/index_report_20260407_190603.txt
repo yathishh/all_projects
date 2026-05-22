@@ -1,0 +1,112 @@
+============================================================
+  DATABASE : autoform
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:06:53 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (3 found)
+────────────────────────────────────────────────────────────
+  • autocrud
+  • metrics
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (11 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  metrics              al_messages               idx_message_uuid                    488 kB     0        btree       
+    DDL: CREATE INDEX idx_message_uuid ON metrics.al_messages USING btree (uuid)
+  metrics              al_messages               idx_message_pending                 8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_message_pending ON metrics.al_messages USING btree (pending) WHERE (pending IS TRUE)
+  metrics              formtimes                 idx_acc_code_formstart              335 MB     0        btree       
+    DDL: CREATE INDEX idx_acc_code_formstart ON metrics.formtimes USING btree (form_start) INCLUDE (account_code) WITH (deduplicate_items='false')
+  metrics              formtimes                 idx_call_uuid                       331 MB     0        btree       
+    DDL: CREATE INDEX idx_call_uuid ON metrics.formtimes USING btree (call_uuid) WITH (deduplicate_items='true')
+  metrics              formtimes                 idx_zero_billsecs                   262 MB     0        btree       
+    DDL: CREATE INDEX idx_zero_billsecs ON metrics.formtimes USING btree (billsecs) WHERE (billsecs = '00:00:00'::interval)
+  metrics              formtimes                 idx_account_code                    251 MB     0        btree       
+    DDL: CREATE INDEX idx_account_code ON metrics.formtimes USING btree (account_code) WHERE (account_code IS NOT NULL)
+  metrics              formtimes                 idx_formtimes_id_groupname          71 MB      0        btree       
+    DDL: CREATE INDEX idx_formtimes_id_groupname ON metrics.formtimes USING btree (id, groupname)
+  metrics              formtimes                 idx_formtimes_groupname             62 MB      0        btree       
+    DDL: CREATE INDEX idx_formtimes_groupname ON metrics.formtimes USING btree (groupname)
+  metrics              formtimes                 idx_form_start                      59 MB      0        btree       
+    DDL: CREATE INDEX idx_form_start ON metrics.formtimes USING btree (date(timezone('UTC'::text, form_start)))
+  metrics              wrapmetrics               idx_ddi_no                          25 MB      0        btree       
+    DDL: CREATE INDEX idx_ddi_no ON metrics.wrapmetrics USING btree (ddi_no)
+  metrics              wrapmetrics               idx_agent_name                      24 MB      0        btree       
+    DDL: CREATE INDEX idx_agent_name ON metrics.wrapmetrics USING btree (name)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (9 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  metrics              formtimes                 idx_acc_code_formstart              335 MB       0       
+    DDL: CREATE INDEX idx_acc_code_formstart ON metrics.formtimes USING btree (form_start) INCLUDE (account_code) WITH (deduplicate_items='false')
+  metrics              formtimes                 idx_call_uuid                       331 MB       0       
+    DDL: CREATE INDEX idx_call_uuid ON metrics.formtimes USING btree (call_uuid) WITH (deduplicate_items='true')
+  metrics              formtimes                 idx_zero_billsecs                   262 MB       0       
+    DDL: CREATE INDEX idx_zero_billsecs ON metrics.formtimes USING btree (billsecs) WHERE (billsecs = '00:00:00'::interval)
+  metrics              formtimes                 idx_account_code                    251 MB       0       
+    DDL: CREATE INDEX idx_account_code ON metrics.formtimes USING btree (account_code) WHERE (account_code IS NOT NULL)
+  metrics              formtimes                 idx_formtimes_id_groupname          71 MB        0       
+    DDL: CREATE INDEX idx_formtimes_id_groupname ON metrics.formtimes USING btree (id, groupname)
+  metrics              formtimes                 idx_formtimes_groupname             62 MB        0       
+    DDL: CREATE INDEX idx_formtimes_groupname ON metrics.formtimes USING btree (groupname)
+  metrics              formtimes                 idx_form_start                      59 MB        0       
+    DDL: CREATE INDEX idx_form_start ON metrics.formtimes USING btree (date(timezone('UTC'::text, form_start)))
+  metrics              wrapmetrics               idx_ddi_no                          25 MB        0       
+    DDL: CREATE INDEX idx_ddi_no ON metrics.wrapmetrics USING btree (ddi_no)
+  metrics              wrapmetrics               idx_agent_name                      24 MB        0       
+    DDL: CREATE INDEX idx_agent_name ON metrics.wrapmetrics USING btree (name)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY metrics."idx_message_uuid"; -- size: 488 kB
+  DROP INDEX CONCURRENTLY metrics."idx_message_pending"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY metrics."idx_acc_code_formstart"; -- size: 335 MB
+  DROP INDEX CONCURRENTLY metrics."idx_call_uuid"; -- size: 331 MB
+  DROP INDEX CONCURRENTLY metrics."idx_zero_billsecs"; -- size: 262 MB
+  DROP INDEX CONCURRENTLY metrics."idx_account_code"; -- size: 251 MB
+  DROP INDEX CONCURRENTLY metrics."idx_formtimes_id_groupname"; -- size: 71 MB
+  DROP INDEX CONCURRENTLY metrics."idx_formtimes_groupname"; -- size: 62 MB
+  DROP INDEX CONCURRENTLY metrics."idx_form_start"; -- size: 59 MB
+  DROP INDEX CONCURRENTLY metrics."idx_ddi_no"; -- size: 25 MB
+  DROP INDEX CONCURRENTLY metrics."idx_agent_name"; -- size: 24 MB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  autocrud               0          0 bytes         0              
+  metrics                15         1994 MB         11             
+  public                 0          0 bytes         0              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: autoform
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         3
+  Unused indexes (0 scans):                11
+  Large unused (>1MB):                     9
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   11
+────────────────────────────────────────────────────────────

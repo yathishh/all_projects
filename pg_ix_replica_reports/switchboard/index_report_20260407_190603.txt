@@ -1,0 +1,123 @@
+============================================================
+  DATABASE : switchboard
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:15:33 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (18 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               addr                      idx_adr_cr                          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_adr_cr ON public.addr USING btree (regions_id)
+  public               change_history            idx_ch_main                         8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_ch_main ON public.change_history USING btree (path)
+  public               contacts                  idx_cts_cliref                      8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cts_cliref ON public.contacts USING btree (client_ref)
+  public               contacts                  idx_cts_mbr                         8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cts_mbr ON public.contacts USING btree (member)
+  public               contacts                  idx_cts_dsc                         8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_cts_dsc ON public.contacts USING btree (status_description)
+  public               dept                      idx_dpt_mbr                         200 kB     0        btree       
+    DDL: CREATE INDEX idx_dpt_mbr ON public.dept USING btree (members_id)
+  public               members_to_users          idx_m2u_main                        8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_m2u_main ON public.members_to_users USING btree (person_id, members_id)
+  public               person                    idx_per_status                      504 kB     0        btree       
+    DDL: CREATE INDEX idx_per_status ON public.person USING btree (status)
+  public               person_to_users           idx_p2u_main                        8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_p2u_main ON public.person_to_users USING btree (person_id, users_id)
+  public               properties                idx_properties_addr_line_1          67 MB      0        btree       
+    DDL: CREATE INDEX idx_properties_addr_line_1 ON public.properties USING btree (addr_line_1)
+  public               properties                idx_properties_ref1                 53 MB      0        btree       
+    DDL: CREATE INDEX idx_properties_ref1 ON public.properties USING btree (ref1)
+  public               properties                idx_properties_ref2                 52 MB      0        btree       
+    DDL: CREATE INDEX idx_properties_ref2 ON public.properties USING btree (ref2)
+  public               properties                idx_properties_postcode             45 MB      0        btree       
+    DDL: CREATE INDEX idx_properties_postcode ON public.properties USING btree (postcode)
+  public               properties                idx_properties_house_name           45 MB      0        btree       
+    DDL: CREATE INDEX idx_properties_house_name ON public.properties USING btree (house_name)
+  public               properties_dept           idx_prp_dpt_mbr                     1288 kB    0        btree       
+    DDL: CREATE INDEX idx_prp_dpt_mbr ON public.properties_dept USING btree (members_id)
+  public               regions                   idx_rg_countries                    8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_rg_countries ON public.regions USING btree (countries_id)
+  public               user_history              idx_uhi_main                        8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_uhi_main ON public.user_history USING btree (users_id)
+  public               user_history              idx_uhi_ip                          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_uhi_ip ON public.user_history USING btree (ip)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (6 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  public               properties                idx_properties_addr_line_1          67 MB        0       
+    DDL: CREATE INDEX idx_properties_addr_line_1 ON public.properties USING btree (addr_line_1)
+  public               properties                idx_properties_ref1                 53 MB        0       
+    DDL: CREATE INDEX idx_properties_ref1 ON public.properties USING btree (ref1)
+  public               properties                idx_properties_ref2                 52 MB        0       
+    DDL: CREATE INDEX idx_properties_ref2 ON public.properties USING btree (ref2)
+  public               properties                idx_properties_postcode             45 MB        0       
+    DDL: CREATE INDEX idx_properties_postcode ON public.properties USING btree (postcode)
+  public               properties                idx_properties_house_name           45 MB        0       
+    DDL: CREATE INDEX idx_properties_house_name ON public.properties USING btree (house_name)
+  public               properties_dept           idx_prp_dpt_mbr                     1288 kB      0       
+    DDL: CREATE INDEX idx_prp_dpt_mbr ON public.properties_dept USING btree (members_id)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_adr_cr"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_ch_main"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cts_cliref"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cts_mbr"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_cts_dsc"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_dpt_mbr"; -- size: 200 kB
+  DROP INDEX CONCURRENTLY public."idx_m2u_main"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_per_status"; -- size: 504 kB
+  DROP INDEX CONCURRENTLY public."idx_p2u_main"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_properties_addr_line_1"; -- size: 67 MB
+  DROP INDEX CONCURRENTLY public."idx_properties_ref1"; -- size: 53 MB
+  DROP INDEX CONCURRENTLY public."idx_properties_ref2"; -- size: 52 MB
+  DROP INDEX CONCURRENTLY public."idx_properties_postcode"; -- size: 45 MB
+  DROP INDEX CONCURRENTLY public."idx_properties_house_name"; -- size: 45 MB
+  DROP INDEX CONCURRENTLY public."idx_prp_dpt_mbr"; -- size: 1288 kB
+  DROP INDEX CONCURRENTLY public."idx_rg_countries"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_uhi_main"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_uhi_ip"; -- size: 8192 bytes
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 43         637 MB          18             
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: switchboard
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                18
+  Large unused (>1MB):                     6
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   18
+────────────────────────────────────────────────────────────

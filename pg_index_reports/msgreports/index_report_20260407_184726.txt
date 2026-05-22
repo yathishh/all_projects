@@ -1,0 +1,92 @@
+============================================================
+  DATABASE : msgreports
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:54:02 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (9 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               report                    idx_report_owner                    56 kB      0        btree       
+    DDL: CREATE INDEX idx_report_owner ON public.report USING btree (report_owner)
+  public               report                    idx_report_status                   16 kB      0        btree       
+    DDL: CREATE INDEX idx_report_status ON public.report USING btree (status) WHERE ((status)::text = 'A'::text)
+  public               report_activity           idx_report_activity_report_info_id  3256 kB    0        btree       
+    DDL: CREATE INDEX idx_report_activity_report_info_id ON public.report_activity USING btree (report_info_id)
+  public               report_activity           idx_report_activity_report_id       3184 kB    0        btree       
+    DDL: CREATE INDEX idx_report_activity_report_id ON public.report_activity USING btree (report_id)
+  public               report_email              idx_report_email_report_id          48 kB      0        btree       
+    DDL: CREATE INDEX idx_report_email_report_id ON public.report_email USING btree (report_id)
+  public               report_info               idx_report_info_report_id           48 kB      0        btree       
+    DDL: CREATE INDEX idx_report_info_report_id ON public.report_info USING btree (report_id)
+  public               report_info               idx_report_info_report_sql_id       48 kB      0        btree       
+    DDL: CREATE INDEX idx_report_info_report_sql_id ON public.report_info USING btree (report_sql_id)
+  public               report_log                idx_report_log_report_id            1544 kB    0        btree       
+    DDL: CREATE INDEX idx_report_log_report_id ON public.report_log USING btree (report_id)
+  public               report_log                idx_report_log_report_info_id       1504 kB    0        btree       
+    DDL: CREATE INDEX idx_report_log_report_info_id ON public.report_log USING btree (report_info_id)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (4 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  public               report_activity           idx_report_activity_report_info_id  3256 kB      0       
+    DDL: CREATE INDEX idx_report_activity_report_info_id ON public.report_activity USING btree (report_info_id)
+  public               report_activity           idx_report_activity_report_id       3184 kB      0       
+    DDL: CREATE INDEX idx_report_activity_report_id ON public.report_activity USING btree (report_id)
+  public               report_log                idx_report_log_report_id            1544 kB      0       
+    DDL: CREATE INDEX idx_report_log_report_id ON public.report_log USING btree (report_id)
+  public               report_log                idx_report_log_report_info_id       1504 kB      0       
+    DDL: CREATE INDEX idx_report_log_report_info_id ON public.report_log USING btree (report_info_id)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_report_owner"; -- size: 56 kB
+  DROP INDEX CONCURRENTLY public."idx_report_status"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_report_activity_report_info_id"; -- size: 3256 kB
+  DROP INDEX CONCURRENTLY public."idx_report_activity_report_id"; -- size: 3184 kB
+  DROP INDEX CONCURRENTLY public."idx_report_email_report_id"; -- size: 48 kB
+  DROP INDEX CONCURRENTLY public."idx_report_info_report_id"; -- size: 48 kB
+  DROP INDEX CONCURRENTLY public."idx_report_info_report_sql_id"; -- size: 48 kB
+  DROP INDEX CONCURRENTLY public."idx_report_log_report_id"; -- size: 1544 kB
+  DROP INDEX CONCURRENTLY public."idx_report_log_report_info_id"; -- size: 1504 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 17         24 MB           9              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: msgreports
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                9
+  Large unused (>1MB):                     4
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   9
+────────────────────────────────────────────────────────────

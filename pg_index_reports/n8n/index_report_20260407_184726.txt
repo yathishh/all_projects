@@ -1,0 +1,81 @@
+============================================================
+  DATABASE : n8n
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:54:38 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (5 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               credentials_entity        idx_07fde106c0b471d8cc80a64fc8      16 kB      0        btree       
+    DDL: CREATE INDEX idx_07fde106c0b471d8cc80a64fc8 ON public.credentials_entity USING btree (type)
+  public               execution_annotation_tags IDX_a3697779b366e131b2bbdae297      8192 bytes 0        btree       
+    DDL: CREATE INDEX "IDX_a3697779b366e131b2bbdae297" ON public.execution_annotation_tags USING btree ("tagId")
+  public               execution_entity          idx_execution_entity_workflow_id_started_at 976 kB     0        btree       
+    DDL: CREATE INDEX idx_execution_entity_workflow_id_started_at ON public.execution_entity USING btree ("workflowId", "startedAt") WHERE (("startedAt" IS NOT NULL) AND ("deletedAt" IS NULL))
+  public               test_case_execution       IDX_8e4b4774db42f1e6dda3452b2a      8192 bytes 0        btree       
+    DDL: CREATE INDEX "IDX_8e4b4774db42f1e6dda3452b2a" ON public.test_case_execution USING btree ("testRunId")
+  public               workflow_history          IDX_1e31657f5fe46816c34be7c1b4      16 kB      0        btree       
+    DDL: CREATE INDEX "IDX_1e31657f5fe46816c34be7c1b4" ON public.workflow_history USING btree ("workflowId")
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No large unused indexes found.
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (3 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  public             execution_annotation_tags IDX_c1519757391996eb06064f0e7c PK_979ec03d31294cca484be65d11f 8192 bytes
+    Redundant DDL : CREATE INDEX "IDX_c1519757391996eb06064f0e7c" ON public.execution_annotation_tags USING btree ("annotationId")
+    Covering  DDL : CREATE UNIQUE INDEX "PK_979ec03d31294cca484be65d11f" ON public.execution_annotation_tags USING btree ("annotationId", "tagId")
+  public             project_relation       IDX_61448d56d61802b5dfde5cdb00 PK_1caaa312a5d7184a003be0f0cb6 16 kB     
+    Redundant DDL : CREATE INDEX "IDX_61448d56d61802b5dfde5cdb00" ON public.project_relation USING btree ("projectId")
+    Covering  DDL : CREATE UNIQUE INDEX "PK_1caaa312a5d7184a003be0f0cb6" ON public.project_relation USING btree ("projectId", "userId")
+  public             workflows_tags         idx_workflows_tags_workflow_id pk_workflows_tags              16 kB     
+    Redundant DDL : CREATE INDEX idx_workflows_tags_workflow_id ON public.workflows_tags USING btree ("workflowId")
+    Covering  DDL : CREATE UNIQUE INDEX pk_workflows_tags ON public.workflows_tags USING btree ("workflowId", "tagId")
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_07fde106c0b471d8cc80a64fc8"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."IDX_a3697779b366e131b2bbdae297"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_execution_entity_workflow_id_started_at"; -- size: 976 kB
+  DROP INDEX CONCURRENTLY public."IDX_8e4b4774db42f1e6dda3452b2a"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."IDX_1e31657f5fe46816c34be7c1b4"; -- size: 16 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 74         6648 kB         5              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: n8n
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                5
+  Large unused (>1MB):                     0
+  Redundant/overlap indexes:               3
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   5
+────────────────────────────────────────────────────────────

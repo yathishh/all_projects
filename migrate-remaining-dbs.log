@@ -1,0 +1,2873 @@
+nohup: ignoring input
+============================================
+ Liquibase Migration — Copy Exact Structure
+ Host : pgsql_cluster.adhkiapps.com
+ DBs  : 6
+============================================
+
+──────────────────────────────────────────
+ Processing: z_messagereports
+──────────────────────────────────────────
+  Schema: public (tables:8 views:4)
+
+  → Schema: public
+     roles:365 users:332 tables:8 views:4 indexes:15 functions:3 procedures:0
+     ✅ 001-roles.sql (365 roles)
+     ✅ 002-users.sql (332 users)
+     ✅ 003-schema.sql
+     ✅ 004-sequences.sql (8 sequences)
+       + table: report
+       + table: report_activity
+       + table: report_email
+       + table: report_email_to_info
+       + table: report_info
+       + table: report_log
+       + table: report_request
+       + table: report_sql
+     ✅ 005-tables.sql (8 tables)
+     ✅ Table grants: 22 statements copied
+       + view: pg_stat_statements
+       + view: pg_stat_statements_info
+       + view: vw_report_activity
+       + view: vw_report_info
+     ✅ 006-views.sql (4 views)
+     ✅ 007-indexes.sql (15 indexes)
+       + function: pg_stat_statements
+       + function: pg_stat_statements_info
+       + function: pg_stat_statements_reset
+     ✅ 008-functions.sql (3 functions)
+  ✅ Schema public done
+       + extension: pg_stat_statements (schema: public)
+     ✅ extensions.sql (1 extensions)
+       + publication: msgreports_migration
+     ✅ replication.sql (1 publications)
+
+  Running changelog-sync for z_messagereports...
+./migrate-remaining-dbs.sh: line 1505: liquibase: command not found
+  ✅ z_messagereports done!
+
+──────────────────────────────────────────
+ Processing: z_messagestore
+──────────────────────────────────────────
+  Schema: public (tables:12 views:6)
+
+  → Schema: public
+     roles:365 users:332 tables:12 views:6 indexes:42 functions:12 procedures:0
+     ✅ 001-roles.sql (365 roles)
+     ✅ 002-users.sql (332 users)
+     ✅ 003-schema.sql
+     ✅ 004-sequences.sql (9 sequences)
+       + table: call
+       + table: email
+       + table: email_attachment
+       + table: email_log
+       + table: http
+       + table: log
+       + table: message_archive
+       + table: message_core
+       + table: message_snapshot
+       + table: report
+       + table: report_info
+       + table: sms
+     ✅ 005-tables.sql (12 tables)
+     ✅ Table grants: 18 statements copied
+       + view: message
+       + view: pg_stat_statements
+       + view: pg_stat_statements_info
+       + view: vw_messages_all
+       + view: vw_messages_all2
+       + view: vw_tables_sizes_schemas
+     ✅ 006-views.sql (6 views)
+     ✅ 007-indexes.sql (42 indexes)
+       + function: copy_message
+       + function: isdateinrange
+       + function: pg_stat_statements
+       + function: pg_stat_statements_info
+       + function: pg_stat_statements_reset
+       + function: postgres_fdw_disconnect
+       + function: postgres_fdw_disconnect_all
+       + function: postgres_fdw_get_connections
+       + function: postgres_fdw_handler
+       + function: postgres_fdw_validator
+       + function: queue_event
+       + function: update_message_snapshot
+     ✅ 008-functions.sql (12 functions)
+       + trigger: notify_event on email
+       + trigger: notify_event on http
+       + trigger: cdr_messages on message_core
+       + trigger: copy_message on message_core
+       + trigger: update_message_snapshot on message_core
+       + trigger: notify_event on sms
+     ✅ 010-triggers.sql (6 triggers)
+  ✅ Schema public done
+       + extension: pg_stat_statements (schema: public)
+       + extension: postgres_fdw (schema: public)
+     ✅ extensions.sql (2 extensions)
+       + FDW: postgres_fdw
+     ✅ fdw.sql (1 FDWs)
+       + publication: msgstore_migration
+     ✅ replication.sql (1 publications)
+
+  Running changelog-sync for z_messagestore...
+./migrate-remaining-dbs.sh: line 1505: liquibase: command not found
+  ✅ z_messagestore done!
+
+──────────────────────────────────────────
+ Processing: z_v2
+──────────────────────────────────────────
+  Schema: api (tables:52 views:15)
+  Schema: asterisk (tables:6 views:2)
+  Schema: ave (tables:28 views:1)
+  Schema: callback (tables:1 views:0)
+  Schema: calllogic (tables:5 views:2)
+  Schema: champs (tables:3 views:1)
+  Schema: etop (tables:6 views:0)
+  Schema: feedback (tables:13 views:0)
+  Schema: geodata (tables:2 views:0)
+  Schema: logger (tables:31 views:13)
+  Schema: logger_ifl (tables:3 views:0)
+  Schema: messaging (tables:6 views:0)
+  Schema: mitel (tables:3 views:0)
+  Schema: paxton (tables:1 views:0)
+  Schema: quicksight (tables:2 views:0)
+  Schema: quicksight_clients (tables:4 views:0)
+  Schema: router (tables:10 views:0)
+  Schema: signup (tables:3 views:0)
+  Schema: smdr (tables:1 views:0)
+  Schema: staging_router (tables:7 views:0)
+  Schema: wallboard (tables:3 views:0)
+  Schema: wallboard2 (tables:1 views:0)
+  Schema: public (tables:5 views:4)
+
+  → Schema: api
+     roles:365 users:332 tables:52 views:15 indexes:131 functions:13 procedures:0
+     ✅ 001-roles.sql (365 roles)
+     ✅ 002-users.sql (332 users)
+     ✅ 003-schema.sql
+       + sequence: caller_id_seq
+     ✅ 004-sequences.sql (7 sequences)
+       + table: activities
+       + table: address_options
+       + table: addresses
+       + table: area_codes
+       + table: audit_log
+       + table: availabilities
+       + table: bankholiday
+       + table: broadcasts
+       + table: call_attributes
+       + table: call_tags
+       + table: caller_id
+       + table: calls
+       + table: communications
+       + table: companies
+       + table: content
+       + table: content_groups
+       + table: countries
+       + table: dbix_class_deploymenthandler_versions
+       + table: feedback
+       + table: forgot_details
+       + table: global_user_roles
+       + table: global_users
+       + table: greetings
+       + table: labels
+       + table: locations
+       + table: logs
+       + table: message_contents
+       + table: message_contents_pending
+       + table: messages
+       + table: messages_have_labels
+       + table: notes
+       + table: notifications
+       + table: numbers
+       + table: operational_times
+       + table: people
+       + table: people_have_addresses
+       + table: reserved
+       + table: roles
+       + table: rota_options
+       + table: rota_types
+       + table: rotas
+       + table: statistics
+       + table: tmp_calllog
+       + table: tokens
+       + table: trial_numbers
+       + table: trials
+       + table: user_history
+       + table: user_roles
+       + table: users
+       + table: vip_tags
+       + table: vips
+       + table: vips_have_vip_tags
+     ✅ 005-tables.sql (52 tables)
+     ✅ Table grants: 859 statements copied
+       + view: vw_area_codes
+       + view: vw_company_summary_by_business_type
+       + view: vw_company_to_ddi
+       + view: vw_company_to_ddi_attr
+       + view: vw_company_to_ddi_attributes
+       + view: vw_ddi_attributes
+       + view: vw_ddi_info
+       + view: vw_ddi_info_router
+       + view: vw_ddi_info_test
+       + view: vw_get_partial_postcodes
+       + view: vw_live_accounts_detailed
+       + view: vw_live_vo_accounts
+       + view: vw_notes
+       + view: vw_rotas
+       + view: vw_rotas_people
+     ✅ 006-views.sql (15 views)
+     ✅ 007-indexes.sql (131 indexes)
+       + function: addresses_generate_tsvector
+       + function: log_to_audit_log
+       + function: messages_generate_tsvector
+       + function: min_wrap_by_ddi
+       + function: notify_listener
+       + function: people_generate_tsvector
+       + function: postgres_fdw_disconnect
+       + function: postgres_fdw_disconnect_all
+       + function: postgres_fdw_get_connections
+       + function: postgres_fdw_handler
+       + function: postgres_fdw_validator
+       + function: users_update_meta
+       + function: vips_generate_tsvector
+     ✅ 008-functions.sql (13 functions)
+       + trigger: trigger_activities_audit on activities
+       + trigger: trigger_address_options_audit on address_options
+       + trigger: trigger_addresses_audit on addresses
+       + trigger: trigger_addresses_before on addresses
+       + trigger: trigger_availabilities_audit on availabilities
+       + trigger: trigger_availabilities_notify on availabilities
+       + trigger: trigger_notes_audit on broadcasts
+       + trigger: trigger_call_tags_audit on call_tags
+       + trigger: trigger_calls_notify on calls
+       + trigger: trigger_communications_audit on communications
+       + trigger: trigger_companies_audit on companies
+       + trigger: trigger_companies_notify on companies
+       + trigger: trigger_content_audit on content
+       + trigger: trigger_content_groups_audit on content_groups
+       + trigger: trigger_feedback_audit on feedback
+       + trigger: trigger_forgot_details_audit on forgot_details
+       + trigger: trigger_global_users_audit on global_users
+       + trigger: trigger_greetings_audit on greetings
+       + trigger: trigger_message_contents_audit on message_contents
+       + trigger: trigger_message_contents_before on message_contents
+       + trigger: trigger_message_contents_notify on message_contents
+       + trigger: trigger_messages_audit on messages
+       + trigger: trigger_notes_audit on notes
+       + trigger: trigger_notes_notify on notes
+       + trigger: trigger_notifications_audit on notifications
+       + trigger: trigger_numbers_audit on numbers
+       + trigger: trigger_operational_times_audit on operational_times
+       + trigger: trigger_operational_times_notify on operational_times
+       + trigger: trigger_people_audit on people
+       + trigger: trigger_people_before on people
+       + trigger: trigger_people_notify on people
+       + trigger: trigger_roles_audit on roles
+       + trigger: trigger_rota_options_audit on rota_options
+       + trigger: trigger_rotas_audit on rotas
+       + trigger: trigger_tokens_audit on tokens
+       + trigger: trigger_trials_audit on trials
+       + trigger: trigger_user_roles_audit on user_roles
+       + trigger: trigger_users_after on users
+       + trigger: trigger_users_audit on users
+       + trigger: trigger_users_notify on users
+       + trigger: trigger_vip_tags_audit on vip_tags
+       + trigger: trigger_vips_audit on vips
+       + trigger: trigger_vips_before on vips
+     ✅ 010-triggers.sql (56 triggers)
+  ✅ Schema api done
+
+  → Schema: asterisk
+     roles:365 users:332 tables:6 views:2 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: ivr_option_seq
+     ✅ 004-sequences.sql (1 sequences)
+       + table: call_queueing
+       + table: calls
+       + table: eqs_accounts
+       + table: ivr_option
+       + table: language
+       + table: sites
+     ✅ 005-tables.sql (6 tables)
+     ✅ Table grants: 73 statements copied
+       + view: vw_call_stats
+       + view: vw_eqs_accounts
+     ✅ 006-views.sql (2 views)
+  ✅ Schema asterisk done
+
+  → Schema: ave
+     roles:365 users:332 tables:28 views:1 indexes:50 functions:6 procedures:25
+     ✅ 003-schema.sql
+       + table: ave_datasource
+       + table: ave_language
+       + table: ave_models
+       + table: ave_outcome_status
+       + table: ave_scripts
+       + table: ave_step_category
+       + table: ave_step_types
+       + table: mindflow_model
+       + table: mindflow_parallel_operation
+       + table: mindflow_script
+       + table: mindflow_script_status
+       + table: pbx_audiosocket_endpoint
+       + table: pbx_ave_ivrlanguage
+       + table: pbx_ave_ivrmenu
+       + table: pbx_ave_request
+       + table: pbx_communication
+       + table: pbx_communication_type
+       + table: pbx_context
+       + table: pbx_log_type
+       + table: pbx_request_status
+       + table: pbx_request_type
+       + table: pbx_scriptrunner_endpoint
+       + table: qa_category
+       + table: qa_question
+       + table: qa_questionnaire_detail
+       + table: qa_questionnaire_header
+       + table: tsc_request
+       + table: tsc_request_status
+     ✅ 005-tables.sql (28 tables)
+     ✅ Table grants: 261 statements copied
+       + view: vw_ave_catalogs
+     ✅ 006-views.sql (1 views)
+     ✅ 007-indexes.sql (50 indexes)
+       + function: getivrmenufromddi
+       + function: getivrmenufromddiunified
+       + function: getquestionnairebyid
+       + function: logaverequests
+     ✅ 008-functions.sql (6 functions)
+       + procedure: addsmartdynamicscript
+       + procedure: checktsqueue
+       + procedure: filtertscrequest
+       + procedure: findscriptbyuuid
+       + procedure: getcontextbyddiandname
+       + procedure: getqacatalogs
+       + procedure: getqaresult
+       + procedure: getquesrionnaireheader
+       + procedure: getsmartdynamicscript
+       + procedure: gettscrequest
+       + procedure: listtscrequest
+       + procedure: logtscrequest
+       + procedure: pullactivedatasources
+       + procedure: pullactivemodels
+       + procedure: pullactivescriptrunnerendpoints
+       + procedure: pullactivesteptypes
+       + procedure: pullnexttsinqueue
+       + procedure: updateaverequest
+       + procedure: updatetscqaresult
+       + procedure: updatetscrequest
+       + procedure: updatetscstatus
+     ✅ 009-procedures.sql (25 procedures)
+  ✅ Schema ave done
+
+  → Schema: callback
+     roles:365 users:332 tables:1 views:0 indexes:1 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: schedule_seq
+     ✅ 004-sequences.sql (1 sequences)
+       + table: schedule
+     ✅ 005-tables.sql (1 tables)
+     ✅ Table grants: 9 statements copied
+     ✅ 007-indexes.sql (1 indexes)
+  ✅ Schema callback done
+
+  → Schema: calllogic
+     roles:365 users:332 tables:5 views:2 indexes:3 functions:3 procedures:0
+     ✅ 003-schema.sql
+       + table: adr
+       + table: adrsegment
+       + table: cdr
+       + table: cdrsegment
+       + table: tmp_mitel
+     ✅ 005-tables.sql (5 tables)
+     ✅ Table grants: 72 statements copied
+       + view: vw_call_summary_stats
+       + view: vw_cdr_adr_combined
+     ✅ 006-views.sql (2 views)
+     ✅ 007-indexes.sql (3 indexes)
+       + function: _navicat_temp_stored_proc
+       + function: get_call_summary
+       + function: mi_stats
+     ✅ 008-functions.sql (3 functions)
+  ✅ Schema calllogic done
+
+  → Schema: champs
+     roles:365 users:332 tables:3 views:1 indexes:3 functions:1 procedures:0
+     ✅ 003-schema.sql
+       + sequence: message_seq
+       + sequence: pop_history_seq
+       + sequence: secrets_seq
+     ✅ 004-sequences.sql (3 sequences)
+       + table: message
+       + table: pop_history
+       + table: secrets
+     ✅ 005-tables.sql (3 tables)
+     ✅ Table grants: 37 statements copied
+       + view: vw_message_summary
+     ✅ 006-views.sql (1 views)
+     ✅ 007-indexes.sql (3 indexes)
+       + function: isdateinrange
+     ✅ 008-functions.sql (1 functions)
+  ✅ Schema champs done
+
+  → Schema: etop
+     roles:365 users:332 tables:6 views:0 indexes:8 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + enum: accounts_account_status
+     ✅ 004-types.sql (1 enums)
+     ✅ 004-sequences.sql (5 sequences)
+       + table: accounts
+       + table: emails
+       + table: groups
+       + table: jobs
+       + table: migrations
+       + table: users
+     ✅ 005-tables.sql (6 tables)
+     ✅ Table grants: 54 statements copied
+     ✅ 007-indexes.sql (8 indexes)
+  ✅ Schema etop done
+
+  → Schema: feedback
+     roles:365 users:332 tables:13 views:0 indexes:9 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: authority_seq
+       + sequence: brand_seq
+       + sequence: category_seq
+       + sequence: comment_seq
+       + sequence: department_seq
+       + sequence: feedback_seq
+       + sequence: feedback_type_seq
+       + sequence: fragment_seq
+       + sequence: fragment_type_seq
+       + sequence: status_seq
+       + sequence: team_seq
+       + sequence: users_seq
+     ✅ 004-sequences.sql (12 sequences)
+       + table: authority
+       + table: brand
+       + table: category
+       + table: comment
+       + table: department
+       + table: feedback
+       + table: feedback_type
+       + table: fragment
+       + table: fragment_type
+       + table: status
+       + table: team
+       + table: user_authority
+       + table: users
+     ✅ 005-tables.sql (13 tables)
+     ✅ Table grants: 133 statements copied
+     ✅ 007-indexes.sql (9 indexes)
+  ✅ Schema feedback done
+
+  → Schema: geodata
+     roles:365 users:332 tables:2 views:0 indexes:1 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: location_seq
+       + sequence: postcode_seq
+     ✅ 004-sequences.sql (2 sequences)
+       + table: location
+       + table: postcode
+     ✅ 005-tables.sql (2 tables)
+     ✅ Table grants: 18 statements copied
+     ✅ 007-indexes.sql (1 indexes)
+  ✅ Schema geodata done
+
+  → Schema: logger
+     roles:365 users:332 tables:31 views:13 indexes:13 functions:10 procedures:0
+     ✅ 003-schema.sql
+       + sequence: agent_activity_seq
+       + sequence: agent_assistance_seq
+       + sequence: agent_call_detail_seq
+       + sequence: agent_call_seq
+       + sequence: agent_status_seq
+       + sequence: app_activity_seq
+       + sequence: call_detail_seq
+       + sequence: callback_sequence
+       + sequence: callcare_tariffs_seq
+       + sequence: cdr_sequence
+       + sequence: ivr_results_ivr_results_id_seq
+       + sequence: message_seq
+       + sequence: messagedata_sequence
+       + sequence: mitel_cdr_id_seq
+       + sequence: segment_seq
+     ✅ 004-sequences.sql (16 sequences)
+       + table: agent_activity
+       + table: agent_assistance
+       + table: agent_call
+       + table: agent_call_detail
+       + table: agent_session
+       + table: agent_status
+       + table: app_activity
+       + table: call_detail
+       + table: callcare_tariffs
+       + table: calls_23032020
+       + table: cdr
+       + table: cdr_feedback
+       + table: cdr_messages
+       + table: cdr_segments
+       + table: company_categories
+       + table: dcdr
+       + table: dcdr_agent_call
+       + table: dcdr_agent_session
+       + table: dcdr_agent_status
+       + table: dcdr_callback
+       + table: dcdr_feedback
+       + table: ivr_callback
+       + table: ivr_results
+       + table: message_data
+       + table: mitel_cdr
+       + table: temp_basicOnePage
+       + table: temp_callidcsv
+       + table: temp_firstrungon
+       + table: temp_fro
+       + table: temp_tcp_accounts
+       + table: voip_230320
+     ✅ 005-tables.sql (31 tables)
+     ✅ Table grants: 552 statements copied
+       + view: vw_agent_stats_60days
+       + view: vw_agent_stats_60days_dcdr
+       + view: vw_call_summary_stats
+       + view: vw_cdr_timezone_uk
+       + view: vw_cdr_today
+       + view: vw_cdr_today_date
+       + view: vw_cdr_today_old
+       + view: vw_cdr_with_msg_vars
+       + view: vw_cdr_with_talktime
+       + view: vw_company_talk_time_yesterday
+       + view: vw_hourly_call_stats
+       + view: vw_loggercdr
+       + view: vw_test_call_logs
+     ✅ 006-views.sql (13 views)
+     ✅ 007-indexes.sql (13 indexes)
+       + function: avg_duration_by_ddi(v_ddi text)
+       + function: avg_duration_by_ddi(v_ddi text)(v_ddi text)
+       + function: duration_stats
+       + function: get_call_summary
+       + function: get_call_summary2
+       + function: get_session_stats
+       + function: getrecordfilepath
+       + function: mi_stats
+       + function: min_wrap_by_ddi
+     ✅ 008-functions.sql (10 functions)
+  ✅ Schema logger done
+
+  → Schema: logger_ifl
+     roles:365 users:332 tables:3 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: cdr_sequence
+       + sequence: message_seq
+       + sequence: segment_seq
+     ✅ 004-sequences.sql (3 sequences)
+       + table: cdr
+       + table: cdr_messages
+       + table: cdr_segments
+     ✅ 005-tables.sql (3 tables)
+     ✅ Table grants: 31 statements copied
+  ✅ Schema logger_ifl done
+
+  → Schema: messaging
+     roles:365 users:332 tables:6 views:0 indexes:10 functions:0 procedures:2
+     ✅ 003-schema.sql
+     ✅ 004-sequences.sql (1 sequences)
+       + table: app_access
+       + table: app_granted_permissions
+       + table: data_sms
+       + table: registed_apps
+       + table: sms_providers
+       + table: sms_status
+     ✅ 005-tables.sql (6 tables)
+     ✅ Table grants: 54 statements copied
+     ✅ 007-indexes.sql (10 indexes)
+       + procedure: listproviders
+       + procedure: pullappdata
+     ✅ 009-procedures.sql (2 procedures)
+  ✅ Schema messaging done
+
+  → Schema: mitel
+     roles:365 users:332 tables:3 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: dnd_status_seq
+     ✅ 004-sequences.sql (1 sequences)
+       + table: dnd_status
+       + table: user_groups
+       + table: user_pins
+     ✅ 005-tables.sql (3 tables)
+     ✅ Table grants: 29 statements copied
+  ✅ Schema mitel done
+
+  → Schema: paxton
+     roles:365 users:332 tables:1 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + table: events
+     ✅ 005-tables.sql (1 tables)
+     ✅ Table grants: 11 statements copied
+  ✅ Schema paxton done
+
+  → Schema: quicksight
+     roles:365 users:332 tables:2 views:0 indexes:1 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + table: dashboard
+       + table: iam_credentials
+     ✅ 005-tables.sql (2 tables)
+     ✅ Table grants: 18 statements copied
+     ✅ 007-indexes.sql (1 indexes)
+  ✅ Schema quicksight done
+
+  → Schema: quicksight_clients
+     roles:365 users:332 tables:4 views:0 indexes:1 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: quicksight_authority_seq
+       + sequence: quicksight_users_seq
+     ✅ 004-sequences.sql (2 sequences)
+       + table: authority
+       + table: dashboard
+       + table: user
+       + table: user_authority
+     ✅ 005-tables.sql (4 tables)
+     ✅ Table grants: 36 statements copied
+     ✅ 007-indexes.sql (1 indexes)
+  ✅ Schema quicksight_clients done
+
+  → Schema: router
+     roles:365 users:332 tables:10 views:0 indexes:5 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: asterisk_cli_group_seq
+       + sequence: destinations_destinations_id_seq
+       + sequence: groups_id_seq
+       + sequence: isdn_mapping_seq
+       + sequence: router_rules_id
+       + sequence: rule_seq
+       + sequence: wrap_group_seq
+     ✅ 004-sequences.sql (7 sequences)
+       + table: acd_pin
+       + table: asterisk_cli_group
+       + table: destinations
+       + table: groups
+       + table: hunt_group
+       + table: isdn_mapping
+       + table: rules
+       + table: tcp_routes
+       + table: translations
+       + table: wrap_group
+     ✅ 005-tables.sql (10 tables)
+     ✅ Table grants: 96 statements copied
+     ✅ 007-indexes.sql (5 indexes)
+  ✅ Schema router done
+
+  → Schema: signup
+     roles:365 users:332 tables:3 views:0 indexes:1 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: completed_order_seq
+       + sequence: orderid_seq
+     ✅ 004-sequences.sql (2 sequences)
+       + table: completed_orders
+       + table: pending_order
+       + table: phone_codes
+     ✅ 005-tables.sql (3 tables)
+     ✅ Table grants: 27 statements copied
+     ✅ 007-indexes.sql (1 indexes)
+  ✅ Schema signup done
+
+  → Schema: smdr
+     roles:365 users:332 tables:1 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + table: calls
+     ✅ 005-tables.sql (1 tables)
+     ✅ Table grants: 9 statements copied
+  ✅ Schema smdr done
+
+  → Schema: staging_router
+     roles: users:332 tables:7 views:0 indexes:2 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: agentgroup_seq
+       + sequence: destination_seq
+       + sequence: hunt_seq
+       + sequence: hunt_state_seq
+       + sequence: rule_data_type_seq
+       + sequence: rule_seq
+       + sequence: translation_seq
+     ✅ 004-sequences.sql (7 sequences)
+       + table: agent_group
+       + table: destination
+       + table: hunt_group
+       + table: hunt_group_state
+       + table: rule
+       + table: rule_data_type
+       + table: translation
+     ✅ 005-tables.sql (7 tables)
+     ✅ Table grants: 68 statements copied
+     ✅ 007-indexes.sql (2 indexes)
+  ✅ Schema staging_router done
+
+  → Schema: wallboard
+     roles:365 users:332 tables:3 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: profile_seq
+       + sequence: tile_sequence
+     ✅ 004-sequences.sql (2 sequences)
+       + table: filterparams
+       + table: profile
+       + table: tiles
+     ✅ 005-tables.sql (3 tables)
+     ✅ Table grants: 27 statements copied
+  ✅ Schema wallboard done
+
+  → Schema: wallboard2
+     roles:365 users:332 tables:1 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: profile_seq
+     ✅ 004-sequences.sql (1 sequences)
+       + table: profile
+     ✅ 005-tables.sql (1 tables)
+     ✅ Table grants: 9 statements copied
+  ✅ Schema wallboard2 done
+
+  → Schema: public
+     roles:365 users:332 tables:5 views:4 indexes:0 functions:768 procedures:0
+     ✅ 003-schema.sql
+       + sequence: adr_seq
+       + sequence: adrseg_seq
+       + sequence: cdr_seq
+       + sequence: cdrseg_seq
+       + sequence: groups_id_seq
+       + sequence: hibernate_sequence
+     ✅ 004-sequences.sql (6 sequences)
+       + table: postcodes
+       + table: repltest
+       + table: sessionstats
+       + table: spatial_ref_sys
+       + table: temp_calls
+     ✅ 005-tables.sql (5 tables)
+     ✅ Table grants: 67 statements copied
+       + view: geography_columns
+       + view: geometry_columns
+       + view: pg_stat_statements
+       + view: pg_stat_statements_info
+     ✅ 006-views.sql (4 views)
+       + function: _postgis_deprecate
+       + function: _postgis_index_extent
+       + function: _postgis_join_selectivity
+       + function: _postgis_pgsql_version
+       + function: _postgis_scripts_pgsql_version
+       + function: _postgis_selectivity
+       + function: _postgis_stats
+       + function: _st_3ddfullywithin
+       + function: _st_3ddwithin
+       + function: _st_3dintersects
+       + function: _st_asgml
+       + function: _st_asx3d
+       + function: _st_bestsrid
+       + function: _st_concavehull
+       + function: _st_contains
+       + function: _st_containsproperly
+       + function: _st_coveredby
+       + function: _st_covers
+       + function: _st_crosses
+       + function: _st_dfullywithin
+       + function: _st_distancetree
+       + function: _st_distanceuncached
+       + function: _st_dwithin
+       + function: _st_dwithinuncached
+       + function: _st_equals
+       + function: _st_expand
+       + function: _st_geomfromgml
+       + function: _st_intersects
+       + function: _st_linecrossingdirection
+       + function: _st_longestline
+       + function: _st_maxdistance
+       + function: _st_orderingequals
+       + function: _st_overlaps
+       + function: _st_pointoutside
+       + function: _st_sortablehash
+       + function: _st_touches
+       + function: _st_voronoi
+       + function: _st_within
+       + function: addgeometrycolumn
+       + function: agent_stats
+       + function: box
+       + function: box2d
+       + function: box2d_in
+       + function: box2d_out
+       + function: box2df_in
+       + function: box2df_out
+       + function: box3d
+       + function: box3d_in
+       + function: box3d_out
+       + function: box3dtobox
+       + function: bytea
+       + function: cdr_with_outbound_type
+       + function: connectby
+       + function: contains_2d
+       + function: crosstab
+       + function: crosstab2
+       + function: crosstab3
+       + function: crosstab4
+       + function: dropgeometrycolumn
+       + function: dropgeometrytable
+       + function: equals
+       + function: file_fdw_handler
+       + function: file_fdw_validator
+       + function: find_location_within_range_by_company
+       + function: find_srid
+       + function: geog_brin_inclusion_add_value
+       + function: geography
+       + function: geography_analyze
+       + function: geography_cmp
+       + function: geography_distance_knn
+       + function: geography_eq
+       + function: geography_ge
+       + function: geography_gist_compress
+       + function: geography_gist_consistent
+       + function: geography_gist_decompress
+       + function: geography_gist_distance
+       + function: geography_gist_penalty
+       + function: geography_gist_picksplit
+       + function: geography_gist_same
+       + function: geography_gist_union
+       + function: geography_gt
+       + function: geography_in
+       + function: geography_le
+       + function: geography_lt
+       + function: geography_out
+       + function: geography_overlaps
+       + function: geography_recv
+       + function: geography_send
+       + function: geography_spgist_choose_nd
+       + function: geography_spgist_compress_nd
+       + function: geography_spgist_config_nd
+       + function: geography_spgist_inner_consistent_nd
+       + function: geography_spgist_leaf_consistent_nd
+       + function: geography_spgist_picksplit_nd
+       + function: geography_typmod_in
+       + function: geography_typmod_out
+       + function: geom2d_brin_inclusion_add_value
+       + function: geom3d_brin_inclusion_add_value
+       + function: geom4d_brin_inclusion_add_value
+       + function: geometry
+       + function: geometry_above
+       + function: geometry_analyze
+       + function: geometry_below
+       + function: geometry_cmp
+       + function: geometry_contained_3d
+       + function: geometry_contains
+       + function: geometry_contains_3d
+       + function: geometry_contains_nd
+       + function: geometry_distance_box
+       + function: geometry_distance_centroid
+       + function: geometry_distance_centroid_nd
+       + function: geometry_distance_cpa
+       + function: geometry_eq
+       + function: geometry_ge
+       + function: geometry_gist_compress_2d
+       + function: geometry_gist_compress_nd
+       + function: geometry_gist_consistent_2d
+       + function: geometry_gist_consistent_nd
+       + function: geometry_gist_decompress_2d
+       + function: geometry_gist_decompress_nd
+       + function: geometry_gist_distance_2d
+       + function: geometry_gist_distance_nd
+       + function: geometry_gist_penalty_2d
+       + function: geometry_gist_penalty_nd
+       + function: geometry_gist_picksplit_2d
+       + function: geometry_gist_picksplit_nd
+       + function: geometry_gist_same_2d
+       + function: geometry_gist_same_nd
+       + function: geometry_gist_sortsupport_2d
+       + function: geometry_gist_union_2d
+       + function: geometry_gist_union_nd
+       + function: geometry_gt
+       + function: geometry_hash
+       + function: geometry_in
+       + function: geometry_le
+       + function: geometry_left
+       + function: geometry_lt
+       + function: geometry_neq
+       + function: geometry_out
+       + function: geometry_overabove
+       + function: geometry_overbelow
+       + function: geometry_overlaps
+       + function: geometry_overlaps_3d
+       + function: geometry_overlaps_nd
+       + function: geometry_overleft
+       + function: geometry_overright
+       + function: geometry_recv
+       + function: geometry_right
+       + function: geometry_same
+       + function: geometry_same_3d
+       + function: geometry_same_nd
+       + function: geometry_send
+       + function: geometry_sortsupport
+       + function: geometry_spgist_choose_2d
+       + function: geometry_spgist_choose_3d
+       + function: geometry_spgist_choose_nd
+       + function: geometry_spgist_compress_2d
+       + function: geometry_spgist_compress_3d
+       + function: geometry_spgist_compress_nd
+       + function: geometry_spgist_config_2d
+       + function: geometry_spgist_config_3d
+       + function: geometry_spgist_config_nd
+       + function: geometry_spgist_inner_consistent_2d
+       + function: geometry_spgist_inner_consistent_3d
+       + function: geometry_spgist_inner_consistent_nd
+       + function: geometry_spgist_leaf_consistent_2d
+       + function: geometry_spgist_leaf_consistent_3d
+       + function: geometry_spgist_leaf_consistent_nd
+       + function: geometry_spgist_picksplit_2d
+       + function: geometry_spgist_picksplit_3d
+       + function: geometry_spgist_picksplit_nd
+       + function: geometry_typmod_in
+       + function: geometry_typmod_out
+       + function: geometry_within
+       + function: geometry_within_nd
+       + function: geometrytype
+       + function: geomfromewkb
+       + function: geomfromewkt
+       + function: get_proj4_from_srid
+       + function: gidx_in
+       + function: gidx_out
+       + function: gserialized_gist_joinsel_2d
+       + function: gserialized_gist_joinsel_nd
+       + function: gserialized_gist_sel_2d
+       + function: gserialized_gist_sel_nd
+       + function: is_contained_2d
+       + function: isdateinrange
+       + function: json
+       + function: jsonb
+       + function: normal_rand
+       + function: overlaps_2d
+       + function: overlaps_geog
+       + function: overlaps_nd
+       + function: path
+       + function: pg_stat_statements
+       + function: pg_stat_statements_info
+       + function: pg_stat_statements_reset
+       + function: pgis_asflatgeobuf_finalfn
+       + function: pgis_asflatgeobuf_transfn
+       + function: pgis_asgeobuf_finalfn
+       + function: pgis_asgeobuf_transfn
+       + function: pgis_asmvt_combinefn
+       + function: pgis_asmvt_deserialfn
+       + function: pgis_asmvt_finalfn
+       + function: pgis_asmvt_serialfn
+       + function: pgis_asmvt_transfn
+       + function: pgis_geometry_accum_transfn
+       + function: pgis_geometry_clusterintersecting_finalfn
+       + function: pgis_geometry_clusterwithin_finalfn
+       + function: pgis_geometry_collect_finalfn
+       + function: pgis_geometry_coverageunion_finalfn
+       + function: pgis_geometry_makeline_finalfn
+       + function: pgis_geometry_polygonize_finalfn
+       + function: pgis_geometry_union_parallel_combinefn
+       + function: pgis_geometry_union_parallel_deserialfn
+       + function: pgis_geometry_union_parallel_finalfn
+       + function: pgis_geometry_union_parallel_serialfn
+       + function: pgis_geometry_union_parallel_transfn
+       + function: point
+       + function: polygon
+       + function: populate_geometry_columns
+       + function: postgis_addbbox
+       + function: postgis_cache_bbox
+       + function: postgis_constraint_dims
+       + function: postgis_constraint_srid
+       + function: postgis_constraint_type
+       + function: postgis_dropbbox
+       + function: postgis_extensions_upgrade
+       + function: postgis_full_version
+       + function: postgis_geos_compiled_version
+       + function: postgis_geos_noop
+       + function: postgis_geos_version
+       + function: postgis_getbbox
+       + function: postgis_hasbbox
+       + function: postgis_index_supportfn
+       + function: postgis_lib_build_date
+       + function: postgis_lib_revision
+       + function: postgis_lib_version
+       + function: postgis_libjson_version
+       + function: postgis_liblwgeom_version
+       + function: postgis_libprotobuf_version
+       + function: postgis_libxml_version
+       + function: postgis_noop
+       + function: postgis_proj_compiled_version
+       + function: postgis_proj_version
+       + function: postgis_scripts_build_date
+       + function: postgis_scripts_installed
+       + function: postgis_scripts_released
+       + function: postgis_srs
+       + function: postgis_srs_all
+       + function: postgis_srs_codes
+       + function: postgis_srs_search
+       + function: postgis_svn_version
+       + function: postgis_transform_geometry
+       + function: postgis_transform_pipeline_geometry
+       + function: postgis_type_name
+       + function: postgis_typmod_dims
+       + function: postgis_typmod_srid
+       + function: postgis_typmod_type
+       + function: postgis_version
+       + function: postgis_wagyu_version
+       + function: spheroid_in
+       + function: spheroid_out
+       + function: st_3dclosestpoint
+       + function: st_3ddfullywithin
+       + function: st_3ddistance
+       + function: st_3ddwithin
+       + function: st_3dintersects
+       + function: st_3dlength
+       + function: st_3dlineinterpolatepoint
+       + function: st_3dlongestline
+       + function: st_3dmakebox
+       + function: st_3dmaxdistance
+       + function: st_3dperimeter
+       + function: st_3dshortestline
+       + function: st_addmeasure
+       + function: st_addpoint
+       + function: st_affine
+       + function: st_angle
+       + function: st_area
+       + function: st_area2d
+       + function: st_asbinary
+       + function: st_asencodedpolyline
+       + function: st_asewkb
+       + function: st_asewkt
+       + function: st_asgeojson
+       + function: st_asgml
+       + function: st_ashexewkb
+       + function: st_askml
+       + function: st_aslatlontext
+       + function: st_asmarc21
+       + function: st_asmvtgeom
+       + function: st_assvg
+       + function: st_astext
+       + function: st_astwkb
+       + function: st_asx3d
+       + function: st_azimuth
+       + function: st_bdmpolyfromtext
+       + function: st_bdpolyfromtext
+       + function: st_boundary
+       + function: st_boundingdiagonal
+       + function: st_box2dfromgeohash
+       + function: st_buffer
+       + function: st_buildarea
+       + function: st_centroid
+       + function: st_chaikinsmoothing
+       + function: st_cleangeometry
+       + function: st_clipbybox2d
+       + function: st_closestpoint
+       + function: st_closestpointofapproach
+       + function: st_clusterintersecting
+       + function: st_clusterwithin
+       + function: st_collect
+       + function: st_collectionextract
+       + function: st_collectionhomogenize
+       + function: st_combinebbox
+       + function: st_concavehull
+       + function: st_contains
+       + function: st_containsproperly
+       + function: st_convexhull
+       + function: st_coorddim
+       + function: st_coverageunion
+       + function: st_coveredby
+       + function: st_covers
+       + function: st_cpawithin
+       + function: st_crosses
+       + function: st_curven
+       + function: st_curvetoline
+       + function: st_delaunaytriangles
+       + function: st_dfullywithin
+       + function: st_difference
+       + function: st_dimension
+       + function: st_disjoint
+       + function: st_distance
+       + function: st_distancecpa
+       + function: st_distancesphere
+       + function: st_distancespheroid
+       + function: st_dump
+       + function: st_dumppoints
+       + function: st_dumprings
+       + function: st_dumpsegments
+       + function: st_dwithin
+       + function: st_endpoint
+       + function: st_envelope
+       + function: st_equals
+       + function: st_estimatedextent
+       + function: st_expand
+       + function: st_exteriorring
+       + function: st_filterbym
+       + function: st_findextent
+       + function: st_flipcoordinates
+       + function: st_force2d
+       + function: st_force3d
+       + function: st_force3dm
+       + function: st_force3dz
+       + function: st_force4d
+       + function: st_forcecollection
+       + function: st_forcecurve
+       + function: st_forcepolygonccw
+       + function: st_forcepolygoncw
+       + function: st_forcerhr
+       + function: st_forcesfs
+       + function: st_frechetdistance
+       + function: st_fromflatgeobuf
+       + function: st_fromflatgeobuftotable
+       + function: st_generatepoints
+       + function: st_geogfromtext
+       + function: st_geogfromwkb
+       + function: st_geographyfromtext
+       + function: st_geohash
+       + function: st_geomcollfromtext
+       + function: st_geomcollfromwkb
+       + function: st_geometricmedian
+       + function: st_geometryfromtext
+       + function: st_geometryn
+       + function: st_geometrytype
+       + function: st_geomfromewkb
+       + function: st_geomfromewkt
+       + function: st_geomfromgeohash
+       + function: st_geomfromgeojson
+       + function: st_geomfromgml
+       + function: st_geomfromkml
+       + function: st_geomfrommarc21
+       + function: st_geomfromtext
+       + function: st_geomfromtwkb
+       + function: st_geomfromwkb
+       + function: st_gmltosql
+       + function: st_hasarc
+       + function: st_hasm
+       + function: st_hasz
+       + function: st_hausdorffdistance
+       + function: st_hexagon
+       + function: st_hexagongrid
+       + function: st_interiorringn
+       + function: st_interpolatepoint
+       + function: st_intersection
+       + function: st_intersects
+       + function: st_inversetransformpipeline
+       + function: st_isclosed
+       + function: st_iscollection
+       + function: st_isempty
+       + function: st_ispolygonccw
+       + function: st_ispolygoncw
+       + function: st_isring
+       + function: st_issimple
+       + function: st_isvalid
+       + function: st_isvaliddetail
+       + function: st_isvalidreason
+       + function: st_isvalidtrajectory
+       + function: st_largestemptycircle
+       + function: st_length
+       + function: st_length2d
+       + function: st_length2dspheroid
+       + function: st_lengthspheroid
+       + function: st_letters
+       + function: st_linecrossingdirection
+       + function: st_lineextend
+       + function: st_linefromencodedpolyline
+       + function: st_linefrommultipoint
+       + function: st_linefromtext
+       + function: st_linefromwkb
+       + function: st_lineinterpolatepoint
+       + function: st_lineinterpolatepoints
+       + function: st_linelocatepoint
+       + function: st_linemerge
+       + function: st_linestringfromwkb
+       + function: st_linesubstring
+       + function: st_linetocurve
+       + function: st_locatealong
+       + function: st_locatebetween
+       + function: st_locatebetweenelevations
+       + function: st_longestline
+       + function: st_m
+       + function: st_makebox2d
+       + function: st_makeenvelope
+       + function: st_makeline
+       + function: st_makepoint
+       + function: st_makepointm
+       + function: st_makepolygon
+       + function: st_makevalid
+       + function: st_maxdistance
+       + function: st_maximuminscribedcircle
+       + function: st_memsize
+       + function: st_minimumboundingcircle
+       + function: st_minimumboundingradius
+       + function: st_minimumclearance
+       + function: st_minimumclearanceline
+       + function: st_mlinefromtext
+       + function: st_mlinefromwkb
+       + function: st_mpointfromtext
+       + function: st_mpointfromwkb
+       + function: st_mpolyfromtext
+       + function: st_mpolyfromwkb
+       + function: st_multi
+       + function: st_multilinefromwkb
+       + function: st_multilinestringfromtext
+       + function: st_multipointfromtext
+       + function: st_multipointfromwkb
+       + function: st_multipolyfromwkb
+       + function: st_multipolygonfromtext
+       + function: st_ndims
+       + function: st_node
+       + function: st_normalize
+       + function: st_npoints
+       + function: st_nrings
+       + function: st_numcurves
+       + function: st_numgeometries
+       + function: st_numinteriorring
+       + function: st_numinteriorrings
+       + function: st_numpatches
+       + function: st_numpoints
+       + function: st_offsetcurve
+       + function: st_orderingequals
+       + function: st_orientedenvelope
+       + function: st_overlaps
+       + function: st_patchn
+       + function: st_perimeter
+       + function: st_perimeter2d
+       + function: st_point
+       + function: st_pointfromgeohash
+       + function: st_pointfromtext
+       + function: st_pointfromwkb
+       + function: st_pointinsidecircle
+       + function: st_pointm
+       + function: st_pointn
+       + function: st_pointonsurface
+       + function: st_points
+       + function: st_pointz
+       + function: st_pointzm
+       + function: st_polyfromtext
+       + function: st_polyfromwkb
+       + function: st_polygon
+       + function: st_polygonfromtext
+       + function: st_polygonfromwkb
+       + function: st_polygonize
+       + function: st_project
+       + function: st_quantizecoordinates
+       + function: st_reduceprecision
+       + function: st_relate
+       + function: st_relatematch
+       + function: st_removeirrelevantpointsforview
+       + function: st_removepoint
+       + function: st_removerepeatedpoints
+       + function: st_removesmallparts
+       + function: st_reverse
+       + function: st_rotate
+       + function: st_rotatex
+       + function: st_rotatey
+       + function: st_rotatez
+       + function: st_scale
+       + function: st_scroll
+       + function: st_segmentize
+       + function: st_seteffectivearea
+       + function: st_setpoint
+       + function: st_setsrid
+       + function: st_sharedpaths
+       + function: st_shiftlongitude
+       + function: st_shortestline
+       + function: st_simplify
+       + function: st_simplifypolygonhull
+       + function: st_simplifypreservetopology
+       + function: st_simplifyvw
+       + function: st_snap
+       + function: st_snaptogrid
+       + function: st_split
+       + function: st_square
+       + function: st_squaregrid
+       + function: st_srid
+       + function: st_startpoint
+       + function: st_subdivide
+       + function: st_summary
+       + function: st_swapordinates
+       + function: st_symdifference
+       + function: st_symmetricdifference
+       + function: st_tileenvelope
+       + function: st_touches
+       + function: st_transform
+       + function: st_transformpipeline
+       + function: st_translate
+       + function: st_transscale
+       + function: st_triangulatepolygon
+       + function: st_unaryunion
+       + function: st_union
+       + function: st_voronoilines
+       + function: st_voronoipolygons
+       + function: st_within
+       + function: st_wkbtosql
+       + function: st_wkttosql
+       + function: st_wrapx
+       + function: st_x
+       + function: st_xmax
+       + function: st_xmin
+       + function: st_y
+       + function: st_ymax
+       + function: st_ymin
+       + function: st_z
+       + function: st_zmax
+       + function: st_zmflag
+       + function: st_zmin
+       + function: text
+       + function: updategeometrysrid
+     ✅ 008-functions.sql (768 functions)
+     ✅ 012-rules.sql (3 rules)
+  ✅ Schema public done
+       + extension: file_fdw (schema: public)
+       + extension: pg_stat_statements (schema: public)
+       + extension: plperl (schema: pg_catalog)
+       + extension: postgis (schema: public)
+       + extension: postgres_fdw (schema: api)
+       + extension: tablefunc (schema: public)
+     ✅ extensions.sql (6 extensions)
+       + FDW: file_fdw
+       + FDW: postgres_fdw
+       + Foreign Server: autoform
+       + Foreign Server: bling_server
+       + Foreign Server: file_fdw_server
+       + Foreign Server: msgstore
+       + Foreign Server: widgets
+       + User Mapping: postgres → autoform
+       + User Mapping: webreports1 → autoform
+       + User Mapping: postgres → bling_server
+       + User Mapping: webreports1 → bling_server
+       + User Mapping: postgres → msgstore
+       + User Mapping: webreports1 → msgstore
+       + User Mapping: postgres → widgets
+       + User Mapping: webreports1 → widgets
+     ✅ fdw.sql (2 FDWs)
+       + publication: logger
+     ✅ replication.sql (1 publications)
+
+  Running changelog-sync for z_v2...
+./migrate-remaining-dbs.sh: line 1505: liquibase: command not found
+  ✅ z_v2 done!
+
+──────────────────────────────────────────
+ Processing: z_voffice
+──────────────────────────────────────────
+  Schema: api (tables:52 views:15)
+  Schema: asterisk (tables:6 views:2)
+  Schema: ave (tables:28 views:1)
+  Schema: callback (tables:1 views:0)
+  Schema: calllogic (tables:5 views:2)
+  Schema: champs (tables:3 views:1)
+  Schema: etop (tables:6 views:0)
+  Schema: feedback (tables:13 views:0)
+  Schema: geodata (tables:2 views:0)
+  Schema: logger (tables:31 views:13)
+  Schema: logger_ifl (tables:3 views:0)
+  Schema: messaging (tables:6 views:0)
+  Schema: mitel (tables:3 views:0)
+  Schema: paxton (tables:1 views:0)
+  Schema: quicksight (tables:2 views:0)
+  Schema: quicksight_clients (tables:4 views:0)
+  Schema: router (tables:10 views:0)
+  Schema: signup (tables:3 views:0)
+  Schema: smdr (tables:1 views:0)
+  Schema: staging_router (tables:7 views:0)
+  Schema: wallboard (tables:3 views:0)
+  Schema: wallboard2 (tables:1 views:0)
+  Schema: public (tables:5 views:4)
+
+  → Schema: api
+     roles:365 users:332 tables:52 views:15 indexes:131 functions:13 procedures:0
+     ✅ 001-roles.sql (365 roles)
+     ✅ 002-users.sql (332 users)
+     ✅ 003-schema.sql
+       + sequence: caller_id_seq
+     ✅ 004-sequences.sql (7 sequences)
+       + table: activities
+       + table: address_options
+       + table: addresses
+       + table: area_codes
+       + table: audit_log
+       + table: availabilities
+       + table: bankholiday
+       + table: broadcasts
+       + table: call_attributes
+       + table: call_tags
+       + table: caller_id
+       + table: calls
+       + table: communications
+       + table: companies
+       + table: content
+       + table: content_groups
+       + table: countries
+       + table: dbix_class_deploymenthandler_versions
+       + table: feedback
+       + table: forgot_details
+       + table: global_user_roles
+       + table: global_users
+       + table: greetings
+       + table: labels
+       + table: locations
+       + table: logs
+       + table: message_contents
+       + table: message_contents_pending
+       + table: messages
+       + table: messages_have_labels
+       + table: notes
+       + table: notifications
+       + table: numbers
+       + table: operational_times
+       + table: people
+       + table: people_have_addresses
+       + table: reserved
+       + table: roles
+       + table: rota_options
+       + table: rota_types
+       + table: rotas
+       + table: statistics
+       + table: tmp_calllog
+       + table: tokens
+       + table: trial_numbers
+       + table: trials
+       + table: user_history
+       + table: user_roles
+       + table: users
+       + table: vip_tags
+       + table: vips
+       + table: vips_have_vip_tags
+     ✅ 005-tables.sql (52 tables)
+     ✅ Table grants: 859 statements copied
+       + view: vw_area_codes
+       + view: vw_company_summary_by_business_type
+       + view: vw_company_to_ddi
+       + view: vw_company_to_ddi_attr
+       + view: vw_company_to_ddi_attributes
+       + view: vw_ddi_attributes
+       + view: vw_ddi_info
+       + view: vw_ddi_info_router
+       + view: vw_ddi_info_test
+       + view: vw_get_partial_postcodes
+       + view: vw_live_accounts_detailed
+       + view: vw_live_vo_accounts
+       + view: vw_notes
+       + view: vw_rotas
+       + view: vw_rotas_people
+     ✅ 006-views.sql (15 views)
+     ✅ 007-indexes.sql (131 indexes)
+       + function: addresses_generate_tsvector
+       + function: log_to_audit_log
+       + function: messages_generate_tsvector
+       + function: min_wrap_by_ddi
+       + function: notify_listener
+       + function: people_generate_tsvector
+       + function: postgres_fdw_disconnect
+       + function: postgres_fdw_disconnect_all
+       + function: postgres_fdw_get_connections
+       + function: postgres_fdw_handler
+       + function: postgres_fdw_validator
+       + function: users_update_meta
+       + function: vips_generate_tsvector
+     ✅ 008-functions.sql (13 functions)
+       + trigger: trigger_activities_audit on activities
+       + trigger: trigger_address_options_audit on address_options
+       + trigger: trigger_addresses_audit on addresses
+       + trigger: trigger_addresses_before on addresses
+       + trigger: trigger_availabilities_audit on availabilities
+       + trigger: trigger_availabilities_notify on availabilities
+       + trigger: trigger_notes_audit on broadcasts
+       + trigger: trigger_call_tags_audit on call_tags
+       + trigger: trigger_calls_notify on calls
+       + trigger: trigger_communications_audit on communications
+       + trigger: trigger_companies_audit on companies
+       + trigger: trigger_companies_notify on companies
+       + trigger: trigger_content_audit on content
+       + trigger: trigger_content_groups_audit on content_groups
+       + trigger: trigger_feedback_audit on feedback
+       + trigger: trigger_forgot_details_audit on forgot_details
+       + trigger: trigger_global_users_audit on global_users
+       + trigger: trigger_greetings_audit on greetings
+       + trigger: trigger_message_contents_audit on message_contents
+       + trigger: trigger_message_contents_before on message_contents
+       + trigger: trigger_message_contents_notify on message_contents
+       + trigger: trigger_messages_audit on messages
+       + trigger: trigger_notes_audit on notes
+       + trigger: trigger_notes_notify on notes
+       + trigger: trigger_notifications_audit on notifications
+       + trigger: trigger_numbers_audit on numbers
+       + trigger: trigger_operational_times_audit on operational_times
+       + trigger: trigger_operational_times_notify on operational_times
+       + trigger: trigger_people_audit on people
+       + trigger: trigger_people_before on people
+       + trigger: trigger_people_notify on people
+       + trigger: trigger_roles_audit on roles
+       + trigger: trigger_rota_options_audit on rota_options
+       + trigger: trigger_rotas_audit on rotas
+       + trigger: trigger_tokens_audit on tokens
+       + trigger: trigger_trials_audit on trials
+       + trigger: trigger_user_roles_audit on user_roles
+       + trigger: trigger_users_after on users
+       + trigger: trigger_users_audit on users
+       + trigger: trigger_users_notify on users
+       + trigger: trigger_vip_tags_audit on vip_tags
+       + trigger: trigger_vips_audit on vips
+       + trigger: trigger_vips_before on vips
+     ✅ 010-triggers.sql (56 triggers)
+  ✅ Schema api done
+
+  → Schema: asterisk
+     roles:365 users:332 tables:6 views:2 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: ivr_option_seq
+     ✅ 004-sequences.sql (1 sequences)
+       + table: call_queueing
+       + table: calls
+       + table: eqs_accounts
+       + table: ivr_option
+       + table: language
+       + table: sites
+     ✅ 005-tables.sql (6 tables)
+     ✅ Table grants: 73 statements copied
+       + view: vw_call_stats
+       + view: vw_eqs_accounts
+     ✅ 006-views.sql (2 views)
+  ✅ Schema asterisk done
+
+  → Schema: ave
+     roles:365 users:332 tables:28 views:1 indexes:50 functions:6 procedures:25
+     ✅ 003-schema.sql
+       + table: ave_datasource
+       + table: ave_language
+       + table: ave_models
+       + table: ave_outcome_status
+       + table: ave_scripts
+       + table: ave_step_category
+       + table: ave_step_types
+       + table: mindflow_model
+       + table: mindflow_parallel_operation
+       + table: mindflow_script
+       + table: mindflow_script_status
+       + table: pbx_audiosocket_endpoint
+       + table: pbx_ave_ivrlanguage
+       + table: pbx_ave_ivrmenu
+       + table: pbx_ave_request
+       + table: pbx_communication
+       + table: pbx_communication_type
+       + table: pbx_context
+       + table: pbx_log_type
+       + table: pbx_request_status
+       + table: pbx_request_type
+       + table: pbx_scriptrunner_endpoint
+       + table: qa_category
+       + table: qa_question
+       + table: qa_questionnaire_detail
+       + table: qa_questionnaire_header
+       + table: tsc_request
+       + table: tsc_request_status
+     ✅ 005-tables.sql (28 tables)
+     ✅ Table grants: 261 statements copied
+       + view: vw_ave_catalogs
+     ✅ 006-views.sql (1 views)
+     ✅ 007-indexes.sql (50 indexes)
+       + function: getivrmenufromddi
+       + function: getivrmenufromddiunified
+       + function: getquestionnairebyid
+       + function: logaverequests
+     ✅ 008-functions.sql (6 functions)
+       + procedure: addsmartdynamicscript
+       + procedure: checktsqueue
+       + procedure: filtertscrequest
+       + procedure: findscriptbyuuid
+       + procedure: getcontextbyddiandname
+       + procedure: getqacatalogs
+       + procedure: getqaresult
+       + procedure: getquesrionnaireheader
+       + procedure: getsmartdynamicscript
+       + procedure: gettscrequest
+       + procedure: listtscrequest
+       + procedure: logtscrequest
+       + procedure: pullactivedatasources
+       + procedure: pullactivemodels
+       + procedure: pullactivescriptrunnerendpoints
+       + procedure: pullactivesteptypes
+       + procedure: pullnexttsinqueue
+       + procedure: updateaverequest
+       + procedure: updatetscqaresult
+       + procedure: updatetscrequest
+       + procedure: updatetscstatus
+     ✅ 009-procedures.sql (25 procedures)
+  ✅ Schema ave done
+
+  → Schema: callback
+     roles:365 users:332 tables:1 views:0 indexes:1 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: schedule_seq
+     ✅ 004-sequences.sql (1 sequences)
+       + table: schedule
+     ✅ 005-tables.sql (1 tables)
+     ✅ Table grants: 9 statements copied
+     ✅ 007-indexes.sql (1 indexes)
+  ✅ Schema callback done
+
+  → Schema: calllogic
+     roles:365 users:332 tables:5 views:2 indexes:3 functions:3 procedures:0
+     ✅ 003-schema.sql
+       + table: adr
+       + table: adrsegment
+       + table: cdr
+       + table: cdrsegment
+       + table: tmp_mitel
+     ✅ 005-tables.sql (5 tables)
+     ✅ Table grants: 72 statements copied
+       + view: vw_call_summary_stats
+       + view: vw_cdr_adr_combined
+     ✅ 006-views.sql (2 views)
+     ✅ 007-indexes.sql (3 indexes)
+       + function: _navicat_temp_stored_proc
+       + function: get_call_summary
+       + function: mi_stats
+     ✅ 008-functions.sql (3 functions)
+  ✅ Schema calllogic done
+
+  → Schema: champs
+     roles:365 users:332 tables:3 views:1 indexes:3 functions:1 procedures:0
+     ✅ 003-schema.sql
+       + sequence: message_seq
+       + sequence: pop_history_seq
+       + sequence: secrets_seq
+     ✅ 004-sequences.sql (3 sequences)
+       + table: message
+       + table: pop_history
+       + table: secrets
+     ✅ 005-tables.sql (3 tables)
+     ✅ Table grants: 37 statements copied
+       + view: vw_message_summary
+     ✅ 006-views.sql (1 views)
+     ✅ 007-indexes.sql (3 indexes)
+       + function: isdateinrange
+     ✅ 008-functions.sql (1 functions)
+  ✅ Schema champs done
+
+  → Schema: etop
+     roles:365 users:332 tables:6 views:0 indexes:8 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + enum: accounts_account_status
+     ✅ 004-types.sql (1 enums)
+     ✅ 004-sequences.sql (5 sequences)
+       + table: accounts
+       + table: emails
+       + table: groups
+       + table: jobs
+       + table: migrations
+       + table: users
+     ✅ 005-tables.sql (6 tables)
+     ✅ Table grants: 54 statements copied
+     ✅ 007-indexes.sql (8 indexes)
+  ✅ Schema etop done
+
+  → Schema: feedback
+     roles:365 users:332 tables:13 views:0 indexes:9 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: authority_seq
+       + sequence: brand_seq
+       + sequence: category_seq
+       + sequence: comment_seq
+       + sequence: department_seq
+       + sequence: feedback_seq
+       + sequence: feedback_type_seq
+       + sequence: fragment_seq
+       + sequence: fragment_type_seq
+       + sequence: status_seq
+       + sequence: team_seq
+       + sequence: users_seq
+     ✅ 004-sequences.sql (12 sequences)
+       + table: authority
+       + table: brand
+       + table: category
+       + table: comment
+       + table: department
+       + table: feedback
+       + table: feedback_type
+       + table: fragment
+       + table: fragment_type
+       + table: status
+       + table: team
+       + table: user_authority
+       + table: users
+     ✅ 005-tables.sql (13 tables)
+     ✅ Table grants: 133 statements copied
+     ✅ 007-indexes.sql (9 indexes)
+  ✅ Schema feedback done
+
+  → Schema: geodata
+     roles:365 users:332 tables:2 views:0 indexes:1 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: location_seq
+       + sequence: postcode_seq
+     ✅ 004-sequences.sql (2 sequences)
+       + table: location
+       + table: postcode
+     ✅ 005-tables.sql (2 tables)
+     ✅ Table grants: 18 statements copied
+     ✅ 007-indexes.sql (1 indexes)
+  ✅ Schema geodata done
+
+  → Schema: logger
+     roles:365 users:332 tables:31 views:13 indexes:13 functions:10 procedures:0
+     ✅ 003-schema.sql
+       + sequence: agent_activity_seq
+       + sequence: agent_assistance_seq
+       + sequence: agent_call_detail_seq
+       + sequence: agent_call_seq
+       + sequence: agent_status_seq
+       + sequence: app_activity_seq
+       + sequence: call_detail_seq
+       + sequence: callback_sequence
+       + sequence: callcare_tariffs_seq
+       + sequence: cdr_sequence
+       + sequence: ivr_results_ivr_results_id_seq
+       + sequence: message_seq
+       + sequence: messagedata_sequence
+       + sequence: mitel_cdr_id_seq
+       + sequence: segment_seq
+     ✅ 004-sequences.sql (16 sequences)
+       + table: agent_activity
+       + table: agent_assistance
+       + table: agent_call
+       + table: agent_call_detail
+       + table: agent_session
+       + table: agent_status
+       + table: app_activity
+       + table: call_detail
+       + table: callcare_tariffs
+       + table: calls_23032020
+       + table: cdr
+       + table: cdr_feedback
+       + table: cdr_messages
+       + table: cdr_segments
+       + table: company_categories
+       + table: dcdr
+       + table: dcdr_agent_call
+       + table: dcdr_agent_session
+       + table: dcdr_agent_status
+       + table: dcdr_callback
+       + table: dcdr_feedback
+       + table: ivr_callback
+       + table: ivr_results
+       + table: message_data
+       + table: mitel_cdr
+       + table: temp_basicOnePage
+       + table: temp_callidcsv
+       + table: temp_firstrungon
+       + table: temp_fro
+       + table: temp_tcp_accounts
+       + table: voip_230320
+     ✅ 005-tables.sql (31 tables)
+     ✅ Table grants: 572 statements copied
+       + view: vw_agent_stats_60days
+       + view: vw_agent_stats_60days_dcdr
+       + view: vw_call_summary_stats
+       + view: vw_cdr_timezone_uk
+       + view: vw_cdr_today
+       + view: vw_cdr_today_date
+       + view: vw_cdr_today_old
+       + view: vw_cdr_with_msg_vars
+       + view: vw_cdr_with_talktime
+       + view: vw_company_talk_time_yesterday
+       + view: vw_hourly_call_stats
+       + view: vw_loggercdr
+       + view: vw_test_call_logs
+     ✅ 006-views.sql (13 views)
+     ✅ 007-indexes.sql (13 indexes)
+       + function: avg_duration_by_ddi(v_ddi text)
+       + function: avg_duration_by_ddi(v_ddi text)(v_ddi text)
+       + function: duration_stats
+       + function: get_call_summary
+       + function: get_call_summary2
+       + function: get_session_stats
+       + function: getrecordfilepath
+       + function: mi_stats
+       + function: min_wrap_by_ddi
+     ✅ 008-functions.sql (10 functions)
+  ✅ Schema logger done
+
+  → Schema: logger_ifl
+     roles:365 users:332 tables:3 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: cdr_sequence
+       + sequence: message_seq
+       + sequence: segment_seq
+     ✅ 004-sequences.sql (3 sequences)
+       + table: cdr
+       + table: cdr_messages
+       + table: cdr_segments
+     ✅ 005-tables.sql (3 tables)
+     ✅ Table grants: 31 statements copied
+  ✅ Schema logger_ifl done
+
+  → Schema: messaging
+     roles:365 users:332 tables:6 views:0 indexes:10 functions:0 procedures:2
+     ✅ 003-schema.sql
+     ✅ 004-sequences.sql (1 sequences)
+       + table: app_access
+       + table: app_granted_permissions
+       + table: data_sms
+       + table: registed_apps
+       + table: sms_providers
+       + table: sms_status
+     ✅ 005-tables.sql (6 tables)
+     ✅ Table grants: 54 statements copied
+     ✅ 007-indexes.sql (10 indexes)
+       + procedure: listproviders
+       + procedure: pullappdata
+     ✅ 009-procedures.sql (2 procedures)
+  ✅ Schema messaging done
+
+  → Schema: mitel
+     roles:365 users:332 tables:3 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: dnd_status_seq
+     ✅ 004-sequences.sql (1 sequences)
+       + table: dnd_status
+       + table: user_groups
+       + table: user_pins
+     ✅ 005-tables.sql (3 tables)
+     ✅ Table grants: 29 statements copied
+  ✅ Schema mitel done
+
+  → Schema: paxton
+     roles:365 users:332 tables:1 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + table: events
+     ✅ 005-tables.sql (1 tables)
+     ✅ Table grants: 11 statements copied
+  ✅ Schema paxton done
+
+  → Schema: quicksight
+     roles:365 users:332 tables:2 views:0 indexes:1 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + table: dashboard
+       + table: iam_credentials
+     ✅ 005-tables.sql (2 tables)
+     ✅ Table grants: 18 statements copied
+     ✅ 007-indexes.sql (1 indexes)
+  ✅ Schema quicksight done
+
+  → Schema: quicksight_clients
+     roles:365 users:332 tables:4 views:0 indexes:1 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: quicksight_authority_seq
+       + sequence: quicksight_users_seq
+     ✅ 004-sequences.sql (2 sequences)
+       + table: authority
+       + table: dashboard
+       + table: user
+       + table: user_authority
+     ✅ 005-tables.sql (4 tables)
+     ✅ Table grants: 36 statements copied
+     ✅ 007-indexes.sql (1 indexes)
+  ✅ Schema quicksight_clients done
+
+  → Schema: router
+     roles:365 users:332 tables:10 views:0 indexes:5 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: asterisk_cli_group_seq
+       + sequence: destinations_destinations_id_seq
+       + sequence: groups_id_seq
+       + sequence: isdn_mapping_seq
+       + sequence: router_rules_id
+       + sequence: rule_seq
+       + sequence: wrap_group_seq
+     ✅ 004-sequences.sql (7 sequences)
+       + table: acd_pin
+       + table: asterisk_cli_group
+       + table: destinations
+       + table: groups
+       + table: hunt_group
+       + table: isdn_mapping
+       + table: rules
+       + table: tcp_routes
+       + table: translations
+       + table: wrap_group
+     ✅ 005-tables.sql (10 tables)
+     ✅ Table grants: 96 statements copied
+     ✅ 007-indexes.sql (5 indexes)
+  ✅ Schema router done
+
+  → Schema: signup
+     roles:365 users:332 tables:3 views:0 indexes:1 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: completed_order_seq
+       + sequence: orderid_seq
+     ✅ 004-sequences.sql (2 sequences)
+       + table: completed_orders
+       + table: pending_order
+       + table: phone_codes
+     ✅ 005-tables.sql (3 tables)
+     ✅ Table grants: 27 statements copied
+     ✅ 007-indexes.sql (1 indexes)
+  ✅ Schema signup done
+
+  → Schema: smdr
+     roles:365 users:332 tables:1 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + table: calls
+     ✅ 005-tables.sql (1 tables)
+     ✅ Table grants: 9 statements copied
+  ✅ Schema smdr done
+
+  → Schema: staging_router
+     roles:365 users:332 tables:7 views:0 indexes:2 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: agentgroup_seq
+       + sequence: destination_seq
+       + sequence: hunt_seq
+       + sequence: hunt_state_seq
+       + sequence: rule_data_type_seq
+       + sequence: rule_seq
+       + sequence: translation_seq
+     ✅ 004-sequences.sql (7 sequences)
+       + table: agent_group
+       + table: destination
+       + table: hunt_group
+       + table: hunt_group_state
+       + table: rule
+       + table: rule_data_type
+       + table: translation
+     ✅ 005-tables.sql (7 tables)
+     ✅ Table grants: 68 statements copied
+     ✅ 007-indexes.sql (2 indexes)
+  ✅ Schema staging_router done
+
+  → Schema: wallboard
+     roles:365 users:332 tables:3 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: profile_seq
+       + sequence: tile_sequence
+     ✅ 004-sequences.sql (2 sequences)
+       + table: filterparams
+       + table: profile
+       + table: tiles
+     ✅ 005-tables.sql (3 tables)
+     ✅ Table grants: 27 statements copied
+  ✅ Schema wallboard done
+
+  → Schema: wallboard2
+     roles:365 users:332 tables:1 views:0 indexes:0 functions:0 procedures:0
+     ✅ 003-schema.sql
+       + sequence: profile_seq
+     ✅ 004-sequences.sql (1 sequences)
+       + table: profile
+     ✅ 005-tables.sql (1 tables)
+     ✅ Table grants: 9 statements copied
+  ✅ Schema wallboard2 done
+
+  → Schema: public
+     roles:365 users:332 tables:5 views:4 indexes:0 functions:768 procedures:0
+     ✅ 003-schema.sql
+       + sequence: adr_seq
+       + sequence: adrseg_seq
+       + sequence: cdr_seq
+       + sequence: cdrseg_seq
+       + sequence: groups_id_seq
+       + sequence: hibernate_sequence
+     ✅ 004-sequences.sql (6 sequences)
+       + table: postcodes
+       + table: repltest
+       + table: sessionstats
+       + table: spatial_ref_sys
+       + table: temp_calls
+     ✅ 005-tables.sql (5 tables)
+     ✅ Table grants: 67 statements copied
+       + view: geography_columns
+       + view: geometry_columns
+       + view: pg_stat_statements
+       + view: pg_stat_statements_info
+     ✅ 006-views.sql (4 views)
+       + function: _postgis_deprecate
+       + function: _postgis_index_extent
+       + function: _postgis_join_selectivity
+       + function: _postgis_pgsql_version
+       + function: _postgis_scripts_pgsql_version
+       + function: _postgis_selectivity
+       + function: _postgis_stats
+       + function: _st_3ddfullywithin
+       + function: _st_3ddwithin
+       + function: _st_3dintersects
+       + function: _st_asgml
+       + function: _st_asx3d
+       + function: _st_bestsrid
+       + function: _st_concavehull
+       + function: _st_contains
+       + function: _st_containsproperly
+       + function: _st_coveredby
+       + function: _st_covers
+       + function: _st_crosses
+       + function: _st_dfullywithin
+       + function: _st_distancetree
+       + function: _st_distanceuncached
+       + function: _st_dwithin
+       + function: _st_dwithinuncached
+       + function: _st_equals
+       + function: _st_expand
+       + function: _st_geomfromgml
+       + function: _st_intersects
+       + function: _st_linecrossingdirection
+       + function: _st_longestline
+       + function: _st_maxdistance
+       + function: _st_orderingequals
+       + function: _st_overlaps
+       + function: _st_pointoutside
+       + function: _st_sortablehash
+       + function: _st_touches
+       + function: _st_voronoi
+       + function: _st_within
+       + function: addgeometrycolumn
+       + function: agent_stats
+       + function: box
+       + function: box2d
+       + function: box2d_in
+       + function: box2d_out
+       + function: box2df_in
+       + function: box2df_out
+       + function: box3d
+       + function: box3d_in
+       + function: box3d_out
+       + function: box3dtobox
+       + function: bytea
+       + function: cdr_with_outbound_type
+       + function: connectby
+       + function: contains_2d
+       + function: crosstab
+       + function: crosstab2
+       + function: crosstab3
+       + function: crosstab4
+       + function: dropgeometrycolumn
+       + function: dropgeometrytable
+       + function: equals
+       + function: file_fdw_handler
+       + function: file_fdw_validator
+       + function: find_location_within_range_by_company
+       + function: find_srid
+       + function: geog_brin_inclusion_add_value
+       + function: geography
+       + function: geography_analyze
+       + function: geography_cmp
+       + function: geography_distance_knn
+       + function: geography_eq
+       + function: geography_ge
+       + function: geography_gist_compress
+       + function: geography_gist_consistent
+       + function: geography_gist_decompress
+       + function: geography_gist_distance
+       + function: geography_gist_penalty
+       + function: geography_gist_picksplit
+       + function: geography_gist_same
+       + function: geography_gist_union
+       + function: geography_gt
+       + function: geography_in
+       + function: geography_le
+       + function: geography_lt
+       + function: geography_out
+       + function: geography_overlaps
+       + function: geography_recv
+       + function: geography_send
+       + function: geography_spgist_choose_nd
+       + function: geography_spgist_compress_nd
+       + function: geography_spgist_config_nd
+       + function: geography_spgist_inner_consistent_nd
+       + function: geography_spgist_leaf_consistent_nd
+       + function: geography_spgist_picksplit_nd
+       + function: geography_typmod_in
+       + function: geography_typmod_out
+       + function: geom2d_brin_inclusion_add_value
+       + function: geom3d_brin_inclusion_add_value
+       + function: geom4d_brin_inclusion_add_value
+       + function: geometry
+       + function: geometry_above
+       + function: geometry_analyze
+       + function: geometry_below
+       + function: geometry_cmp
+       + function: geometry_contained_3d
+       + function: geometry_contains
+       + function: geometry_contains_3d
+       + function: geometry_contains_nd
+       + function: geometry_distance_box
+       + function: geometry_distance_centroid
+       + function: geometry_distance_centroid_nd
+       + function: geometry_distance_cpa
+       + function: geometry_eq
+       + function: geometry_ge
+       + function: geometry_gist_compress_2d
+       + function: geometry_gist_compress_nd
+       + function: geometry_gist_consistent_2d
+       + function: geometry_gist_consistent_nd
+       + function: geometry_gist_decompress_2d
+       + function: geometry_gist_decompress_nd
+       + function: geometry_gist_distance_2d
+       + function: geometry_gist_distance_nd
+       + function: geometry_gist_penalty_2d
+       + function: geometry_gist_penalty_nd
+       + function: geometry_gist_picksplit_2d
+       + function: geometry_gist_picksplit_nd
+       + function: geometry_gist_same_2d
+       + function: geometry_gist_same_nd
+       + function: geometry_gist_sortsupport_2d
+       + function: geometry_gist_union_2d
+       + function: geometry_gist_union_nd
+       + function: geometry_gt
+       + function: geometry_hash
+       + function: geometry_in
+       + function: geometry_le
+       + function: geometry_left
+       + function: geometry_lt
+       + function: geometry_neq
+       + function: geometry_out
+       + function: geometry_overabove
+       + function: geometry_overbelow
+       + function: geometry_overlaps
+       + function: geometry_overlaps_3d
+       + function: geometry_overlaps_nd
+       + function: geometry_overleft
+       + function: geometry_overright
+       + function: geometry_recv
+       + function: geometry_right
+       + function: geometry_same
+       + function: geometry_same_3d
+       + function: geometry_same_nd
+       + function: geometry_send
+       + function: geometry_sortsupport
+       + function: geometry_spgist_choose_2d
+       + function: geometry_spgist_choose_3d
+       + function: geometry_spgist_choose_nd
+       + function: geometry_spgist_compress_2d
+       + function: geometry_spgist_compress_3d
+       + function: geometry_spgist_compress_nd
+       + function: geometry_spgist_config_2d
+       + function: geometry_spgist_config_3d
+       + function: geometry_spgist_config_nd
+       + function: geometry_spgist_inner_consistent_2d
+       + function: geometry_spgist_inner_consistent_3d
+       + function: geometry_spgist_inner_consistent_nd
+       + function: geometry_spgist_leaf_consistent_2d
+       + function: geometry_spgist_leaf_consistent_3d
+       + function: geometry_spgist_leaf_consistent_nd
+       + function: geometry_spgist_picksplit_2d
+       + function: geometry_spgist_picksplit_3d
+       + function: geometry_spgist_picksplit_nd
+       + function: geometry_typmod_in
+       + function: geometry_typmod_out
+       + function: geometry_within
+       + function: geometry_within_nd
+       + function: geometrytype
+       + function: geomfromewkb
+       + function: geomfromewkt
+       + function: get_proj4_from_srid
+       + function: gidx_in
+       + function: gidx_out
+       + function: gserialized_gist_joinsel_2d
+       + function: gserialized_gist_joinsel_nd
+       + function: gserialized_gist_sel_2d
+       + function: gserialized_gist_sel_nd
+       + function: is_contained_2d
+       + function: isdateinrange
+       + function: json
+       + function: jsonb
+       + function: normal_rand
+       + function: overlaps_2d
+       + function: overlaps_geog
+       + function: overlaps_nd
+       + function: path
+       + function: pg_stat_statements
+       + function: pg_stat_statements_info
+       + function: pg_stat_statements_reset
+       + function: pgis_asflatgeobuf_finalfn
+       + function: pgis_asflatgeobuf_transfn
+       + function: pgis_asgeobuf_finalfn
+       + function: pgis_asgeobuf_transfn
+       + function: pgis_asmvt_combinefn
+       + function: pgis_asmvt_deserialfn
+       + function: pgis_asmvt_finalfn
+       + function: pgis_asmvt_serialfn
+       + function: pgis_asmvt_transfn
+       + function: pgis_geometry_accum_transfn
+       + function: pgis_geometry_clusterintersecting_finalfn
+       + function: pgis_geometry_clusterwithin_finalfn
+       + function: pgis_geometry_collect_finalfn
+       + function: pgis_geometry_coverageunion_finalfn
+       + function: pgis_geometry_makeline_finalfn
+       + function: pgis_geometry_polygonize_finalfn
+       + function: pgis_geometry_union_parallel_combinefn
+       + function: pgis_geometry_union_parallel_deserialfn
+       + function: pgis_geometry_union_parallel_finalfn
+       + function: pgis_geometry_union_parallel_serialfn
+       + function: pgis_geometry_union_parallel_transfn
+       + function: point
+       + function: polygon
+       + function: populate_geometry_columns
+       + function: postgis_addbbox
+       + function: postgis_cache_bbox
+       + function: postgis_constraint_dims
+       + function: postgis_constraint_srid
+       + function: postgis_constraint_type
+       + function: postgis_dropbbox
+       + function: postgis_extensions_upgrade
+       + function: postgis_full_version
+       + function: postgis_geos_compiled_version
+       + function: postgis_geos_noop
+       + function: postgis_geos_version
+       + function: postgis_getbbox
+       + function: postgis_hasbbox
+       + function: postgis_index_supportfn
+       + function: postgis_lib_build_date
+       + function: postgis_lib_revision
+       + function: postgis_lib_version
+       + function: postgis_libjson_version
+       + function: postgis_liblwgeom_version
+       + function: postgis_libprotobuf_version
+       + function: postgis_libxml_version
+       + function: postgis_noop
+       + function: postgis_proj_compiled_version
+       + function: postgis_proj_version
+       + function: postgis_scripts_build_date
+       + function: postgis_scripts_installed
+       + function: postgis_scripts_released
+       + function: postgis_srs
+       + function: postgis_srs_all
+       + function: postgis_srs_codes
+       + function: postgis_srs_search
+       + function: postgis_svn_version
+       + function: postgis_transform_geometry
+       + function: postgis_transform_pipeline_geometry
+       + function: postgis_type_name
+       + function: postgis_typmod_dims
+       + function: postgis_typmod_srid
+       + function: postgis_typmod_type
+       + function: postgis_version
+       + function: postgis_wagyu_version
+       + function: spheroid_in
+       + function: spheroid_out
+       + function: st_3dclosestpoint
+       + function: st_3ddfullywithin
+       + function: st_3ddistance
+       + function: st_3ddwithin
+       + function: st_3dintersects
+       + function: st_3dlength
+       + function: st_3dlineinterpolatepoint
+       + function: st_3dlongestline
+       + function: st_3dmakebox
+       + function: st_3dmaxdistance
+       + function: st_3dperimeter
+       + function: st_3dshortestline
+       + function: st_addmeasure
+       + function: st_addpoint
+       + function: st_affine
+       + function: st_angle
+       + function: st_area
+       + function: st_area2d
+       + function: st_asbinary
+       + function: st_asencodedpolyline
+       + function: st_asewkb
+       + function: st_asewkt
+       + function: st_asgeojson
+       + function: st_asgml
+       + function: st_ashexewkb
+       + function: st_askml
+       + function: st_aslatlontext
+       + function: st_asmarc21
+       + function: st_asmvtgeom
+       + function: st_assvg
+       + function: st_astext
+       + function: st_astwkb
+       + function: st_asx3d
+       + function: st_azimuth
+       + function: st_bdmpolyfromtext
+       + function: st_bdpolyfromtext
+       + function: st_boundary
+       + function: st_boundingdiagonal
+       + function: st_box2dfromgeohash
+       + function: st_buffer
+       + function: st_buildarea
+       + function: st_centroid
+       + function: st_chaikinsmoothing
+       + function: st_cleangeometry
+       + function: st_clipbybox2d
+       + function: st_closestpoint
+       + function: st_closestpointofapproach
+       + function: st_clusterintersecting
+       + function: st_clusterwithin
+       + function: st_collect
+       + function: st_collectionextract
+       + function: st_collectionhomogenize
+       + function: st_combinebbox
+       + function: st_concavehull
+       + function: st_contains
+       + function: st_containsproperly
+       + function: st_convexhull
+       + function: st_coorddim
+       + function: st_coverageunion
+       + function: st_coveredby
+       + function: st_covers
+       + function: st_cpawithin
+       + function: st_crosses
+       + function: st_curven
+       + function: st_curvetoline
+       + function: st_delaunaytriangles
+       + function: st_dfullywithin
+       + function: st_difference
+       + function: st_dimension
+       + function: st_disjoint
+       + function: st_distance
+       + function: st_distancecpa
+       + function: st_distancesphere
+       + function: st_distancespheroid
+       + function: st_dump
+       + function: st_dumppoints
+       + function: st_dumprings
+       + function: st_dumpsegments
+       + function: st_dwithin
+       + function: st_endpoint
+       + function: st_envelope
+       + function: st_equals
+       + function: st_estimatedextent
+       + function: st_expand
+       + function: st_exteriorring
+       + function: st_filterbym
+       + function: st_findextent
+       + function: st_flipcoordinates
+       + function: st_force2d
+       + function: st_force3d
+       + function: st_force3dm
+       + function: st_force3dz
+       + function: st_force4d
+       + function: st_forcecollection
+       + function: st_forcecurve
+       + function: st_forcepolygonccw
+       + function: st_forcepolygoncw
+       + function: st_forcerhr
+       + function: st_forcesfs
+       + function: st_frechetdistance
+       + function: st_fromflatgeobuf
+       + function: st_fromflatgeobuftotable
+       + function: st_generatepoints
+       + function: st_geogfromtext
+       + function: st_geogfromwkb
+       + function: st_geographyfromtext
+       + function: st_geohash
+       + function: st_geomcollfromtext
+       + function: st_geomcollfromwkb
+       + function: st_geometricmedian
+       + function: st_geometryfromtext
+       + function: st_geometryn
+       + function: st_geometrytype
+       + function: st_geomfromewkb
+       + function: st_geomfromewkt
+       + function: st_geomfromgeohash
+       + function: st_geomfromgeojson
+       + function: st_geomfromgml
+       + function: st_geomfromkml
+       + function: st_geomfrommarc21
+       + function: st_geomfromtext
+       + function: st_geomfromtwkb
+       + function: st_geomfromwkb
+       + function: st_gmltosql
+       + function: st_hasarc
+       + function: st_hasm
+       + function: st_hasz
+       + function: st_hausdorffdistance
+       + function: st_hexagon
+       + function: st_hexagongrid
+       + function: st_interiorringn
+       + function: st_interpolatepoint
+       + function: st_intersection
+       + function: st_intersects
+       + function: st_inversetransformpipeline
+       + function: st_isclosed
+       + function: st_iscollection
+       + function: st_isempty
+       + function: st_ispolygonccw
+       + function: st_ispolygoncw
+       + function: st_isring
+       + function: st_issimple
+       + function: st_isvalid
+       + function: st_isvaliddetail
+       + function: st_isvalidreason
+       + function: st_isvalidtrajectory
+       + function: st_largestemptycircle
+       + function: st_length
+       + function: st_length2d
+       + function: st_length2dspheroid
+       + function: st_lengthspheroid
+       + function: st_letters
+       + function: st_linecrossingdirection
+       + function: st_lineextend
+       + function: st_linefromencodedpolyline
+       + function: st_linefrommultipoint
+       + function: st_linefromtext
+       + function: st_linefromwkb
+       + function: st_lineinterpolatepoint
+       + function: st_lineinterpolatepoints
+       + function: st_linelocatepoint
+       + function: st_linemerge
+       + function: st_linestringfromwkb
+       + function: st_linesubstring
+       + function: st_linetocurve
+       + function: st_locatealong
+       + function: st_locatebetween
+       + function: st_locatebetweenelevations
+       + function: st_longestline
+       + function: st_m
+       + function: st_makebox2d
+       + function: st_makeenvelope
+       + function: st_makeline
+       + function: st_makepoint
+       + function: st_makepointm
+       + function: st_makepolygon
+       + function: st_makevalid
+       + function: st_maxdistance
+       + function: st_maximuminscribedcircle
+       + function: st_memsize
+       + function: st_minimumboundingcircle
+       + function: st_minimumboundingradius
+       + function: st_minimumclearance
+       + function: st_minimumclearanceline
+       + function: st_mlinefromtext
+       + function: st_mlinefromwkb
+       + function: st_mpointfromtext
+       + function: st_mpointfromwkb
+       + function: st_mpolyfromtext
+       + function: st_mpolyfromwkb
+       + function: st_multi
+       + function: st_multilinefromwkb
+       + function: st_multilinestringfromtext
+       + function: st_multipointfromtext
+       + function: st_multipointfromwkb
+       + function: st_multipolyfromwkb
+       + function: st_multipolygonfromtext
+       + function: st_ndims
+       + function: st_node
+       + function: st_normalize
+       + function: st_npoints
+       + function: st_nrings
+       + function: st_numcurves
+       + function: st_numgeometries
+       + function: st_numinteriorring
+       + function: st_numinteriorrings
+       + function: st_numpatches
+       + function: st_numpoints
+       + function: st_offsetcurve
+       + function: st_orderingequals
+       + function: st_orientedenvelope
+       + function: st_overlaps
+       + function: st_patchn
+       + function: st_perimeter
+       + function: st_perimeter2d
+       + function: st_point
+       + function: st_pointfromgeohash
+       + function: st_pointfromtext
+       + function: st_pointfromwkb
+       + function: st_pointinsidecircle
+       + function: st_pointm
+       + function: st_pointn
+       + function: st_pointonsurface
+       + function: st_points
+       + function: st_pointz
+       + function: st_pointzm
+       + function: st_polyfromtext
+       + function: st_polyfromwkb
+       + function: st_polygon
+       + function: st_polygonfromtext
+       + function: st_polygonfromwkb
+       + function: st_polygonize
+       + function: st_project
+       + function: st_quantizecoordinates
+       + function: st_reduceprecision
+       + function: st_relate
+       + function: st_relatematch
+       + function: st_removeirrelevantpointsforview
+       + function: st_removepoint
+       + function: st_removerepeatedpoints
+       + function: st_removesmallparts
+       + function: st_reverse
+       + function: st_rotate
+       + function: st_rotatex
+       + function: st_rotatey
+       + function: st_rotatez
+       + function: st_scale
+       + function: st_scroll
+       + function: st_segmentize
+       + function: st_seteffectivearea
+       + function: st_setpoint
+       + function: st_setsrid
+       + function: st_sharedpaths
+       + function: st_shiftlongitude
+       + function: st_shortestline
+       + function: st_simplify
+       + function: st_simplifypolygonhull
+       + function: st_simplifypreservetopology
+       + function: st_simplifyvw
+       + function: st_snap
+       + function: st_snaptogrid
+       + function: st_split
+       + function: st_square
+       + function: st_squaregrid
+       + function: st_srid
+       + function: st_startpoint
+       + function: st_subdivide
+       + function: st_summary
+       + function: st_swapordinates
+       + function: st_symdifference
+       + function: st_symmetricdifference
+       + function: st_tileenvelope
+       + function: st_touches
+       + function: st_transform
+       + function: st_transformpipeline
+       + function: st_translate
+       + function: st_transscale
+       + function: st_triangulatepolygon
+       + function: st_unaryunion
+       + function: st_union
+       + function: st_voronoilines
+       + function: st_voronoipolygons
+       + function: st_within
+       + function: st_wkbtosql
+       + function: st_wkttosql
+       + function: st_wrapx
+       + function: st_x
+       + function: st_xmax
+       + function: st_xmin
+       + function: st_y
+       + function: st_ymax
+       + function: st_ymin
+       + function: st_z
+       + function: st_zmax
+       + function: st_zmflag
+       + function: st_zmin
+       + function: text
+       + function: updategeometrysrid
+     ✅ 008-functions.sql (768 functions)
+     ✅ 012-rules.sql (3 rules)
+  ✅ Schema public done
+       + extension: file_fdw (schema: public)
+       + extension: pg_stat_statements (schema: public)
+       + extension: plperl (schema: pg_catalog)
+       + extension: postgis (schema: public)
+       + extension: postgres_fdw (schema: api)
+       + extension: tablefunc (schema: public)
+     ✅ extensions.sql (6 extensions)
+       + FDW: file_fdw
+       + FDW: postgres_fdw
+       + Foreign Server: autoform
+       + Foreign Server: bling_server
+       + Foreign Server: file_fdw_server
+       + Foreign Server: msgstore
+       + Foreign Server: widgets
+       + User Mapping: postgres → autoform
+       + User Mapping: webreports1 → autoform
+       + User Mapping: baz.patel.pgadmin → bling_server
+       + User Mapping: postgres → bling_server
+       + User Mapping: webreports1 → bling_server
+       + User Mapping: postgres → msgstore
+       + User Mapping: webreports1 → msgstore
+       + User Mapping: postgres → widgets
+       + User Mapping: webreports1 → widgets
+     ✅ fdw.sql (2 FDWs)
+       + publication: logger
+     ✅ replication.sql (1 publications)
+
+  Running changelog-sync for z_voffice...
+./migrate-remaining-dbs.sh: line 1505: liquibase: command not found
+  ✅ z_voffice done!
+
+──────────────────────────────────────────
+ Processing: zz_widgets
+──────────────────────────────────────────
+  Schema: callout (tables:1 views:3)
+  Schema: deptools (tables:1 views:0)
+  Schema: public (tables:0 views:2)
+
+  → Schema: callout
+     roles:365 users:332 tables:1 views:3 indexes:2 functions:5 procedures:0
+     ✅ 001-roles.sql (365 roles)
+     ✅ 002-users.sql (332 users)
+     ✅ 003-schema.sql
+       + table: calls
+     ✅ 005-tables.sql (1 tables)
+     ✅ Table grants: 12 statements copied
+       + view: calls_report_fill5
+       + view: vw_calls_report_fill5
+       + view: vw_calls_report_fill5_lastmonth
+     ✅ 006-views.sql (3 views)
+     ✅ 007-indexes.sql (2 indexes)
+       + function: postgres_fdw_disconnect
+       + function: postgres_fdw_disconnect_all
+       + function: postgres_fdw_get_connections
+       + function: postgres_fdw_handler
+       + function: postgres_fdw_validator
+     ✅ 008-functions.sql (5 functions)
+  ✅ Schema callout done
+
+  → Schema: deptools
+     roles:365 users:332 tables:1 views:0 indexes:1 functions:0 procedures:0
+     ✅ 003-schema.sql
+     ✅ 004-sequences.sql (1 sequences)
+       + table: tariffs
+     ✅ 005-tables.sql (1 tables)
+     ✅ Table grants: 2 statements copied
+     ✅ 007-indexes.sql (1 indexes)
+  ✅ Schema deptools done
+
+  → Schema: public
+     roles:365 users:332 tables:0 views:2 indexes:0 functions:3 procedures:0
+     ✅ 003-schema.sql
+       + view: pg_stat_statements
+       + view: pg_stat_statements_info
+     ✅ 006-views.sql (2 views)
+       + function: pg_stat_statements
+       + function: pg_stat_statements_info
+       + function: pg_stat_statements_reset
+     ✅ 008-functions.sql (3 functions)
+  ✅ Schema public done
+       + extension: pg_stat_statements (schema: public)
+       + extension: postgres_fdw (schema: callout)
+     ✅ extensions.sql (2 extensions)
+       + FDW: postgres_fdw
+       + Foreign Server: widgets
+       + User Mapping: postgres → widgets
+     ✅ fdw.sql (1 FDWs)
+
+  Running changelog-sync for zz_widgets...
+./migrate-remaining-dbs.sh: line 1505: liquibase: command not found
+  ✅ zz_widgets done!
+
+──────────────────────────────────────────
+ Processing: zzz_billing
+──────────────────────────────────────────
+  Schema: public (tables:56 views:38)
+
+  → Schema: public
+     roles:365 users:332 tables:56 views:38 indexes:122 functions:71 procedures:0
+     ✅ 001-roles.sql (365 roles)
+     ✅ 002-users.sql (332 users)
+     ✅ 003-schema.sql
+       + sequence: seq_tmp_client_grouping
+     ✅ 004-sequences.sql (45 sequences)
+       + table: account
+       + table: account_activity
+       + table: account_copy
+       + table: account_counter
+       + table: account_ddi
+       + table: account_detail
+       + table: account_discount
+       + table: account_discount_to_invoice
+       + table: account_kind
+       + table: account_note
+       + table: account_tags
+       + table: account_tariff
+       + table: account_template
+       + table: account_template_deteled_06-2019
+       + table: account_to_account_tags
+       + table: account_to_tariff
+       + table: account_to_tariff_06-2019
+       + table: additional_bill
+       + table: additional_charge
+       + table: alias
+       + table: audit_table
+       + table: bank_holiday
+       + table: cdr
+       + table: charge
+       + table: charge_type
+       + table: companypostgres
+       + table: countries
+       + table: credit_history
+       + table: epdq_alias
+       + table: epdq_payment_request_log
+       + table: epdq_payment_response_log
+       + table: external_cache_data
+       + table: free
+       + table: free_counter
+       + table: free_type
+       + table: interim
+       + table: invoice
+       + table: invoice_counter
+       + table: invoice_report
+       + table: option
+       + table: recurring_bill
+       + table: roles
+       + table: service_number
+       + table: service_number_note
+       + table: tariff
+       + table: tariff_note
+       + table: tariff_override
+       + table: temp_cdr
+       + table: timezones
+       + table: transaction
+       + table: user_roles
+       + table: users
+       + table: users_history
+       + table: vat
+       + table: vodafone_ddi
+       + table: ybv_numbers
+     ✅ 005-tables.sql (56 tables)
+     ✅ Table grants: 492 statements copied
+       + view: ____vw_tmp_invoices
+       + view: ____vw_tmp_report_call_avg
+       + view: pg_stat_statements
+       + view: pg_stat_statements_info
+       + view: vw_account_numbers
+       + view: vw_account_numbers_now
+       + view: vw_account_tariffs
+       + view: vw_account_tariffs_free_seconds
+       + view: vw_accounts_live
+       + view: vw_accounts_live_with_tags
+       + view: vw_accounts_search
+       + view: vw_accounts_search_suspended
+       + view: vw_accounts_xul_search
+       + view: vw_adp_bundle_usage
+       + view: vw_adptcp_callstats_by_hour15min_interval
+       + view: vw_affiliate_report
+       + view: vw_call_billing_data
+       + view: vw_calls_by_site_date_last90days
+       + view: vw_cdr_detail
+       + view: vw_cdr_in_detail
+       + view: vw_cdr_out_detail
+       + view: vw_cdr_report
+       + view: vw_charge_detail
+       + view: vw_free
+       + view: vw_free_magrathea_service_numbers
+       + view: vw_get_ddi_test_numbers
+       + view: vw_get_ddi_test_numbers_by_tag
+       + view: vw_life_report
+       + view: vw_live_accounts_with_ddi_and_tariffs
+       + view: vw_service_numbers
+       + view: vw_service_numbers2
+       + view: vw_temp_andy_health_invoices
+       + view: vw_temp_andy_highest_yearly_invoice_health_clients
+       + view: vw_unused_voip_no
+       + view: vw_ybv_callstats_by_hour15min_interval
+       + view: vw_ybv_callstats_by_hour15min_intervalv2
+       + view: vw_ybv_calltraffic_per_ddi
+       + view: vw_zero_invoices_jan_2016
+     ✅ 006-views.sql (38 views)
+     ✅ 007-indexes.sql (122 indexes)
+       + function: generate_additional_bills
+       + function: generate_free_counter
+       + function: generate_interim_totals
+       + function: generate_interval_invoices
+       + function: generate_invoice
+       + function: generate_special_invoice
+       + function: get_account_id
+       + function: get_account_kind_id
+       + function: get_account_name
+       + function: get_account_tariff
+       + function: get_account_tariff_id
+       + function: get_account_tariff_interval
+       + function: get_account_tariff_name
+       + function: get_anniversaries
+       + function: get_audit_table_data
+       + function: get_charge_type
+       + function: get_charge_type_id
+       + function: get_company_details_by_ddi
+       + function: get_cost
+       + function: get_free_type_id
+       + function: get_interim_account
+       + function: get_interim_accounts
+       + function: get_interim_total
+       + function: get_interim_total_from_snapshot
+       + function: get_last_day
+       + function: get_last_invoice_type
+       + function: get_next_account_number
+       + function: get_next_day
+       + function: get_next_invoice_number
+       + function: get_run_next_from_date
+       + function: get_service_number
+       + function: get_service_number_public
+       + function: get_tariff
+       + function: get_tariff_class
+       + function: get_timezone
+       + function: get_vat
+       + function: is_free
+       + function: log_to_audit_table()
+       + function: notify_account_update
+       + function: pg_stat_statements
+       + function: pg_stat_statements_info
+       + function: pg_stat_statements_reset
+       + function: pitr_account
+       + function: pitr_account_ddi
+       + function: pitr_account_detail
+       + function: pitr_account_discount
+       + function: pitr_account_template
+       + function: pitr_additional_bill
+       + function: pitr_recurring_bill
+       + function: pitr_service_number
+       + function: plpg_check_account
+       + function: plpg_check_account_discount
+       + function: plpg_check_account_to_tariff
+       + function: plpg_check_additional_bill
+       + function: plpg_check_additional_charge_before_delete
+       + function: plpg_check_additional_charge_before_insert
+       + function: plpg_check_cdr_before_delete
+       + function: plpg_check_cdr_before_insert
+       + function: plpg_check_credit_history
+       + function: plpg_check_credit_history_after
+       + function: plpg_check_invoice
+       + function: plpg_check_recurring_bill
+       + function: plpg_check_tariff
+       + function: plpg_set_tariff_class
+       + function: postgres_fdw_disconnect
+       + function: postgres_fdw_disconnect_all
+       + function: postgres_fdw_get_connections
+       + function: postgres_fdw_handler
+       + function: postgres_fdw_validator
+       + function: ts_round
+       + function: update_tariff
+     ✅ 008-functions.sql (71 functions)
+       + trigger: notify_event on account
+       + trigger: trigger_account_audit on account
+       + trigger: trigger_account_check on account
+       + trigger: notify_event on account_ddi
+       + trigger: trigger_account_ddi_audit on account_ddi
+       + trigger: trigger_account_detail_audit on account_detail
+       + trigger: trigger_account_discount_audit on account_discount
+       + trigger: trigger_account_discount_check on account_discount
+       + trigger: trigger_account_template_audit on account_template
+       + trigger: trigger_check_account_to_tariff on account_to_tariff
+       + trigger: trigger_additional_bill_audit on additional_bill
+       + trigger: trigger_additional_bill_check on additional_bill
+       + trigger: trigger_additional_charge_delete on additional_charge
+       + trigger: trigger_additional_charge_insert on additional_charge
+       + trigger: trigger_cdr_before_delete on cdr
+       + trigger: trigger_cdr_before_insert on cdr
+       + trigger: trigger_credit_history_check on credit_history
+       + trigger: trigger_credit_history_check_after on credit_history
+       + trigger: trig_invoice_check on invoice
+       + trigger: trigger_check_recurring_bill on recurring_bill
+       + trigger: trigger_recurring_bill_audit on recurring_bill
+       + trigger: trigger_service_number_audit on service_number
+       + trigger: trigger_tariff_set_class on tariff
+     ✅ 010-triggers.sql (54 triggers)
+     ✅ 012-rules.sql (4 rules)
+  ✅ Schema public done
+       + extension: pg_stat_statements (schema: public)
+       + extension: plperl (schema: pg_catalog)
+       + extension: postgres_fdw (schema: public)
+     ✅ extensions.sql (3 extensions)
+       + FDW: postgres_fdw
+       + Foreign Server: virtualoffice_server
+       + User Mapping: baz.patel.pgadmin → virtualoffice_server
+     ✅ fdw.sql (1 FDWs)
+       + publication: billing_migration
+     ✅ replication.sql (1 publications)
+
+  Running changelog-sync for zzz_billing...
+./migrate-remaining-dbs.sh: line 1505: liquibase: command not found
+  ✅ zzz_billing done!
+
+============================================
+ ✅ All databases migrated!
+
+ Files created only where content exists:
+   001-roles.sql      → only if roles found
+   002-users.sql      → only if users found
+   003-schema.sql     → always
+   005-tables.sql     → only if tables found
+   006-views.sql      → only if views found
+   007-indexes.sql    → only if indexes found
+   008-functions.sql  → only if functions found
+   009-procedures.sql → only if procedures found
+
+ Next steps:
+   git add databases/
+   git commit -m 'feat: copy exact structure from all DBs'
+   git push origin development
+============================================

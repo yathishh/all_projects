@@ -1,0 +1,162 @@
+{
+  "name": "ChangeRequest",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Change request title"
+    },
+    "jira_ticket": {
+      "type": "string",
+      "description": "Jira ticket ID (e.g. DB-123)"
+    },
+    "jira_summary": {
+      "type": "string",
+      "description": "Jira ticket summary/title pulled from Jira"
+    },
+    "jira_status": {
+      "type": "string",
+      "description": "Current Jira status (e.g. In Progress, Done)"
+    },
+    "jira_assignee": {
+      "type": "string",
+      "description": "Jira ticket assignee"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the change"
+    },
+    "db_type": {
+      "type": "string",
+      "enum": [
+        "mysql",
+        "postgres",
+        "mongodb"
+      ],
+      "description": "Target database type"
+    },
+    "target_db": {
+      "type": "string",
+      "description": "Target database name/host"
+    },
+    "migration_script": {
+      "type": "string",
+      "description": "The SQL/migration script content"
+    },
+    "rollback_script": {
+      "type": "string",
+      "description": "Rollback script in case of failure"
+    },
+    "rollback_plan": {
+      "type": "string",
+      "description": "Step-by-step rollback procedure description"
+    },
+    "rollback_risk": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "default": "low",
+      "description": "Risk level of the rollback procedure"
+    },
+    "rollback_window_minutes": {
+      "type": "number",
+      "description": "Estimated time to rollback in minutes"
+    },
+    "impact_assessment": {
+      "type": "string",
+      "description": "Assessment of impact on services/tables if migration fails"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "pending_local",
+        "local_passed",
+        "local_failed",
+        "pending_staging_approval",
+        "staging_approved",
+        "staging_rejected",
+        "pending_staging_deploy",
+        "staging_passed",
+        "staging_failed",
+        "pending_prod_approval",
+        "prod_approved",
+        "prod_rejected",
+        "prod_deployed",
+        "prod_failed",
+        "rolled_back"
+      ],
+      "default": "draft"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "local",
+        "staging",
+        "production"
+      ],
+      "default": "local"
+    },
+    "requested_by": {
+      "type": "string"
+    },
+    "staging_approved_by": {
+      "type": "string"
+    },
+    "staging_approved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "staging_rejection_reason": {
+      "type": "string"
+    },
+    "prod_approved_by": {
+      "type": "string"
+    },
+    "prod_approved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "prod_rejection_reason": {
+      "type": "string"
+    },
+    "scheduled_deploy_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "local_test_log": {
+      "type": "string"
+    },
+    "staging_deploy_log": {
+      "type": "string"
+    },
+    "prod_deploy_log": {
+      "type": "string"
+    },
+    "git_branch": {
+      "type": "string"
+    },
+    "git_commit": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "jira_ticket",
+    "db_type",
+    "migration_script"
+  ]
+}

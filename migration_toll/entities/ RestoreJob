@@ -1,0 +1,86 @@
+{
+  "name": "RestoreJob",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "backup_job_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "target_db_type": {
+      "type": "string"
+    },
+    "target_db_name": {
+      "type": "string"
+    },
+    "target_connection_string": {
+      "type": "string"
+    },
+    "restore_type": {
+      "type": "string",
+      "enum": [
+        "full_restore",
+        "point_in_time",
+        "selective_tables",
+        "schema_only",
+        "data_only",
+        "cross_db_restore",
+        "disaster_recovery"
+      ],
+      "default": "full_restore"
+    },
+    "point_in_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "selected_objects": {
+      "type": "string"
+    },
+    "overwrite_existing": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "validating",
+        "running",
+        "completed",
+        "failed",
+        "rolled_back"
+      ],
+      "default": "pending"
+    },
+    "progress_percent": {
+      "type": "number",
+      "default": 0
+    },
+    "restored_records": {
+      "type": "number",
+      "default": 0
+    },
+    "duration_seconds": {
+      "type": "number",
+      "default": 0
+    },
+    "error_message": {
+      "type": "string"
+    },
+    "validation_report": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "target_db_type",
+    "restore_type"
+  ]
+}

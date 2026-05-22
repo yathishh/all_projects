@@ -1,0 +1,54 @@
+{
+  "name": "WebhookConfig",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Friendly name for this webhook"
+    },
+    "webhook_url": {
+      "type": "string",
+      "description": "Microsoft Teams incoming webhook URL"
+    },
+    "channel_name": {
+      "type": "string",
+      "description": "Display name of the Teams channel"
+    },
+    "enabled": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this webhook is active"
+    },
+    "notify_on_start": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send notification when deployment starts"
+    },
+    "notify_on_success": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send notification when deployment succeeds"
+    },
+    "notify_on_failure": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send notification when deployment fails"
+    },
+    "notify_on_rollback": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send notification when a rollback is executed"
+    },
+    "environments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Which environments to notify for"
+    }
+  },
+  "required": [
+    "name",
+    "webhook_url"
+  ]
+}

@@ -1,0 +1,122 @@
+============================================================
+  DATABASE : django
+  Host     : pgsql_cluster.adhkiapps.com:5001
+  Report   : Tue Apr  7 19:10:37 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (14 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               auth_group                auth_group_name_like                8192 bytes 0        btree       
+    DDL: CREATE INDEX auth_group_name_like ON public.auth_group USING btree (name varchar_pattern_ops)
+  public               auth_group_permissions    auth_group_permissions_group_id     8192 bytes 0        btree       
+    DDL: CREATE INDEX auth_group_permissions_group_id ON public.auth_group_permissions USING btree (group_id)
+  public               auth_group_permissions    auth_group_permissions_permission_id 8192 bytes 0        btree       
+    DDL: CREATE INDEX auth_group_permissions_permission_id ON public.auth_group_permissions USING btree (permission_id)
+  public               auth_permission           auth_permission_content_type_id     16 kB      0        btree       
+    DDL: CREATE INDEX auth_permission_content_type_id ON public.auth_permission USING btree (content_type_id)
+  public               auth_user                 auth_user_username_like             16 kB      0        btree       
+    DDL: CREATE INDEX auth_user_username_like ON public.auth_user USING btree (username varchar_pattern_ops)
+  public               auth_user_groups          auth_user_groups_user_id            8192 bytes 0        btree       
+    DDL: CREATE INDEX auth_user_groups_user_id ON public.auth_user_groups USING btree (user_id)
+  public               auth_user_groups          auth_user_groups_group_id           8192 bytes 0        btree       
+    DDL: CREATE INDEX auth_user_groups_group_id ON public.auth_user_groups USING btree (group_id)
+  public               auth_user_user_permissions auth_user_user_permissions_permission_id 8192 bytes 0        btree       
+    DDL: CREATE INDEX auth_user_user_permissions_permission_id ON public.auth_user_user_permissions USING btree (permission_id)
+  public               auth_user_user_permissions auth_user_user_permissions_user_id  8192 bytes 0        btree       
+    DDL: CREATE INDEX auth_user_user_permissions_user_id ON public.auth_user_user_permissions USING btree (user_id)
+  public               django_admin_log          django_admin_log_content_type_id    16 kB      0        btree       
+    DDL: CREATE INDEX django_admin_log_content_type_id ON public.django_admin_log USING btree (content_type_id)
+  public               django_admin_log          django_admin_log_user_id            16 kB      0        btree       
+    DDL: CREATE INDEX django_admin_log_user_id ON public.django_admin_log USING btree (user_id)
+  public               django_session            django_session_expire_date          16 kB      0        btree       
+    DDL: CREATE INDEX django_session_expire_date ON public.django_session USING btree (expire_date)
+  public               django_session            django_session_session_key_like     16 kB      0        btree       
+    DDL: CREATE INDEX django_session_session_key_like ON public.django_session USING btree (session_key varchar_pattern_ops)
+  public               polls_choice              polls_choice_poll_id                16 kB      0        btree       
+    DDL: CREATE INDEX polls_choice_poll_id ON public.polls_choice USING btree (poll_id)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No large unused indexes found.
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (4 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  public             auth_group_permissions auth_group_permissions_group_id auth_group_permissions_group_id_permission_id_key 8192 bytes
+    Redundant DDL : CREATE INDEX auth_group_permissions_group_id ON public.auth_group_permissions USING btree (group_id)
+    Covering  DDL : CREATE UNIQUE INDEX auth_group_permissions_group_id_permission_id_key ON public.auth_group_permissions USING btree (group_id, permission_id)
+  public             auth_permission        auth_permission_content_type_id auth_permission_content_type_id_codename_key 16 kB     
+    Redundant DDL : CREATE INDEX auth_permission_content_type_id ON public.auth_permission USING btree (content_type_id)
+    Covering  DDL : CREATE UNIQUE INDEX auth_permission_content_type_id_codename_key ON public.auth_permission USING btree (content_type_id, codename)
+  public             auth_user_groups       auth_user_groups_user_id       auth_user_groups_user_id_group_id_key 8192 bytes
+    Redundant DDL : CREATE INDEX auth_user_groups_user_id ON public.auth_user_groups USING btree (user_id)
+    Covering  DDL : CREATE UNIQUE INDEX auth_user_groups_user_id_group_id_key ON public.auth_user_groups USING btree (user_id, group_id)
+  public             auth_user_user_permissions auth_user_user_permissions_user_id auth_user_user_permissions_user_id_permission_id_key 8192 bytes
+    Redundant DDL : CREATE INDEX auth_user_user_permissions_user_id ON public.auth_user_user_permissions USING btree (user_id)
+    Covering  DDL : CREATE UNIQUE INDEX auth_user_user_permissions_user_id_permission_id_key ON public.auth_user_user_permissions USING btree (user_id, permission_id)
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (2 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  INDEX                          DUPLICATE OF                   SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  public             auth_group             auth_group_name_key            auth_group_name_like           8192 bytes
+    Index 1 DDL : CREATE UNIQUE INDEX auth_group_name_key ON public.auth_group USING btree (name)
+    Index 2 DDL : CREATE INDEX auth_group_name_like ON public.auth_group USING btree (name varchar_pattern_ops)
+  public             auth_user              auth_user_username_key         auth_user_username_like        16 kB     
+    Index 1 DDL : CREATE UNIQUE INDEX auth_user_username_key ON public.auth_user USING btree (username)
+    Index 2 DDL : CREATE INDEX auth_user_username_like ON public.auth_user USING btree (username varchar_pattern_ops)
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."auth_group_name_like"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."auth_group_permissions_group_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."auth_group_permissions_permission_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."auth_permission_content_type_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."auth_user_username_like"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."auth_user_groups_user_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."auth_user_groups_group_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."auth_user_user_permissions_permission_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."auth_user_user_permissions_user_id"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."django_admin_log_content_type_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."django_admin_log_user_id"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."django_session_expire_date"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."django_session_session_key_like"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."polls_choice_poll_id"; -- size: 16 kB
+
+  -- Duplicate indexes (keep one, drop the other):
+  DROP INDEX CONCURRENTLY public."auth_group_name_key"; -- duplicate of auth_group_name_like, size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."auth_user_username_key"; -- duplicate of auth_user_username_like, size: 16 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 32         392 kB          14             
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: django
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                14
+  Large unused (>1MB):                     0
+  Redundant/overlap indexes:               4
+  Exact duplicate indexes:                 2
+  Total drop candidates:                   16
+────────────────────────────────────────────────────────────

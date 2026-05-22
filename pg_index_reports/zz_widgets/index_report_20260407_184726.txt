@@ -1,0 +1,66 @@
+============================================================
+  DATABASE : zz_widgets
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 19:00:06 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (3 found)
+────────────────────────────────────────────────────────────
+  • callout
+  • deptools
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  callout              calls                     calls_pbx_call_id_idx               15 MB      0        btree       
+    DDL: CREATE INDEX calls_pbx_call_id_idx ON callout.calls USING btree (pbx_call_id)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (1 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE         SCANS   
+  ────────────────── ───────────────────────── ─────────────────────────────────── ──────────── ────────
+  callout              calls                     calls_pbx_call_id_idx               15 MB        0       
+    DDL: CREATE INDEX calls_pbx_call_id_idx ON callout.calls USING btree (pbx_call_id)
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No redundant (prefix-overlap) indexes found.
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY callout."calls_pbx_call_id_idx"; -- size: 15 MB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  callout                2          98 MB           1              
+  deptools               1          72 kB           0              
+  public                 0          0 bytes         0              
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: zz_widgets
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         3
+  Unused indexes (0 scans):                1
+  Large unused (>1MB):                     1
+  Redundant/overlap indexes:               0
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   1
+────────────────────────────────────────────────────────────

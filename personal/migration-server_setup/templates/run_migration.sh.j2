@@ -1,0 +1,43 @@
+#!/bin/bash
+# ============================================================
+# /usr/local/bin/run-migration
+# Wrapper around Liquibase — called by GitHub Actions via SSH
+#
+# Usage:
+#   run-migration update
+#   run-migration status
+#   run-migration validate
+#   run-migration rollbackCount 1
+#   run-migration tag --tag=v1.0
+# ============================================================
+
+set -euo pipefail
+
+PROJECT_DIR="{{ liquibase_project_dir }}"
+LOG_FILE="{{ liquibase_log_dir }}/migration-$(date +%Y%m%d-%H%M%S).log"
+
+# Ensure log directory exists
+mkdir -p "{{ liquibase_log_dir }}"
+
+echo "============================================" | tee -a "$LOG_FILE"
+echo " Liquibase Migration Runner"                 | tee -a "$LOG_FILE"
+echo " Date    : $(date)"                          | tee -a "$LOG_FILE"
+echo " Command : $*"                               | tee -a "$LOG_FILE"
+echo " User    : $(whoami)"                        | tee -a "$LOG_FILE"
+echo "============================================" | tee -a "$LOG_FILE"
+
+cd "$PROJECT_DIR"
+
+liquibase \
+  --defaultsFile="${PROJECT_DIR}/liquibase.properties" \
+  "$@" 2>&1 | tee -a "$LOG_FILE"
+
+EXIT_CODE=${PIPESTATUS[0]}
+
+echo "" | tee -a "$LOG_FILE"
+if [ $EXIT_CODE -eq 0 ]; then
+  echo "SUCCESS — Log: $LOG_FILE" | tee -a "$LOG_FILE"
+else
+  echo "FAILED  — Log: $LOG_FILE" | tee -a "$LOG_FILE"
+  exit $EXIT_CODE
+fi

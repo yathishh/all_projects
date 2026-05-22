@@ -1,0 +1,213 @@
+#!/bin/bash
+# =============================================================
+# Script: fix_and_setup.sh
+# Purpose: Fully automated fix for:
+#   1. Grant global_rw on ALL missed schemas across ALL DBs
+#   2. Revoke PUBLIC connect on ALL DBs
+#   3. Recreate app user cleanly with correct PG16 settings
+#   4. Grant CONNECT only on specific target DB
+#
+# Usage:   ./fix_and_setup.sh <username> <password> <target_database>
+# Example: ./fix_and_setup.sh test_qip_user 'yNk3F4yVvWokFQUFgBqNv5oYf' qip_db_test
+#
+# NOTE: Other existing users are NOT touched.
+#       Their access will be managed from the application side.
+# =============================================================
+
+DB_HOST="172.30.19.51"
+DB_PORT="5432"
+DB_SUPERUSER="postgres"
+ROLE_NAME="global_rw"
+
+if [ "$#" -ne 3 ]; then
+  echo "Usage: $0 <username> <password> <target_database>"
+  echo "Example: $0 test_qip_user 'yNk3F4yVvWokFQUFgBqNv5oYf' qip_db_test"
+  exit 1
+fi
+
+APP_USER="$1"
+APP_PASS="$2"
+TARGET_DB="$3"
+
+echo "======================================================"
+echo " Full Automated Fix & Setup"
+echo " User     : $APP_USER"
+echo " Target DB: $TARGET_DB"
+echo "======================================================"
+echo ""
+
+# ============================================================
+# FIX 1: Grant global_rw on ALL missed schemas across ALL DBs
+# ============================================================
+echo "------------------------------------------------------"
+echo " FIX 1: Granting global_rw on all missed schemas"
+echo "------------------------------------------------------"
+
+DATABASES=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -Atc "
+  SELECT datname FROM pg_database
+  WHERE datistemplate = false
+  AND datname NOT IN ('postgres','rdsadmin')
+  ORDER BY datname;
+")
+
+for DB in $DATABASES; do
+  echo " -> Database: $DB"
+  SCHEMAS=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -Atc "
+    SELECT schema_name FROM information_schema.schemata
+    WHERE schema_name NOT IN ('pg_catalog','information_schema','pg_toast')
+    AND schema_name NOT LIKE 'pg_%'
+    ORDER BY schema_name;
+  ")
+  for SCHEMA in $SCHEMAS; do
+    HAS=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -Atc \
+      "SELECT has_schema_privilege('$ROLE_NAME', '$SCHEMA', 'USAGE');")
+    if [ "$HAS" = "t" ]; then
+      echo "    ✔ Already granted: $SCHEMA"
+      continue
+    fi
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -c "GRANT USAGE ON SCHEMA \"$SCHEMA\" TO $ROLE_NAME;" > /dev/null
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -c "GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA \"$SCHEMA\" TO $ROLE_NAME;" > /dev/null
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -c "GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA \"$SCHEMA\" TO $ROLE_NAME;" > /dev/null
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -c "GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA \"$SCHEMA\" TO $ROLE_NAME;" > /dev/null
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -c "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$SCHEMA\" GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO $ROLE_NAME;" > /dev/null
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -c "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$SCHEMA\" GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO $ROLE_NAME;" > /dev/null
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -c "ALTER DEFAULT PRIVILEGES IN SCHEMA \"$SCHEMA\" GRANT EXECUTE ON FUNCTIONS TO $ROLE_NAME;" > /dev/null
+    VERIFY=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$DB" -Atc "SELECT has_schema_privilege('$ROLE_NAME', '$SCHEMA', 'USAGE');")
+    [ "$VERIFY" = "t" ] && echo "    ✔ Granted: $SCHEMA" || echo "    ❌ FAILED: $SCHEMA"
+  done
+done
+echo " ✔ FIX 1 COMPLETE"
+echo ""
+
+# ============================================================
+# FIX 2: Revoke PUBLIC connect on ALL DBs
+#         ONLY this specific user gets CONNECT on target DB
+#         Other users managed from application side
+# ============================================================
+echo "------------------------------------------------------"
+echo " FIX 2: Revoking PUBLIC connect on all databases"
+echo "------------------------------------------------------"
+
+ALL_DBS=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -Atc "
+  SELECT datname FROM pg_database
+  WHERE datistemplate = false
+  ORDER BY datname;
+")
+
+for DB in $ALL_DBS; do
+  psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d postgres \
+    -c "REVOKE CONNECT ON DATABASE \"$DB\" FROM PUBLIC;" > /dev/null
+  echo "  ✔ PUBLIC revoked : $DB"
+done
+
+echo ""
+echo "  -----------------------------------------------"
+echo "  CONNECT will be granted to : $APP_USER"
+echo "  ONLY on database           : $TARGET_DB"
+echo "  All other databases        : NO ACCESS"
+echo "  Other users                : Managed from app side"
+echo "  -----------------------------------------------"
+echo " ✔ FIX 2 COMPLETE"
+echo ""
+
+# ============================================================
+# FIX 3: Remove and Recreate App User with Correct Settings
+# ============================================================
+echo "------------------------------------------------------"
+echo " FIX 3: Recreating '$APP_USER' with correct settings"
+echo "------------------------------------------------------"
+
+USER_EXISTS=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -Atc \
+  "SELECT 1 FROM pg_roles WHERE rolname = '$APP_USER';")
+
+if [ "$USER_EXISTS" = "1" ]; then
+  echo "  -> Terminating active sessions..."
+  psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d postgres -c "
+    SELECT pg_terminate_backend(pid) FROM pg_stat_activity
+    WHERE usename = '$APP_USER' AND pid <> pg_backend_pid();" > /dev/null
+
+  echo "  -> Revoking all grants..."
+  psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d postgres \
+    -c "REVOKE $ROLE_NAME FROM \"$APP_USER\";" > /dev/null
+  for DB in $ALL_DBS; do
+    psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d postgres \
+      -c "REVOKE CONNECT ON DATABASE \"$DB\" FROM \"$APP_USER\";" > /dev/null 2>&1
+  done
+
+  echo "  -> Dropping old user..."
+  psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d postgres \
+    -c "DROP USER \"$APP_USER\";" > /dev/null
+  echo "  ✔ Old user dropped."
+fi
+
+# Recreate with INHERIT=true
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d postgres -c "
+  CREATE USER \"$APP_USER\" WITH
+    LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE
+    INHERIT NOREPLICATION NOBYPASSRLS
+    CONNECTION LIMIT 50
+    PASSWORD '$APP_PASS';" > /dev/null
+echo "  ✔ User created with INHERIT=true."
+
+# Grant role WITH INHERIT TRUE (PG16 fix)
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d postgres \
+  -c "GRANT $ROLE_NAME TO \"$APP_USER\" WITH INHERIT TRUE;" > /dev/null
+echo "  ✔ Role granted WITH INHERIT TRUE."
+
+# Grant CONNECT ONLY on target DB
+psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d postgres \
+  -c "GRANT CONNECT ON DATABASE \"$TARGET_DB\" TO \"$APP_USER\";" > /dev/null
+echo "  ✔ CONNECT granted on '$TARGET_DB' only."
+
+echo " ✔ FIX 3 COMPLETE"
+echo ""
+
+# ============================================================
+# FINAL VERIFICATION
+# ============================================================
+echo "======================================================"
+echo " FINAL VERIFICATION"
+echo "======================================================"
+
+ROLINHERIT=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -Atc \
+  "SELECT rolinherit FROM pg_roles WHERE rolname = '$APP_USER';")
+
+INHERIT_OPT=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -Atc "
+  SELECT m.inherit_option FROM pg_auth_members m
+  JOIN pg_roles r ON r.oid = m.roleid
+  JOIN pg_roles u ON u.oid = m.member
+  WHERE r.rolname = '$ROLE_NAME' AND u.rolname = '$APP_USER';")
+
+DB_COUNT=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -Atc "
+  SELECT count(*) FROM pg_database
+  WHERE has_database_privilege('$APP_USER', datname, 'CONNECT')
+  AND datistemplate = false
+  AND datname != 'postgres';")
+
+SCHEMA_ACCESS=$(psql -h "$DB_HOST" -p "$DB_PORT" -U "$DB_SUPERUSER" -d "$TARGET_DB" -Atc "
+  SELECT string_agg(schema_name, ', ' ORDER BY schema_name)
+  FROM information_schema.schemata
+  WHERE schema_name NOT IN ('pg_catalog','information_schema','pg_toast')
+  AND schema_name NOT LIKE 'pg_%'
+  AND has_schema_privilege('$APP_USER', schema_name, 'USAGE');")
+
+echo ""
+echo "  rolinherit        : $ROLINHERIT  $([ "$ROLINHERIT" = "t" ] && echo "✅" || echo "❌")"
+echo "  inherit_option    : $INHERIT_OPT  $([ "$INHERIT_OPT" = "t" ] && echo "✅" || echo "❌")"
+echo "  Databases visible : $DB_COUNT     $([ "$DB_COUNT" = "1" ] && echo "✅ (only $TARGET_DB)" || echo "❌ (should be 1)")"
+echo "  Schema access     : ${SCHEMA_ACCESS:-none}  $([ -n "$SCHEMA_ACCESS" ] && echo "✅" || echo "❌")"
+echo ""
+
+if [ "$ROLINHERIT" = "t" ] && [ "$INHERIT_OPT" = "t" ] && [ "$DB_COUNT" = "1" ] && [ -n "$SCHEMA_ACCESS" ]; then
+  echo "======================================================"
+  echo " ✅ ALL CHECKS PASSED! '$APP_USER' is ready."
+  echo "   -> Connect to : $TARGET_DB ONLY"
+  echo "   -> Schemas    : $SCHEMA_ACCESS"
+  echo "======================================================"
+else
+  echo "======================================================"
+  echo " ❌ SOME CHECKS FAILED!"
+  echo "   Run: ./verify_user.sh $APP_USER"
+  echo "======================================================"
+  exit 1
+fi

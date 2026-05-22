@@ -1,0 +1,264 @@
+============================================================
+  DATABASE : keycloak
+  Host     : pgsql_cluster.adhkiapps.com:5432
+  Report   : Tue Apr  7 18:53:15 IST 2026
+============================================================
+
+────────────────────────────────────────────────────────────
+  SCHEMAS IN THIS DATABASE (1 found)
+────────────────────────────────────────────────────────────
+  • public
+
+────────────────────────────────────────────────────────────
+  UNUSED INDEXES (idx_scan = 0, non-PK/unique)            (55 found)
+────────────────────────────────────────────────────────────
+  SCHEMA               TABLE                     INDEX                               SIZE       SCANS    TYPE        
+  ────────────────── ───────────────────────── ─────────────────────────────────── ────────── ──────── ────────────
+  public               admin_event_entity        idx_admin_event_time                8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_admin_event_time ON public.admin_event_entity USING btree (realm_id, admin_event_time)
+  public               authentication_execution  idx_auth_exec_realm_flow            16 kB      0        btree       
+    DDL: CREATE INDEX idx_auth_exec_realm_flow ON public.authentication_execution USING btree (realm_id, flow_id)
+  public               authentication_flow       idx_auth_flow_realm                 16 kB      0        btree       
+    DDL: CREATE INDEX idx_auth_flow_realm ON public.authentication_flow USING btree (realm_id)
+  public               authenticator_config      idx_auth_config_realm               16 kB      0        btree       
+    DDL: CREATE INDEX idx_auth_config_realm ON public.authenticator_config USING btree (realm_id)
+  public               client_initial_access     idx_client_init_acc_realm           8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_client_init_acc_realm ON public.client_initial_access USING btree (realm_id)
+  public               client_scope              idx_realm_clscope                   16 kB      0        btree       
+    DDL: CREATE INDEX idx_realm_clscope ON public.client_scope USING btree (realm_id)
+  public               client_scope_client       idx_cl_clscope                      16 kB      0        btree       
+    DDL: CREATE INDEX idx_cl_clscope ON public.client_scope_client USING btree (scope_id)
+  public               client_scope_role_mapping idx_clscope_role                    16 kB      0        btree       
+    DDL: CREATE INDEX idx_clscope_role ON public.client_scope_role_mapping USING btree (scope_id)
+  public               client_scope_role_mapping idx_role_clscope                    16 kB      0        btree       
+    DDL: CREATE INDEX idx_role_clscope ON public.client_scope_role_mapping USING btree (role_id)
+  public               client_session            idx_client_session_session          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_client_session_session ON public.client_session USING btree (session_id)
+  public               component                 idx_component_realm                 16 kB      0        btree       
+    DDL: CREATE INDEX idx_component_realm ON public.component USING btree (realm_id)
+  public               component                 idx_component_provider_type         16 kB      0        btree       
+    DDL: CREATE INDEX idx_component_provider_type ON public.component USING btree (provider_type)
+  public               credential                idx_user_credential                 16 kB      0        btree       
+    DDL: CREATE INDEX idx_user_credential ON public.credential USING btree (user_id)
+  public               default_client_scope      idx_defcls_scope                    16 kB      0        btree       
+    DDL: CREATE INDEX idx_defcls_scope ON public.default_client_scope USING btree (scope_id)
+  public               default_client_scope      idx_defcls_realm                    16 kB      0        btree       
+    DDL: CREATE INDEX idx_defcls_realm ON public.default_client_scope USING btree (realm_id)
+  public               fed_user_attribute        idx_fu_attribute                    8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_attribute ON public.fed_user_attribute USING btree (user_id, realm_id, name)
+  public               fed_user_consent          idx_fu_consent                      8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_consent ON public.fed_user_consent USING btree (user_id, client_id)
+  public               fed_user_consent          idx_fu_cnsnt_ext                    8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_cnsnt_ext ON public.fed_user_consent USING btree (user_id, client_storage_provider, external_client_id)
+  public               fed_user_consent          idx_fu_consent_ru                   8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_consent_ru ON public.fed_user_consent USING btree (realm_id, user_id)
+  public               fed_user_credential       idx_fu_credential                   8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_credential ON public.fed_user_credential USING btree (user_id, type)
+  public               fed_user_credential       idx_fu_credential_ru                8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_credential_ru ON public.fed_user_credential USING btree (realm_id, user_id)
+  public               fed_user_group_membership idx_fu_group_membership_ru          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_group_membership_ru ON public.fed_user_group_membership USING btree (realm_id, user_id)
+  public               fed_user_group_membership idx_fu_group_membership             8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_group_membership ON public.fed_user_group_membership USING btree (user_id, group_id)
+  public               fed_user_required_action  idx_fu_required_action_ru           8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_required_action_ru ON public.fed_user_required_action USING btree (realm_id, user_id)
+  public               fed_user_required_action  idx_fu_required_action              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_required_action ON public.fed_user_required_action USING btree (user_id, required_action)
+  public               fed_user_role_mapping     idx_fu_role_mapping                 8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_role_mapping ON public.fed_user_role_mapping USING btree (user_id, role_id)
+  public               fed_user_role_mapping     idx_fu_role_mapping_ru              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fu_role_mapping_ru ON public.fed_user_role_mapping USING btree (realm_id, user_id)
+  public               federated_identity        idx_fedidentity_feduser             8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fedidentity_feduser ON public.federated_identity USING btree (federated_user_id)
+  public               federated_identity        idx_fedidentity_user                8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_fedidentity_user ON public.federated_identity USING btree (user_id)
+  public               group_attribute           idx_group_attr_group                16 kB      0        btree       
+    DDL: CREATE INDEX idx_group_attr_group ON public.group_attribute USING btree (group_id)
+  public               identity_provider         idx_ident_prov_realm                8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_ident_prov_realm ON public.identity_provider USING btree (realm_id)
+  public               identity_provider_mapper  idx_id_prov_mapp_realm              8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_id_prov_mapp_realm ON public.identity_provider_mapper USING btree (realm_id)
+  public               keycloak_role             idx_keycloak_role_realm             16 kB      0        btree       
+    DDL: CREATE INDEX idx_keycloak_role_realm ON public.keycloak_role USING btree (realm)
+  public               migration_model           idx_update_time                     16 kB      0        btree       
+    DDL: CREATE INDEX idx_update_time ON public.migration_model USING btree (update_time)
+  public               offline_user_session      idx_offline_uss_preload             32 kB      0        btree       
+    DDL: CREATE INDEX idx_offline_uss_preload ON public.offline_user_session USING btree (offline_flag, created_on, user_session_id)
+  public               offline_user_session      idx_offline_uss_createdon           16 kB      0        btree       
+    DDL: CREATE INDEX idx_offline_uss_createdon ON public.offline_user_session USING btree (created_on)
+  public               realm                     idx_realm_master_adm_cli            16 kB      0        btree       
+    DDL: CREATE INDEX idx_realm_master_adm_cli ON public.realm USING btree (master_admin_client)
+  public               realm_default_groups      idx_realm_def_grp_realm             16 kB      0        btree       
+    DDL: CREATE INDEX idx_realm_def_grp_realm ON public.realm_default_groups USING btree (realm_id)
+  public               realm_events_listeners    idx_realm_evt_list_realm            16 kB      0        btree       
+    DDL: CREATE INDEX idx_realm_evt_list_realm ON public.realm_events_listeners USING btree (realm_id)
+  public               realm_supported_locales   idx_realm_supp_local_realm          8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_realm_supp_local_realm ON public.realm_supported_locales USING btree (realm_id)
+  public               required_action_provider  idx_req_act_prov_realm              16 kB      0        btree       
+    DDL: CREATE INDEX idx_req_act_prov_realm ON public.required_action_provider USING btree (realm_id)
+  public               resource_policy           idx_res_policy_policy               16 kB      0        btree       
+    DDL: CREATE INDEX idx_res_policy_policy ON public.resource_policy USING btree (policy_id)
+  public               resource_scope            idx_res_scope_scope                 16 kB      0        btree       
+    DDL: CREATE INDEX idx_res_scope_scope ON public.resource_scope USING btree (scope_id)
+  public               resource_server_policy    idx_res_serv_pol_res_serv           16 kB      0        btree       
+    DDL: CREATE INDEX idx_res_serv_pol_res_serv ON public.resource_server_policy USING btree (resource_server_id)
+  public               resource_server_resource  idx_res_srv_res_res_srv             16 kB      0        btree       
+    DDL: CREATE INDEX idx_res_srv_res_res_srv ON public.resource_server_resource USING btree (resource_server_id)
+  public               resource_server_scope     idx_res_srv_scope_res_srv           16 kB      0        btree       
+    DDL: CREATE INDEX idx_res_srv_scope_res_srv ON public.resource_server_scope USING btree (resource_server_id)
+  public               role_attribute            idx_role_attribute                  16 kB      0        btree       
+    DDL: CREATE INDEX idx_role_attribute ON public.role_attribute USING btree (role_id)
+  public               scope_mapping             idx_scope_mapping_role              16 kB      0        btree       
+    DDL: CREATE INDEX idx_scope_mapping_role ON public.scope_mapping USING btree (role_id)
+  public               scope_policy              idx_scope_policy_policy             16 kB      0        btree       
+    DDL: CREATE INDEX idx_scope_policy_policy ON public.scope_policy USING btree (policy_id)
+  public               user_consent              idx_user_consent                    16 kB      0        btree       
+    DDL: CREATE INDEX idx_user_consent ON public.user_consent USING btree (user_id)
+  public               user_consent_client_scope idx_usconsent_clscope               16 kB      0        btree       
+    DDL: CREATE INDEX idx_usconsent_clscope ON public.user_consent_client_scope USING btree (user_consent_id)
+  public               user_federation_mapper    idx_usr_fed_map_fed_prv             8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_usr_fed_map_fed_prv ON public.user_federation_mapper USING btree (federation_provider_id)
+  public               user_federation_mapper    idx_usr_fed_map_realm               8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_usr_fed_map_realm ON public.user_federation_mapper USING btree (realm_id)
+  public               user_federation_provider  idx_usr_fed_prv_realm               8192 bytes 0        btree       
+    DDL: CREATE INDEX idx_usr_fed_prv_realm ON public.user_federation_provider USING btree (realm_id)
+  public               user_required_action      idx_user_reqactions                 16 kB      0        btree       
+    DDL: CREATE INDEX idx_user_reqactions ON public.user_required_action USING btree (user_id)
+
+────────────────────────────────────────────────────────────
+  LARGE UNUSED INDEXES (>1MB, 0 scans)                    (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No large unused indexes found.
+
+────────────────────────────────────────────────────────────
+  REDUNDANT INDEXES (prefix-covered by another index)     (14 found)
+────────────────────────────────────────────────────────────
+  SCHEMA             TABLE                  REDUNDANT INDEX                COVERED BY                     SIZE      
+  ────────────────── ────────────────────── ────────────────────────────── ────────────────────────────── ──────────
+  public             client_scope           idx_realm_clscope              uk_cli_scope                   16 kB     
+    Redundant DDL : CREATE INDEX idx_realm_clscope ON public.client_scope USING btree (realm_id)
+    Covering  DDL : CREATE UNIQUE INDEX uk_cli_scope ON public.client_scope USING btree (realm_id, name)
+  public             client_scope_attributes idx_clscope_attrs              pk_cl_tmpl_attr                16 kB     
+    Redundant DDL : CREATE INDEX idx_clscope_attrs ON public.client_scope_attributes USING btree (scope_id)
+    Covering  DDL : CREATE UNIQUE INDEX pk_cl_tmpl_attr ON public.client_scope_attributes USING btree (scope_id, name)
+  public             client_scope_client    idx_clscope_cl                 c_cli_scope_bind               40 kB     
+    Redundant DDL : CREATE INDEX idx_clscope_cl ON public.client_scope_client USING btree (client_id)
+    Covering  DDL : CREATE UNIQUE INDEX c_cli_scope_bind ON public.client_scope_client USING btree (client_id, scope_id)
+  public             client_scope_role_mapping idx_clscope_role               pk_template_scope              16 kB     
+    Redundant DDL : CREATE INDEX idx_clscope_role ON public.client_scope_role_mapping USING btree (scope_id)
+    Covering  DDL : CREATE UNIQUE INDEX pk_template_scope ON public.client_scope_role_mapping USING btree (scope_id, role_id)
+  public             composite_role         idx_composite                  constraint_composite_role      16 kB     
+    Redundant DDL : CREATE INDEX idx_composite ON public.composite_role USING btree (composite)
+    Covering  DDL : CREATE UNIQUE INDEX constraint_composite_role ON public.composite_role USING btree (composite, child_role)
+  public             default_client_scope   idx_defcls_realm               r_def_cli_scope_bind           16 kB     
+    Redundant DDL : CREATE INDEX idx_defcls_realm ON public.default_client_scope USING btree (realm_id)
+    Covering  DDL : CREATE UNIQUE INDEX r_def_cli_scope_bind ON public.default_client_scope USING btree (realm_id, scope_id)
+  public             offline_client_session idx_us_sess_id_on_cl_sess      constraint_offl_cl_ses_pk3     40 kB     
+    Redundant DDL : CREATE INDEX idx_us_sess_id_on_cl_sess ON public.offline_client_session USING btree (user_session_id)
+    Covering  DDL : CREATE UNIQUE INDEX constraint_offl_cl_ses_pk3 ON public.offline_client_session USING btree (user_session_id, client_id, client_storage_provider, external_client_id, offline_flag)
+  public             realm_default_groups   idx_realm_def_grp_realm        constr_realm_default_groups    16 kB     
+    Redundant DDL : CREATE INDEX idx_realm_def_grp_realm ON public.realm_default_groups USING btree (realm_id)
+    Covering  DDL : CREATE UNIQUE INDEX constr_realm_default_groups ON public.realm_default_groups USING btree (realm_id, group_id)
+  public             realm_enabled_event_types idx_realm_evt_types_realm      constr_realm_enabl_event_types 16 kB     
+    Redundant DDL : CREATE INDEX idx_realm_evt_types_realm ON public.realm_enabled_event_types USING btree (realm_id)
+    Covering  DDL : CREATE UNIQUE INDEX constr_realm_enabl_event_types ON public.realm_enabled_event_types USING btree (realm_id, value)
+  public             realm_events_listeners idx_realm_evt_list_realm       constr_realm_events_listeners  16 kB     
+    Redundant DDL : CREATE INDEX idx_realm_evt_list_realm ON public.realm_events_listeners USING btree (realm_id)
+    Covering  DDL : CREATE UNIQUE INDEX constr_realm_events_listeners ON public.realm_events_listeners USING btree (realm_id, value)
+  public             realm_supported_locales idx_realm_supp_local_realm     constr_realm_supported_locales 8192 bytes
+    Redundant DDL : CREATE INDEX idx_realm_supp_local_realm ON public.realm_supported_locales USING btree (realm_id)
+    Covering  DDL : CREATE UNIQUE INDEX constr_realm_supported_locales ON public.realm_supported_locales USING btree (realm_id, value)
+  public             redirect_uris          idx_redir_uri_client           constraint_redirect_uris       40 kB     
+    Redundant DDL : CREATE INDEX idx_redir_uri_client ON public.redirect_uris USING btree (client_id)
+    Covering  DDL : CREATE UNIQUE INDEX constraint_redirect_uris ON public.redirect_uris USING btree (client_id, value)
+  public             user_consent_client_scope idx_usconsent_clscope          constraint_grntcsnt_clsc_pm    16 kB     
+    Redundant DDL : CREATE INDEX idx_usconsent_clscope ON public.user_consent_client_scope USING btree (user_consent_id)
+    Covering  DDL : CREATE UNIQUE INDEX constraint_grntcsnt_clsc_pm ON public.user_consent_client_scope USING btree (user_consent_id, scope_id)
+  public             web_origins            idx_web_orig_client            constraint_web_origins         40 kB     
+    Redundant DDL : CREATE INDEX idx_web_orig_client ON public.web_origins USING btree (client_id)
+    Covering  DDL : CREATE UNIQUE INDEX constraint_web_origins ON public.web_origins USING btree (client_id, value)
+
+────────────────────────────────────────────────────────────
+  DUPLICATE INDEXES (identical column sets)               (0 found)
+────────────────────────────────────────────────────────────
+  ✓ No duplicate indexes found.
+
+────────────────────────────────────────────────────────────
+  DROP INDEX CANDIDATES (review before executing!)
+  ⚠  Always verify with EXPLAIN before dropping
+────────────────────────────────────────────────────────────
+  -- Unused indexes (0 scans):
+  DROP INDEX CONCURRENTLY public."idx_admin_event_time"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_auth_exec_realm_flow"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_auth_flow_realm"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_auth_config_realm"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_client_init_acc_realm"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_realm_clscope"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_cl_clscope"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_clscope_role"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_role_clscope"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_client_session_session"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_component_realm"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_component_provider_type"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_user_credential"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_defcls_scope"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_defcls_realm"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_fu_attribute"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fu_consent"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fu_cnsnt_ext"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fu_consent_ru"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fu_credential"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fu_credential_ru"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fu_group_membership_ru"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fu_group_membership"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fu_required_action_ru"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fu_required_action"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fu_role_mapping"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fu_role_mapping_ru"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fedidentity_feduser"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_fedidentity_user"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_group_attr_group"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_ident_prov_realm"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_id_prov_mapp_realm"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_keycloak_role_realm"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_update_time"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_offline_uss_preload"; -- size: 32 kB
+  DROP INDEX CONCURRENTLY public."idx_offline_uss_createdon"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_realm_master_adm_cli"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_realm_def_grp_realm"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_realm_evt_list_realm"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_realm_supp_local_realm"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_req_act_prov_realm"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_res_policy_policy"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_res_scope_scope"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_res_serv_pol_res_serv"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_res_srv_res_res_srv"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_res_srv_scope_res_srv"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_role_attribute"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_scope_mapping_role"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_scope_policy_policy"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_user_consent"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_usconsent_clscope"; -- size: 16 kB
+  DROP INDEX CONCURRENTLY public."idx_usr_fed_map_fed_prv"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_usr_fed_map_realm"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_usr_fed_prv_realm"; -- size: 8192 bytes
+  DROP INDEX CONCURRENTLY public."idx_user_reqactions"; -- size: 16 kB
+
+
+────────────────────────────────────────────────────────────
+  PER-SCHEMA INDEX STATISTICS
+────────────────────────────────────────────────────────────
+  SCHEMA                 TOTAL_IDX  TOTAL_SIZE      UNUSED_IDX     
+  ────────────────────── ────────── ─────────────── ───────────────
+  public                 188        29 MB           55             
+
+────────────────────────────────────────────────────────────
+  DATABASE SUMMARY: keycloak
+────────────────────────────────────────────────────────────
+  Schemas scanned:                         1
+  Unused indexes (0 scans):                55
+  Large unused (>1MB):                     0
+  Redundant/overlap indexes:               14
+  Exact duplicate indexes:                 0
+  Total drop candidates:                   55
+────────────────────────────────────────────────────────────

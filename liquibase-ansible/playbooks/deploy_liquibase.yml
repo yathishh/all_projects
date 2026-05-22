@@ -1,0 +1,10 @@
+# ============================================================
+# playbooks/deploy_liquibase.yml
+# Run individually: ansible-playbook -i inventories/hosts.ini playbooks/deploy_liquibase.yml
+# ============================================================
+---
+- name: Deploy Liquibase Migration Server Only
+  hosts: migration
+  become: yes
+  roles:
+    - role: liquibase

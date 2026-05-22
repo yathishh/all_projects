@@ -1,0 +1,310 @@
+# ============================================================
+# tasks/main.yml
+# Provisions the Liquibase migration server on Ubuntu 22.04
+# ============================================================
+
+---
+# ────────────────────────────────────────────────────────────
+# SECTION 1: System Preparation
+# ────────────────────────────────────────────────────────────
+- name: "[1/8] Update apt cache"
+  builtin.apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: "[1/8] Install system dependencies"
+  builtin.apt:
+    name:
+      - curl
+      - gnupg
+      - apt-transport-https
+      - ca-certificates
+      - unzip
+      - git
+      - rsync
+      - python3
+      - python3-pip
+      - python3-venv
+      - openssh-server
+      - ufw
+    state: present
+
+# ────────────────────────────────────────────────────────────
+# SECTION 2: Create Dedicated Users
+# ────────────────────────────────────────────────────────────
+- name: "[2/8] Create liquibase system group"
+  builtin.group:
+    name: liquibase
+    system: yes
+    state: present
+
+- name: "[2/8] Create liquibase system user"
+  builtin.user:
+    name: liquibase
+    group: liquibase
+    system: yes
+    shell: /bin/bash
+    home: /home/liquibase
+    create_home: yes
+    state: present
+
+- name: "[2/8] Create deployer group (used by GitHub Actions)"
+  builtin.group:
+    name: "{{ deploy_group }}"
+    state: present
+
+- name: "[2/8] Create deployer user (used by GitHub Actions SSH)"
+  builtin.user:
+    name: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+    groups: liquibase        
+    append: yes
+    shell: /bin/bash
+    home: "{{ deploy_home }}"
+    create_home: yes
+    state: present
+
+- name: "[2/8] Create .ssh directory for deployer"
+  builtin.file:
+    path: "{{ deploy_home }}/.ssh"
+    state: directory
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+    mode: "0700"
+
+- name: "[2/8] Add GitHub Actions SSH public key for deployer"
+  builtin.copy:
+    content: "{{ deploy_ssh_public_key }}\n"
+    dest: "{{ deploy_home }}/.ssh/authorized_keys"
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+    mode: "0600"
+
+# ────────────────────────────────────────────────────────────
+# SECTION 3: Install Java 17
+# ────────────────────────────────────────────────────────────
+- name: "[3/8] Install OpenJDK 17"
+  builtin.apt:
+    name: openjdk-17-jdk
+    state: present
+
+- name: "[3/8] Set JAVA_HOME system-wide"
+  builtin.copy:
+    dest: /etc/profile.d/java.sh
+    content: |
+      export JAVA_HOME="{{ java_home }}"
+      export PATH="$JAVA_HOME/bin:$PATH"
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: "[3/8] Verify Java is accessible"
+  builtin.command: java -version
+  register: java_check
+  changed_when: false
+
+- name: "[3/8] Print Java version"
+  builtin.debug:
+    msg: "{{ java_check.stderr }}"
+
+# ────────────────────────────────────────────────────────────
+# SECTION 4: Install Liquibase
+# ────────────────────────────────────────────────────────────
+- name: "[4/8] Add Liquibase GPG signing key"
+  builtin.shell: |
+    curl -fsSL https://repo.liquibase.com/liquibase.asc | \
+    gpg --dearmor -o /usr/share/keyrings/liquibase-keyring.gpg
+  args:
+    creates: /usr/share/keyrings/liquibase-keyring.gpg
+
+- name: "[4/8] Add Liquibase APT repository"
+  builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/liquibase-keyring.gpg] https://repo.liquibase.com stable main"
+    state: present
+    filename: liquibase
+
+- name: "[4/8] Install Liquibase {{ liquibase_version }}"
+  builtin.apt:
+    name: "liquibase={{ liquibase_version }}"
+    state: present
+    update_cache: yes
+
+- name: "[4/8] Hold Liquibase at {{ liquibase_version }} (prevent auto-upgrade)"
+  builtin.dpkg_selections:
+    name: liquibase
+    selection: hold
+
+- name: "[4/8] Verify Liquibase installation"
+  builtin.command: liquibase --version
+  register: lb_check
+  changed_when: false
+
+- name: "[4/8] Print Liquibase version"
+  builtin.debug:
+    msg: "{{ lb_check.stdout }}"
+
+# ────────────────────────────────────────────────────────────
+# SECTION 5: PostgreSQL JDBC Driver
+# ────────────────────────────────────────────────────────────
+- name: "[5/8] Create JDBC drivers directory"
+  builtin.file:
+    path: "{{ jdbc_driver_dir }}"
+    state: directory
+    owner: liquibase
+    group: liquibase
+    mode: "0755"
+
+- name: "[5/8] Download PostgreSQL JDBC driver v{{ jdbc_driver_version }}"
+  builtin.get_url:
+    url: "https://jdbc.postgresql.org/download/postgresql-{{ jdbc_driver_version }}.jar"
+    dest: "{{ jdbc_driver_dir }}/postgresql-{{ jdbc_driver_version }}.jar"
+    owner: liquibase
+    group: liquibase
+    mode: "0644"
+    checksum: "sha256:5b8dfddbdf2d6c9dcde5d8c2faf77f2ce4e9de4e6f63e1b7af8dc73d37cce01c"
+
+# ────────────────────────────────────────────────────────────
+# SECTION 6: Project Directory & Config Files
+# ────────────────────────────────────────────────────────────
+- name: "[6/8] Create Liquibase project directory structure"
+  builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: liquibase
+    group: liquibase
+    mode: "0775"     
+  loop:
+    - "{{ liquibase_project_dir }}"
+    - "{{ liquibase_project_dir }}/changelog"
+    - "{{ liquibase_project_dir }}/changelog/migrations"
+
+- name: "[6/8] Create log directory"
+  builtin.file:
+    path: "{{ liquibase_log_dir }}"
+    state: directory
+    owner: liquibase
+    group: liquibase
+    mode: "0775"
+
+- name: "[6/8] Deploy liquibase.properties (from template)"
+  builtin.template:
+    src: liquibase.properties.j2
+    dest: "{{ liquibase_project_dir }}/liquibase.properties"
+    owner: liquibase
+    group: liquibase
+    mode: "0640"     
+- name: "[6/8] Deploy root changelog file"
+  builtin.template:
+    src: db.changelog-root.xml.j2
+    dest: "{{ liquibase_project_dir }}/changelog/db.changelog-root.xml"
+    owner: liquibase
+    group: liquibase
+    mode: "0664"
+
+- name: "[6/8] Deploy example first migration"
+  builtin.template:
+    src: 001_create_users.sql.j2
+    dest: "{{ liquibase_project_dir }}/changelog/migrations/001_create_users.sql"
+    owner: liquibase
+    group: liquibase
+    mode: "0664"
+
+# ────────────────────────────────────────────────────────────
+# SECTION 7: Python Virtual Environment
+# ────────────────────────────────────────────────────────────
+- name: "[7/8] Create Python virtual environment"
+  builtin.command:
+    cmd: python3 -m venv /opt/liquibase-venv
+    creates: /opt/liquibase-venv/bin/activate
+
+- name: "[7/8] Install Python packages (psycopg2, pytest, dotenv)"
+  builtin.pip:
+    name:
+      - psycopg2-binary
+      - python-dotenv
+      - pytest
+    virtualenv: /opt/liquibase-venv
+    state: present
+
+- name: "[7/8] Set ownership of Python venv"
+  builtin.file:
+    path: /opt/liquibase-venv
+    owner: liquibase
+    group: liquibase
+    recurse: yes
+
+# ────────────────────────────────────────────────────────────
+# SECTION 8: Wrapper Script, Sudoers & Firewall
+# ────────────────────────────────────────────────────────────
+- name: "[8/8] Deploy run-migration wrapper script"
+  builtin.template:
+    src: run_migration.sh.j2
+    dest: /usr/local/bin/run-migration
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: "[8/8] Allow deployer to run run-migration as liquibase (passwordless sudo)"
+  builtin.copy:
+    dest: /etc/sudoers.d/deployer-liquibase
+    content: |
+      # Allow GitHub Actions deployer to run migrations without password
+      {{ deploy_user }} ALL=(liquibase) NOPASSWD: /usr/local/bin/run-migration
+    owner: root
+    group: root
+    mode: "0440"
+    validate: visudo -cf %s
+
+- name: "[8/8] Allow SSH through UFW"
+  community.general.ufw:
+    rule: allow
+    name: OpenSSH
+
+- name: "[8/8] Allow outbound PostgreSQL to DB server (private network)"
+  community.general.ufw:
+    rule: allow
+    direction: out
+    dest: "{{ pg_host }}"
+    port: "{{ pg_port }}"
+    proto: tcp
+
+- name: "[8/8] Enable UFW with default deny incoming"
+  community.general.ufw:
+    state: enabled
+    policy: deny
+    direction: incoming
+
+# ── Final Connectivity Test ───────────────────────────────────
+- name: "Validate Liquibase can connect to PostgreSQL"
+  builtin.command:
+    cmd: liquibase --defaultsFile={{ liquibase_project_dir }}/liquibase.properties status
+  become: yes
+  become_user: liquibase
+  register: lb_status
+  changed_when: false
+  failed_when: false
+
+- name: "Print connection test result"
+  builtin.debug:
+    msg: "{{ lb_status.stdout | default(lb_status.stderr) }}"
+
+- name: "Summary"
+  builtin.debug:
+    msg: |
+      ══════════════════════════════════════════════
+        Migration Server Setup Complete 
+      ══════════════════════════════════════════════
+        Liquibase version : {{ liquibase_version }} (held)
+        Java              : OpenJDK 17
+        JDBC driver       : postgresql-{{ jdbc_driver_version }}.jar
+        Project dir       : {{ liquibase_project_dir }}
+        Log dir           : {{ liquibase_log_dir }}
+        Run script        : /usr/local/bin/run-migration
+        Python venv       : /opt/liquibase-venv
+        Deploy user       : {{ deploy_user }} (SSH key installed)
+        DB host           : {{ pg_host }}:{{ pg_port }}/{{ pg_database }}
+      ══════════════════════════════════════════════
+        Next step → Add to GitHub Actions:
+          SSH_PRIVATE_KEY  → repo Settings > Secrets
+          MIGRATION_SERVER → YOUR_MIGRATION_SERVER_IP
+      ══════════════════════════════════════════════
